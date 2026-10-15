@@ -1,0 +1,52 @@
+---
+import { Picture } from 'astro:assets';
+import { getCollection } from 'astro:content';
+
+const items = (await getCollection('lab')).sort((a, b) => a.data.order - b.data.order).slice(0, 3);
+---
+
+<section id="lab" class="lab" aria-labelledby="lab-title">
+  <div class="wrap">
+    <div class="lab__head">
+      <h2 id="lab-title">From the Lab</h2>
+      <a class="lab__all" href="/lab">See the Lab</a>
+    </div>
+    <div class="lab__grid">
+      {
+        items.map((item) => (
+          <article class="lab__item">
+            <Picture
+              src={item.data.image}
+              formats={['avif', 'webp']}
+              widths={[480, 800]}
+              sizes="(min-width: 48em) 30vw, 100vw"
+              alt={item.data.imageAlt}
+            />
+            <h3>{item.data.title}</h3>
+            <p>{item.data.summary}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .lab { padding-block: var(--space-2xl) 0; }
+  .lab__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-m);
+    margin-bottom: var(--space-xl);
+  }
+  .lab__grid { display: grid; gap: var(--space-l); }
+  .lab__item { display: grid; gap: var(--space-s); align-content: start; }
+  .lab__item :global(img) { aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4px; margin-bottom: var(--space-xs); }
+  .lab__item p { color: var(--text-muted); font-size: var(--step--1); }
+
+  @media (min-width: 48em) {
+    .lab__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>

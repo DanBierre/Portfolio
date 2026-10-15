@@ -1,0 +1,58 @@
+---
+const columns = [
+  {
+    name: 'Experiences',
+    intro: 'For your clients: AI they can see, touch and share.',
+    items: [
+      'Campaign sites with generative features built in',
+      'AI-powered installations and live event experiences',
+      "AI features inside your client's site or app",
+    ],
+  },
+  {
+    name: 'Pipelines',
+    intro: 'For your studio: generative production that runs on brand.',
+    items: [
+      'Image and video generation workflows tuned to a brand',
+      'Copy and asset variations at campaign scale',
+      'Tooling and training so your team runs it without me',
+    ],
+  },
+];
+---
+
+<section id="services" class="services" aria-labelledby="services-title">
+  <div class="wrap">
+    <h2 id="services-title">What I do for agencies</h2>
+    <div class="services__grid">
+      {
+        columns.map((c) => (
+          <section class="services__col" aria-label={c.name}>
+            <h3>{c.name}</h3>
+            <p class="services__intro">{c.intro}</p>
+            <ul role="list">
+              {c.items.map((i) => (
+                <li>{i}</li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .services { padding-block: var(--space-2xl) 0; }
+  h2 { margin-bottom: var(--space-xl); max-width: 16ch; }
+  .services__grid { display: grid; gap: var(--space-xl) var(--space-l); }
+  .services__col { border-top: 1px solid var(--text); padding-top: var(--space-m); }
+  h3 { font-size: var(--step-3); letter-spacing: -0.035em; }
+  .services__intro { margin-block: var(--space-s) var(--space-l); color: var(--text-muted); }
+  ul { padding: 0; list-style: none; }
+  li { padding-block: var(--space-s); border-bottom: 1px solid var(--border); }
+
+  @media (min-width: 48em) {
+    .services__grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>

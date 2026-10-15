@@ -1,0 +1,76 @@
+---
+import { Picture } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'work'>;
+}
+
+const { entry } = Astro.props;
+const { title, clientType, role, outcome, cover, coverAlt, preview } = entry.data;
+---
+
+<article class="work-card">
+  <a href={`/work/${entry.id}`} class="work-card__link">
+    <div class="work-card__media">
+      <Picture
+        src={cover}
+        formats={['avif', 'webp']}
+        widths={[640, 960, 1280, 1600]}
+        sizes="(min-width: 90rem) 85rem, 100vw"
+        alt={coverAlt}
+        style={`view-transition-name: work-${entry.id}`}
+      />
+      {
+        preview && (
+          <video class="work-card__preview" muted loop playsinline preload="none" aria-hidden="true">
+            <source src={preview} type="video/webm" />
+          </video>
+        )
+      }
+    </div>
+    <div class="work-card__meta">
+      <h3 class="work-card__title">{title}</h3>
+      <p class="work-card__context">{clientType} · {role}</p>
+      <p class="work-card__outcome">{outcome}</p>
+    </div>
+  </a>
+</article>
+
+<style>
+  .work-card__link { display: grid; gap: var(--space-m); text-decoration: none; }
+  .work-card__media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--surface);
+    border-radius: 4px;
+  }
+  .work-card__media :global(img),
+  .work-card__preview {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.9s var(--ease-out);
+  }
+  .work-card__preview { opacity: 0; transition: opacity 0.4s var(--ease-out), transform 0.9s var(--ease-out); }
+  .work-card__preview.is-playing { opacity: 1; }
+  .work-card__link:hover .work-card__media :global(img),
+  .work-card__link:hover .work-card__preview { transform: scale(1.02); }
+
+  .work-card__meta {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-xs);
+  }
+  .work-card__title { font-size: var(--step-2); letter-spacing: -0.03em; }
+  .work-card__context { color: var(--text-muted); font-size: var(--step--1); }
+  .work-card__outcome { font-size: var(--step-0); }
+
+  @media (min-width: 64em) {
+    .work-card__meta { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: var(--space-l); }
+    .work-card__title { grid-row: span 2; }
+  }
+</style>

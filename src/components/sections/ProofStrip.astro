@@ -1,0 +1,42 @@
+---
+import { Image } from 'astro:assets';
+import { site } from '../../site.config';
+
+// Drop client/agency logos (with permission) into src/assets/logos/ and they replace the result line.
+const logos = Object.entries(
+  import.meta.glob<{ default: ImageMetadata }>('../../assets/logos/*.{svg,png}', { eager: true }),
+).map(([path, mod]) => ({ src: mod.default, name: path.split('/').pop()!.replace(/\.\w+$/, '') }));
+---
+
+<section id="proof" class="proof" aria-label="Proof">
+  <div class="wrap proof__inner">
+    {
+      logos.length > 0 ? (
+        <ul class="proof__logos" role="list">
+          {logos.map((l) => (
+            <li>
+              <Image src={l.src} alt={l.name} height={32} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="proof__result">{site.proofResult}</p>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .proof { border-block: 1px solid var(--border); }
+  .proof__inner { padding-block: var(--space-m); }
+  .proof__result { font-size: var(--step-1); letter-spacing: -0.015em; max-width: none; }
+  .proof__logos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-l) var(--space-xl);
+    padding: 0;
+    list-style: none;
+  }
+  .proof__logos :global(img) { height: 2rem; width: auto; opacity: 0.75; }
+</style>

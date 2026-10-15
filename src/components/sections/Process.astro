@@ -1,0 +1,54 @@
+---
+import BookCall from '../BookCall.astro';
+
+const steps = [
+  { title: 'Brief', text: 'A 20-minute call about your pitch or project, followed by a written scope.' },
+  { title: 'Prototype in 1 week', text: 'A working prototype you can show your client, so the idea is proven before the full budget is spent.' },
+  { title: 'Build', text: 'The production build, working inside your process and under your agency’s name if you prefer.' },
+  { title: 'Handover', text: 'Documented code and a walkthrough, so your team can own what we built.' },
+];
+---
+
+<section id="process" class="process" aria-labelledby="process-title">
+  <div class="wrap">
+    <h2 id="process-title">How we work together</h2>
+    <ol class="process__steps" role="list">
+      {
+        steps.map((s, i) => (
+          <li>
+            <span class="process__num tabular" aria-hidden="true">
+              {i + 1}
+            </span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+    <div class="process__cta">
+      <BookCall variant="primary" label="Book a call" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .process { padding-block: var(--space-2xl) 0; }
+  h2 { margin-bottom: var(--space-xl); }
+  .process__steps {
+    display: grid;
+    gap: var(--space-l);
+    padding: 0;
+    list-style: none;
+  }
+  li { display: grid; gap: var(--space-s); align-content: start; border-top: 1px solid var(--border); padding-top: var(--space-m); }
+  .process__num { font-size: var(--step--1); color: var(--text-muted); }
+  li p { color: var(--text-muted); }
+  .process__cta { margin-top: var(--space-xl); }
+
+  @media (min-width: 48em) {
+    .process__steps { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 72em) {
+    .process__steps { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>

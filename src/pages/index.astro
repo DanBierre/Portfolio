@@ -1,11 +1,26 @@
 ---
 import Base from '../layouts/Base.astro';
 import { site } from '../site.config';
+import Hero from '../components/sections/Hero.astro';
+import ProofStrip from '../components/sections/ProofStrip.astro';
+import FeaturedWork from '../components/sections/FeaturedWork.astro';
+import Services from '../components/sections/Services.astro';
+import Process from '../components/sections/Process.astro';
+import LabTeaser from '../components/sections/LabTeaser.astro';
+import About from '../components/sections/About.astro';
+import Contact from '../components/sections/Contact.astro';
 ---
 
 <Base
   title={`${site.name} | AI creative technologist for agencies`}
   description="Interactive AI experiences for your clients, and the generative pipelines that make your studio faster. Designed and built end to end."
 >
-  <h1>The AI half of your creative team.</h1>
+  <Hero />
+  <ProofStrip />
+  <FeaturedWork />
+  <Services />
+  <Process />
+  <LabTeaser />
+  <About />
+  <Contact />
 </Base>

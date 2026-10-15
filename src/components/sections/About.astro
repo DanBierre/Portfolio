@@ -1,0 +1,37 @@
+---
+import { Picture } from 'astro:assets';
+import { site } from '../../site.config';
+import portrait from '../../assets/portrait.jpg';
+---
+
+<section id="about" class="about" aria-labelledby="about-title">
+  <div class="wrap about__grid">
+    <Picture
+      src={portrait}
+      formats={['avif', 'webp']}
+      widths={[480, 800]}
+      sizes="(min-width: 48em) 35vw, 100vw"
+      alt={`Portrait of ${site.name}`}
+      class="about__photo"
+    />
+    <div class="about__text">
+      <h2 id="about-title">About</h2>
+      <p class="about__bio">{site.bio}</p>
+      <p class="about__tools">{site.tools}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about { padding-block: var(--space-2xl) 0; }
+  .about__grid { display: grid; gap: var(--space-l); align-items: end; }
+  .about__grid :global(.about__photo) { aspect-ratio: 4 / 5; object-fit: cover; border-radius: 4px; }
+  .about__text { display: grid; gap: var(--space-m); }
+  .about__bio { font-size: var(--step-1); line-height: 1.45; letter-spacing: -0.01em; }
+  .about__tools { color: var(--text-muted); font-size: var(--step--1); }
+
+  @media (min-width: 48em) {
+    .about__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: var(--space-xl); }
+    .about__grid :global(.about__photo) { max-width: 28rem; }
+  }
+</style>

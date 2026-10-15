@@ -1,0 +1,63 @@
+---
+import { site } from '../../site.config';
+import BookCall from '../BookCall.astro';
+import CopyEmail from '../CopyEmail.astro';
+---
+
+<section id="contact" class="contact" aria-labelledby="contact-title">
+  <div class="wrap">
+    <h2 id="contact-title">Your pitch promised AI. I make it real.</h2>
+
+    <ul class="contact__trust" role="list">
+      <li>{site.availability}</li>
+      <li>{site.replyPromise}</li>
+      <li>{site.whiteLabel}</li>
+    </ul>
+
+    <div class="contact__paths">
+      <div class="contact__path">
+        <h3>Ready to talk</h3>
+        <p>Twenty minutes, no prep needed.</p>
+        <BookCall variant="primary" />
+      </div>
+      <div class="contact__path contact__path--brief">
+        <h3>Have a brief</h3>
+        <slot name="form"><p>Send it to the email below.</p></slot>
+      </div>
+      <div class="contact__path">
+        <h3>Just looking</h3>
+        <CopyEmail />
+        <a href={site.linkedin}>LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact { padding-block: var(--space-2xl) 0; }
+  h2 { font-size: var(--step-5); max-width: 16ch; }
+  .contact__trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-l);
+    margin-block: var(--space-l) var(--space-xl);
+    padding: 0;
+    list-style: none;
+    color: var(--text-muted);
+  }
+  .contact__trust li:first-child { color: var(--text); }
+  .contact__paths { display: grid; gap: var(--space-xl) var(--space-l); }
+  .contact__path {
+    display: grid;
+    gap: var(--space-s);
+    align-content: start;
+    justify-items: start;
+    border-top: 1px solid var(--text);
+    padding-top: var(--space-m);
+  }
+  .contact__path p { color: var(--text-muted); }
+
+  @media (min-width: 64em) {
+    .contact__paths { grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 3fr); }
+  }
+</style>
