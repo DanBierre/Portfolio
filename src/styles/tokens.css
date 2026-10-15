@@ -12,7 +12,7 @@
   --text: var(--ink-light);
   --text-muted: #9d9b95;
   --border: #2e2e2c;
-  --lattice: rgb(236 235 231 / 0.09);
+  --lattice: rgb(236 235 231 / 0.06);
   --focus: var(--ink-light);
   --error: #ff8f80;
   /* Buttons invert the ground: light pill on dark, dark pill on washi. */

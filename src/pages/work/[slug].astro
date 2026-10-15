@@ -27,7 +27,7 @@ const og = await getImage({ src: cover, width: 1200, height: 630, fit: 'cover', 
 
 <Base title={`${title} | ${site.name}`} description={`${outcome} ${clientType}.`} ogImage={og.src}>
   <article class="case">
-    <header class="wrap case__header">
+    <header class="wrap case__header lattice-field">
       <h1>{title}</h1>
       <dl class="case__meta">
         <div><dt>Client</dt><dd>{clientType}</dd></div>
@@ -76,11 +76,13 @@ const og = await getImage({ src: cover, width: 1200, height: 630, fit: 'cover', 
       }
     </div>
 
-    <section id="case-cta" class="wrap case__cta" aria-labelledby="case-cta-title" data-slug={entry.id}>
-      <h2 id="case-cta-title">Have a similar project? Let's talk</h2>
-      <div class="case__cta-actions">
-        <BookCall variant="primary" />
-        <a class="btn btn--secondary" href="/#contact">Send a brief</a>
+    <section id="case-cta" class="case__cta band lattice-field" aria-labelledby="case-cta-title" data-slug={entry.id}>
+      <div class="wrap case__cta-inner">
+        <h2 id="case-cta-title">Have a similar project? Let's talk</h2>
+        <div class="case__cta-actions">
+          <BookCall variant="primary" />
+          <a class="btn btn--secondary" href="/#contact">Send a brief</a>
+        </div>
       </div>
     </section>
 
@@ -107,7 +109,8 @@ const og = await getImage({ src: cover, width: 1200, height: 630, fit: 'cover', 
 
 <style>
   .case__header { display: grid; gap: var(--space-l); padding-block: var(--space-xl) var(--space-l); }
-  h1 { font-size: var(--step-5); max-width: 18ch; overflow-wrap: anywhere; }
+  /* Ragged Kolkhoze statement: first line flush, wrapped lines hang indented. */
+  h1 { font-size: var(--step-5); max-width: 18ch; overflow-wrap: anywhere; padding-left: 1.6em; text-indent: -1.6em; }
   .case__meta { display: flex; flex-wrap: wrap; gap: var(--space-m) var(--space-xl); }
   .case__meta dt { font-size: var(--step--1); color: var(--text-muted); text-transform: lowercase; }
   .case__meta .data { font-family: var(--font-data); font-size: 0.9em; }
@@ -126,7 +129,8 @@ const og = await getImage({ src: cover, width: 1200, height: 630, fit: 'cover', 
   .case__quote p { font-size: var(--step-2); letter-spacing: -0.025em; line-height: 1.3; }
   .case__quote footer { margin-top: var(--space-s); color: var(--text-muted); }
 
-  .case__cta { display: grid; gap: var(--space-l); padding-block: var(--space-xl); border-top: 1px solid var(--border); }
+  .case__cta { margin-top: var(--space-xl); padding-block: var(--space-2xl); }
+  .case__cta-inner { display: grid; gap: var(--space-l); }
   .case__cta h2 { max-width: 14ch; }
   .case__cta-actions { display: flex; flex-wrap: wrap; gap: var(--space-s); }
 

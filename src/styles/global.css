@@ -78,12 +78,12 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* Washi band: backlit paper. The grey section grounds read as shoji screens with light behind them. */
 .band {
-  --bg: #dcd8cf;
+  --bg: #d8d7d2;
   --surface: #ebe8e1;
   --text: #141414;
   --text-muted: #4a4843;
   --border: #b9b5ab;
-  --lattice: rgb(20 20 20 / 0.08);
+  --lattice: rgb(20 20 20 / 0.07);
   --focus: #141414;
   --error: #8f1f15;
   --btn-bg: #141414;
@@ -94,8 +94,8 @@ a:hover { text-decoration-thickness: 2px; }
   color: var(--text);
   /* Inner light (warmer at the centre, as if lit from behind) plus long paper fibres. */
   background-image:
-    radial-gradient(ellipse 70% 60% at 50% 45%, rgb(255 250 238 / 0.35), transparent 70%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.045 0.11' numOctaves='4' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.28 0 0 0 0 0.24 0 0 0 0.32 -0.08'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
+    radial-gradient(ellipse 70% 60% at 50% 45%, rgb(255 255 255 / 0.16), transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.006 0.28' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.28 0 0 0 0 0.24 0 0 0 0.22 -0.06'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
 }
 
 /* Kumiko lattice: the shoji grid, drawn as hairlines at the --kumiko module. */
@@ -103,7 +103,7 @@ a:hover { text-decoration-thickness: 2px; }
   background-image:
     linear-gradient(to right, var(--lattice) 1px, transparent 1px),
     linear-gradient(to bottom, var(--lattice) 1px, transparent 1px);
-  background-size: var(--kumiko) calc(var(--kumiko) * 1.5);
+  background-size: var(--kumiko) calc(var(--kumiko) * 2);
 }
 
 /* Buttons: pills that invert their ground. */
@@ -132,3 +132,18 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* Native cross-document page transitions; unsupported browsers just navigate. */
 @view-transition { navigation: auto; }
+
+/* Lattice field: the kumiko grid drawn behind a whole section as page structure. */
+.lattice-field { position: relative; isolation: isolate; }
+.lattice-field::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--lattice) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--lattice) 1px, transparent 1px);
+  background-size: calc(var(--kumiko) * 2) calc(var(--kumiko) * 4);
+  background-position: var(--gutter) 0;
+}

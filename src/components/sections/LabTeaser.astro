@@ -51,7 +51,7 @@ const items = all.slice(0, 3);
   .lab__grid { display: grid; gap: var(--space-xl) var(--space-m); }
   .lab__item { display: grid; gap: var(--space-s); align-content: start; }
   .lab__item :global(img) {
-    aspect-ratio: 2 / 3;
+    aspect-ratio: 1 / 2;
     object-fit: cover;
     filter: grayscale(1);
     transition: filter 0.5s var(--ease-out);
@@ -62,7 +62,7 @@ const items = all.slice(0, 3);
   .lab__summary { color: var(--text-muted); font-size: var(--step--1); }
 
   @media (min-width: 48em) {
-    .lab__grid { grid-template-columns: repeat(3, 1fr); }
+    .lab__grid { grid-template-columns: repeat(3, minmax(0, 18rem)); justify-content: space-between; }
     .lab__item:nth-child(2) { margin-top: calc(var(--kumiko) * 2); }
   }
 </style>

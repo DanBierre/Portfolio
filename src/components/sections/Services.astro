@@ -21,16 +21,13 @@ const columns = [
 ];
 ---
 
-<section id="services" class="services band" aria-labelledby="services-title">
+<section id="services" class="services band lattice-field" aria-labelledby="services-title">
   <div class="wrap">
     <h2 id="services-title">What I do<br />for agencies</h2>
     <div class="services__grid">
       {
-        columns.map((c, i) => (
+        columns.map((c) => (
           <section class="services__col" aria-label={c.name}>
-            <p class="label tabular" aria-hidden="true">
-              [0{i + 1}]
-            </p>
             <h3>{c.name}</h3>
             <p class="services__intro">{c.intro}</p>
             <ul role="list">

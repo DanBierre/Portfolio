@@ -4,7 +4,7 @@ import BookCall from '../BookCall.astro';
 import CopyEmail from '../CopyEmail.astro';
 ---
 
-<section id="contact" class="contact band" aria-labelledby="contact-title">
+<section id="contact" class="contact band lattice-field" aria-labelledby="contact-title">
   <div class="wrap">
     <h2 id="contact-title">
       <span class="line">Your pitch promised AI.</span>{' '}<span class="line line--indent">I make it real.</span>
@@ -18,16 +18,16 @@ import CopyEmail from '../CopyEmail.astro';
 
     <div class="contact__paths">
       <div class="contact__path">
-        <h3><span class="label tabular" aria-hidden="true">[01]</span> Ready to talk</h3>
+        <h3>Ready to talk</h3>
         <p>Twenty minutes, no prep needed.</p>
         <BookCall variant="primary" />
       </div>
       <div class="contact__path contact__path--brief">
-        <h3><span class="label tabular" aria-hidden="true">[02]</span> Have a brief</h3>
+        <h3>Have a brief</h3>
         <slot name="form"><p>Send it to the email below.</p></slot>
       </div>
       <div class="contact__path">
-        <h3><span class="label tabular" aria-hidden="true">[03]</span> Just looking</h3>
+        <h3>Just looking</h3>
         <CopyEmail />
         <a href={site.linkedin}>LinkedIn</a>
       </div>
@@ -60,7 +60,6 @@ import CopyEmail from '../CopyEmail.astro';
     border-top: 1px solid var(--text);
     padding-top: var(--space-m);
   }
-  .contact__path h3 { display: flex; gap: var(--space-s); align-items: baseline; }
   .contact__path p { color: var(--text-muted); }
 
   @media (max-width: 47.99em) {

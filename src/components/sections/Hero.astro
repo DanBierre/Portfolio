@@ -4,7 +4,7 @@ import BookCall from '../BookCall.astro';
 import poster from '../../assets/hero-poster.jpg';
 ---
 
-<section id="hero" class="hero" aria-labelledby="hero-title">
+<section id="hero" class="hero lattice-field" aria-labelledby="hero-title">
   <div class="wrap hero__grid">
     <figure class="hero__screen" aria-hidden="true">
       <div class="hero__media">
@@ -22,6 +22,7 @@ import poster from '../../assets/hero-poster.jpg';
         </video>
       </div>
       <span class="hero__kumiko lattice"></span>
+      <span class="hero__divide"></span>
     </figure>
 
     <div class="hero__statement">
@@ -92,7 +93,7 @@ import poster from '../../assets/hero-poster.jpg';
 </script>
 
 <style>
-  .hero { padding-block: var(--space-l) var(--space-xl); overflow: hidden; }
+  .hero { padding-block: var(--space-l); overflow: hidden; }
   .hero__filters { position: absolute; }
 
   .hero__grid {
@@ -101,8 +102,8 @@ import poster from '../../assets/hero-poster.jpg';
     grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: var(--space-m);
     row-gap: var(--space-l);
-    min-height: calc(100svh - 3.75rem - var(--space-l) - var(--space-xl));
-    padding-top: calc(min(36svh, 26rem) + var(--space-m));
+    min-height: calc(100svh - 3.75rem - var(--space-l) * 2);
+    padding-top: calc(min(44svh, 34rem) + var(--space-m));
     align-content: end;
   }
 
@@ -111,8 +112,8 @@ import poster from '../../assets/hero-poster.jpg';
     position: absolute;
     top: 0;
     right: var(--gutter);
-    height: min(36svh, 26rem);
-    aspect-ratio: 2 / 3;
+    height: min(44svh, 34rem);
+    aspect-ratio: 1 / 1; /* two 1:2 shoji panels side by side */
     overflow: hidden;
     background: var(--surface);
   }
@@ -125,11 +126,13 @@ import poster from '../../assets/hero-poster.jpg';
     object-fit: cover;
     filter: grayscale(1) contrast(1.05);
   }
+  .hero__divide { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; translate: -1px 0; background: rgb(20 20 20 / 0.85); }
   .hero__video { opacity: 0; transition: opacity 1.2s var(--ease-out); }
   .hero__video.is-playing { opacity: 1; }
   .hero__kumiko {
     position: absolute;
     inset: 0;
+    background-position: 0 0, 0 0;
     --lattice: rgb(236 235 231 / 0.22);
     box-shadow: inset 0 0 0 1px rgb(236 235 231 / 0.22);
   }
