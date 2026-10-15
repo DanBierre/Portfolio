@@ -7,7 +7,6 @@ test('reduced motion: no autoplay, no animations', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
   await page.waitForTimeout(500);
-  expect(await paused('#hero video')(page)).toBe(true);
   expect(await page.evaluate(() => document.getAnimations().length)).toBe(0);
 });
 
@@ -20,10 +19,9 @@ test('reduced motion: work previews stay paused on hover', async ({ page }, info
   expect(await paused('#work article video')(page)).toBe(true);
 });
 
-test('motion allowed: hero video plays and headline animates', async ({ page }) => {
+test('motion allowed: the headline animates', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
-  await expect.poll(() => paused('#hero video')(page)).toBe(false);
   expect(
     await page.evaluate(() =>
       document.getAnimations().some((a) => (a.effect as KeyframeEffect).target?.closest('h1')),

@@ -1,18 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { site } from '../../src/site.config';
 
-// WCAG 2.2.2: auto-playing looping media needs a pause control.
-test('hero video can be paused and resumed', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await page.goto('/');
-  const video = page.locator('#hero video');
-  await expect.poll(() => video.evaluate((v: HTMLVideoElement) => !v.paused)).toBe(true);
-  await page.getByRole('button', { name: 'Pause background video' }).click();
-  expect(await video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
-  await page.getByRole('button', { name: 'Play background video' }).click();
-  await expect.poll(() => video.evaluate((v: HTMLVideoElement) => !v.paused)).toBe(true);
-});
-
 test('touch previews play once instead of looping', async ({ page }, info) => {
   test.skip(info.project.name !== 'mobile');
   await page.goto('/');

@@ -74,3 +74,11 @@ Decisions made during the build (from the execution ledger), each with its cost 
 - The five in-progress entries use [PLACEHOLDER] images; the Ensō cover is real (rendered from the generator code).
 - Shared button fix: `<button>`-based secondary buttons no longer show the browser's default grey background.
 - Homepage first-content time rose to 1.96 s (budget 2 s, was 1.73 s) with the new Lab imagery; worth watching once real images land.
+
+## Hero: indie edit (replaces the hero footage placeholder)
+
+- Live ensō hero tried and dropped at Dan's request; replaced by a Gawx-style "indie edit" (reference: "Japan" by Gawx).
+- Built as one WebGL shader: speed ramps (time warp), motion blur + trails, night halation, film burns and flash frames at cuts, grain, gate weave, colour split, vignette. Loops ~11 s across 6 shots: Dan's Fushimi Inari photo (punch-ins, drifts) and a generated Tokyo-night bokeh/streak scene. Real clips can be added as more sources later.
+- Runs at 24 fps, starts when the page is idle, only while on screen, and only with hardware graphics: software renderers (no GPU, as in Lighthouse and very low-end devices) and reduced-motion visitors see a graded still of the photo. Pause button kept (WCAG 2.2.2).
+- Tests force software rendering on via a window flag (`__indieEditAllowSoftware`); real visitors cannot trigger it accidentally.
+- Old placeholder hero video and poster removed (homepage weight 546 KB → 176 KB).

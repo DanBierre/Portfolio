@@ -1,32 +1,33 @@
 ---
-import { Picture } from 'astro:assets';
+import { Picture, getImage } from 'astro:assets';
 import BookCall from '../BookCall.astro';
-import poster from '../../assets/hero-poster.jpg';
+import portrait from '../../assets/portrait.jpg';
 import SpineMark from '../SpineMark.astro';
 import { ui, langOf } from '../../i18n/ui';
 
 const lang = langOf(Astro.currentLocale);
 const t = ui[lang];
+
+
+// Indie edit source: Dan's Fushimi Inari photo as a texture; the still frame is the same photo, graded.
+const texture = await getImage({ src: portrait, width: 800, format: 'jpg' });
 ---
 
 <section id="hero" class="hero lattice-field spined" aria-labelledby="hero-title">
   <SpineMark section="hero" top="var(--space-l)" />
   <div class="wrap hero__grid">
     <figure class="hero__screen" aria-hidden="true">
-      <div class="hero__media">
-        <Picture
-          src={poster}
-          formats={['avif', 'webp']}
-          widths={[400, 640, 960]}
-          sizes="(min-width: 48em) 30vw, 60vw"
-          alt=""
-          loading="eager"
-          fetchpriority="high"
-        />
-        <video class="hero__video" muted loop playsinline preload="none" poster={poster.src}>
-          <source src="/media/hero.webm" type="video/webm" />
-        </video>
-      </div>
+      <Picture
+        src={portrait}
+        formats={['avif', 'webp']}
+        widths={[400, 640, 800]}
+        sizes="(min-width: 48em) 30vw, 60vw"
+        alt=""
+        loading="eager"
+        class="hero__still"
+        data-hero-still
+      />
+      <canvas class="hero__edit" data-hero-edit data-photo={texture.src} hidden></canvas>
       <span class="hero__kumiko lattice"></span>
       <span class="hero__divide"></span>
     </figure>
@@ -75,6 +76,8 @@ const t = ui[lang];
 </section>
 
 <script>
+  import { createIndieEdit } from '../../lib/indie-renderer';
+
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Diffusion reveal: the headline resolves out of noise, like an image generating through paper.
@@ -94,20 +97,36 @@ const t = ui[lang];
     requestAnimationFrame(step);
   }
 
-  // Background footage plays only when motion is welcome, and can always be paused (WCAG 2.2.2).
-  const video = document.querySelector<HTMLVideoElement>('.hero__video');
+  // Indie edit: a looping Gawx-style cut (speed ramps, motion blur, film burns) rendered in WebGL.
+  // Only when motion is welcome and WebGL exists; otherwise the graded still stays. Always pausable (WCAG 2.2.2).
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-hero-edit]');
+  const still = document.querySelector<HTMLElement>('[data-hero-still]');
   const toggle = document.querySelector<HTMLButtonElement>('.hero__toggle');
-  if (video && toggle && !reduce) {
-    const sync = () => {
-      toggle.setAttribute('aria-label', video.paused ? toggle.dataset.play! : toggle.dataset.pause!);
-      toggle.dataset.state = video.paused ? 'paused' : 'playing';
-    };
-    video.addEventListener('playing', () => video.classList.add('is-playing'), { once: true });
-    video.addEventListener('play', sync);
-    video.addEventListener('pause', sync);
-    toggle.addEventListener('click', () => (video.paused ? video.play() : video.pause()));
-    toggle.hidden = false;
-    video.play().catch(sync);
+  if (canvas && still && toggle && !reduce) {
+    canvas.hidden = false;
+    // Tests run in software-rendered Chromium; they opt in explicitly. Real visitors need a GPU.
+    const allowSoftware = (window as any).__indieEditAllowSoftware === true;
+    const edit = createIndieEdit(canvas, canvas.dataset.photo!, () => (still.hidden = true), { allowSoftware });
+    if (!edit) {
+      canvas.hidden = true;
+    } else {
+      let paused = false;
+      const sync = () => {
+        toggle.setAttribute('aria-label', paused ? toggle.dataset.play! : toggle.dataset.pause!);
+        toggle.dataset.state = paused ? 'paused' : 'playing';
+      };
+      toggle.addEventListener('click', () => {
+        paused = !paused;
+        paused ? edit.stop() : edit.start();
+        sync();
+      });
+      // Start once the page is idle (never competing with first load), and only run while on screen.
+      const begin = () =>
+        new IntersectionObserver(([e]) => (e.isIntersecting && !paused ? edit.start() : edit.stop())).observe(canvas);
+      'requestIdleCallback' in window ? requestIdleCallback(begin, { timeout: 2000 }) : setTimeout(begin, 1200);
+      toggle.hidden = false;
+      sync();
+    }
   }
 </script>
 
@@ -136,18 +155,12 @@ const t = ui[lang];
     overflow: hidden;
     background: var(--surface);
   }
-  .hero__media :global(img),
-  .hero__video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: grayscale(1) contrast(1.05);
-  }
   .hero__divide { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; translate: -1px 0; background: rgb(20 20 20 / 0.85); }
-  .hero__video { opacity: 0; transition: opacity 1.2s var(--ease-out); }
-  .hero__video.is-playing { opacity: 1; }
+  .hero__screen :global(.hero__still),
+  .hero__edit { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  /* The still is graded like the edit: warm, crushed, a little faded. */
+  .hero__screen :global(.hero__still) { filter: contrast(1.15) saturate(0.85) sepia(0.18) brightness(0.85); }
+  .hero__edit { image-rendering: auto; }
   .hero__kumiko {
     position: absolute;
     inset: 0;
