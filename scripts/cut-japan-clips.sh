@@ -3,7 +3,7 @@
 # them into one night-film look that sits on the site's warm charcoal and gold. Only the base grade is
 # baked here: halation, film burn, flash frames, motion blur and time warp are added live by the hero's
 # WebGL renderer, so baking them too would double them.
-#   bash scripts/cut-japan-clips.sh           -> public/media/japan/<name>.mp4
+#   bash scripts/cut-japan-clips.sh           -> public/media/japan/<name>.mp4 (+ raw/<name>.mp4, ungraded)
 #   bash scripts/cut-japan-clips.sh preview   -> before|after stills in $PREVIEW_DIR (default ./grade-preview)
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -47,4 +47,7 @@ for c in "${CLIPS[@]}"; do
     -vf "fps=24,$fix,$LOOK,format=yuv420p" \
     -c:v libx264 -preset slow -crf 27 -profile:v high -g 12 -movflags +faststart "$OUT/$name.mp4"
   echo "$OUT/$name.mp4 $(du -k "$OUT/$name.mp4" | cut -f1) KB"
+  # Ungraded twin for the Lab's Grade wipe: same frames, no look, 720p is plenty under a wipe.
+  mkdir -p "$OUT/raw"
+  "$FF" -v error -y -ss "$in" -t "$LEN" -i "$SRC/$id-1080.mp4" -an -vf "fps=24,scale=1280:-2,format=yuv420p"     -c:v libx264 -preset slow -crf 28 -g 12 -movflags +faststart "$OUT/raw/$name.mp4"
 done

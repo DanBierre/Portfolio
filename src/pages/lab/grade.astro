@@ -1,0 +1,232 @@
+---
+import Base from '../../layouts/Base.astro';
+import BookCall from '../../components/BookCall.astro';
+import { CLIPS } from '../../lib/indie-edit';
+import { site } from '../../site.config';
+
+// What each clip needed before the shared look (mirrors scripts/cut-japan-clips.sh).
+const notes: Record<(typeof CLIPS)[number], string> = {
+  street: 'Saturation down 15% and a touch darker, so the signage glows instead of shouting.',
+  neon: 'Neon pulled back 15% so the white kanji leads the frame.',
+  subway: 'Fluorescent green taken out of the mids and shadows, then pushed a little darker.',
+  lantern: 'Left almost alone: a paper lantern already lives in this palette.',
+  crossing: 'Daytime pushed to dusk: down in exposure, flatter, cooler shadows under warm highlights.',
+};
+const steps = [
+  ['Milky blacks', 'Curves lift the floor to 4%, so shadows read as film stock, not digital black.'],
+  ['Soft highlights', 'Whites roll off at 93%: neon blooms instead of clipping.'],
+  ['Warm over cool', "Gold in the highlights, a cool cast in the shadows: the site's palette, in light."],
+  ['Colour as accent', 'Saturation to 80% everywhere, so colour lands where the eye should go.'],
+  ['Lens', 'A 0.7 px blur and a light vignette take the digital edge off.'],
+];
+const first = 'crossing'; // the biggest change: day to dusk
+---
+
+<Base
+  title={`Grade | ${site.name}`}
+  description="Wipe between raw stock footage and the graded cut used on the homepage, and see each step of the night-film look."
+>
+  <div class="wrap grade-page">
+    <header class="grade-page__head">
+      <a class="label" href="/lab">← Lab</a>
+      <h1>Grade</h1>
+      <p class="grade-page__intro">
+        Five stock clips from five shoots, graded into one film. Drag across the frame: raw on the left, the cut on
+        the homepage on the right.
+      </p>
+    </header>
+
+    <figure class="grade-page__frame" data-frame style="--wipe: 50%">
+      <video data-raw src={`/media/japan/raw/${first}.mp4`} muted loop playsinline preload="none" aria-hidden="true"></video>
+      <video
+        data-graded
+        src={`/media/japan/${first}.mp4`}
+        muted
+        loop
+        playsinline
+        preload="none"
+        aria-label="The same clip, raw and graded, split by a wipe"></video>
+      <span class="grade-page__line" aria-hidden="true"></span>
+      <span class="grade-page__tag grade-page__tag--raw label" aria-hidden="true">raw</span>
+      <span class="grade-page__tag grade-page__tag--graded label" aria-hidden="true">graded</span>
+    </figure>
+
+    <form class="grade-page__controls" data-controls>
+      <fieldset class="clips">
+        <legend class="label">Clip</legend>
+        {
+          CLIPS.map((c, i) => (
+            <label class="clip">
+              <input type="radio" name="clip" value={c} checked={c === first} />
+              <span>{c}</span>
+            </label>
+          ))
+        }
+      </fieldset>
+      <div class="field">
+        <label for="wipe">Wipe</label>
+        <input id="wipe" name="wipe" type="range" min="0" max="100" step="1" value="50" />
+      </div>
+      <button class="btn btn--secondary" type="button" data-play>Play</button>
+    </form>
+    <p class="grade-page__note" data-note aria-live="polite">{notes[first]}</p>
+
+    <ol class="grade-page__steps">
+      {
+        steps.map(([title, text], i) => (
+          <li>
+            <span class="num label">{String(i + 1).padStart(2, '0')}</span>
+            <h2>{title}</h2>
+            <p>{text}</p>
+          </li>
+        ))
+      }
+    </ol>
+    <p class="grade-page__more">
+      On the homepage, the shader adds what a grade can't: halation, film burns, flash frames, motion blur and grain,
+      live. The speed ramps are in <a href="/lab/time-warp">Time Warp</a>.
+    </p>
+
+    <section class="grade-page__cta">
+      <p>Footage that looks like one film.</p>
+      <BookCall variant="primary" />
+    </section>
+  </div>
+</Base>
+
+<script define:vars={{ notes }}>
+  const frame = document.querySelector('[data-frame]');
+  const raw = document.querySelector('[data-raw]');
+  const graded = document.querySelector('[data-graded]');
+  const form = document.querySelector('[data-controls]');
+  const play = document.querySelector('[data-play]');
+  const note = document.querySelector('[data-note]');
+  let playing = false;
+
+  const setWipe = (v) => frame.style.setProperty('--wipe', `${v}%`);
+  // Dragging across the frame moves the wipe; the slider is the keyboard and screen reader route.
+  frame.addEventListener('pointermove', (e) => {
+    if (e.pointerType === 'mouse' || e.buttons) {
+      const r = frame.getBoundingClientRect();
+      form.wipe.value = Math.round(((e.clientX - r.left) / r.width) * 100);
+      setWipe(form.wipe.value);
+    }
+  });
+
+  const both = (fn) => [raw, graded].forEach(fn);
+  const setPlaying = (on) => {
+    playing = on;
+    play.textContent = on ? 'Pause' : 'Play';
+    both((v) => (on ? v.play().catch(() => {}) : v.pause()));
+  };
+  // Keep the two in lockstep: the raw clip follows the graded one.
+  graded.addEventListener('timeupdate', () => {
+    if (Math.abs(raw.currentTime - graded.currentTime) > 0.06) raw.currentTime = graded.currentTime;
+  });
+  form.addEventListener('input', (e) => {
+    if (e.target.name === 'wipe') return setWipe(e.target.value);
+    const c = form.clip.value;
+    raw.src = `/media/japan/raw/${c}.mp4`;
+    graded.src = `/media/japan/${c}.mp4`;
+    note.textContent = notes[c];
+    if (playing) setPlaying(true);
+    else both((v) => (v.currentTime = 1));
+  });
+  play.addEventListener('click', () => setPlaying(!playing));
+
+  // Fetch footage only when the frame is on screen. Motion welcome: it plays; otherwise a still frame.
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  new IntersectionObserver(([e], io) => {
+    if (!e.isIntersecting) return;
+    io.disconnect();
+    both((v) => (v.preload = 'auto'));
+    still ? both((v) => (v.currentTime = 1)) : setPlaying(true);
+  }).observe(frame);
+</script>
+
+<style>
+  .grade-page { padding-block: var(--space-xl); }
+  .grade-page__head { display: grid; gap: var(--space-m); margin-bottom: var(--space-xl); }
+  .grade-page__head a { text-decoration: none; }
+  .grade-page__intro { font-size: var(--step-1); color: var(--text-muted); max-width: 48ch; }
+
+  .grade-page__frame {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 16 / 9;
+    background: #141414;
+    overflow: hidden;
+    cursor: ew-resize;
+    touch-action: pan-y;
+  }
+  .grade-page__frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .grade-page__frame [data-graded] { clip-path: inset(0 0 0 var(--wipe)); }
+  .grade-page__line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--wipe);
+    width: 2px;
+    translate: -1px 0;
+    background: #c9a24f; /* always on footage */
+    pointer-events: none;
+  }
+  .grade-page__tag {
+    position: absolute;
+    top: var(--space-xs);
+    margin: 0;
+    padding: 0.2em 0.6em;
+    background: rgb(20 20 20 / 0.7);
+    color: #ecebe7;
+    pointer-events: none;
+  }
+  .grade-page__tag--raw { left: var(--space-xs); }
+  .grade-page__tag--graded { right: var(--space-xs); }
+
+  .grade-page__controls {
+    display: grid;
+    grid-template-columns: 2fr 1fr auto;
+    gap: var(--space-m);
+    align-items: end;
+    margin-top: var(--space-l);
+  }
+  .clips { display: flex; flex-wrap: wrap; gap: 0.4rem; border: 0; padding: 0; margin: 0; }
+  .clips legend { margin-bottom: 0.4rem; }
+  .clip { position: relative; }
+  .clip input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+  .clip span {
+    display: inline-block;
+    padding: 0.45em 0.9em;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-family: var(--font-data);
+    font-size: var(--step--1);
+  }
+  .clip input:checked + span { border-color: var(--gold); color: var(--gold); }
+  .clip input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .field { display: grid; gap: 0.35rem; }
+  .field label { font-size: var(--step--1); font-weight: 500; }
+  .field input { width: 100%; accent-color: var(--gold); min-height: 2.75rem; }
+  .grade-page__note { margin-top: var(--space-s); color: var(--text-muted); max-width: 60ch; min-height: 3em; }
+
+  .grade-page__steps {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-xl) 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: var(--space-l) var(--space-m);
+  }
+  .grade-page__steps li { display: grid; gap: 0.4rem; align-content: start; border-top: 1px solid var(--border); padding-top: var(--space-s); }
+  .grade-page__steps h2 { font-size: var(--step-1); margin: 0; }
+  .grade-page__steps p { margin: 0; color: var(--text-muted); font-size: var(--step--1); }
+  .grade-page__steps .num { color: var(--gold); }
+  .grade-page__more { margin-top: var(--space-l); max-width: 60ch; }
+
+  .grade-page__cta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-m); margin-top: var(--space-xl); }
+  .grade-page__cta p { font-size: var(--step-2); margin: 0; }
+
+  @media (max-width: 47.99em) {
+    .grade-page__controls { grid-template-columns: 1fr; }
+  }
+</style>
