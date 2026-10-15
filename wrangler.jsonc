@@ -1,0 +1,18 @@
+{
+  "name": "danbierre-dev",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-10-15",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"],
+    "not_found_handling": "404-page"
+  },
+  "send_email": [{ "name": "EMAIL" }],
+  "vars": {
+    // TODO(Dan): set to the inbox that should receive briefs
+    "BRIEF_TO": "REPLACE_ME@example.com",
+    "BRIEF_FROM": "brief@danbierre.dev"
+  },
+  "routes": [{ "pattern": "danbierre.dev", "custom_domain": true }]
+}

@@ -1,0 +1,17 @@
+.DS_Store
+.astro/
+.dev.vars
+.env
+.env.production
+.idea/
+.lighthouseci/
+.superpowers/
+.wrangler/
+dist/
+node_modules/
+npm-debug.log*
+playwright-report/
+pnpm-debug.log*
+test-results/
+yarn-debug.log*
+yarn-error.log*
