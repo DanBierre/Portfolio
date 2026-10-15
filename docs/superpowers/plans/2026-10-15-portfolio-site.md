@@ -106,7 +106,7 @@ tests/e2e/*.spec.ts
   `interface Env { ASSETS: Fetcher; EMAIL: SendEmail; BRIEF_TO: string; BRIEF_FROM: string }`.
 
 - [ ] **Step 1:** Scaffold with `npm create astro@latest . -- --template minimal --typescript strict --install --no-git`. Add dev dependencies: `vitest @playwright/test @axe-core/playwright @lhci/cli wrangler`. Run `npx playwright install chromium`.
-- [ ] **Step 2:** Write `wrangler.jsonc` with `main: "worker/index.ts"`, `compatibility_date: "2026-10-15"`, `assets: { directory: "./dist", binding: "ASSETS", run_worker_first: ["/api/*"], not_found_handling: "404-page" }`, `send_email: [{ name: "EMAIL" }]`, and `vars: { BRIEF_TO: "<Dan's address>", BRIEF_FROM: "brief@<domain>" }`.
+- [ ] **Step 2:** Write `wrangler.jsonc` with `main: "worker/index.ts"`, `compatibility_date: "2026-10-15"`, `assets: { directory: "./dist", binding: "ASSETS", run_worker_first: ["/api/*"], not_found_handling: "404-page" }`, `send_email: [{ name: "EMAIL" }]`, and `vars: { BRIEF_TO: "<Dan's inbox, ask Dan>", BRIEF_FROM: "brief@danbierre.dev" }`, `routes: [{ pattern: "danbierre.dev", custom_domain: true }]`. In `astro.config.mjs` set `site: "https://danbierre.dev"`, and in `site.config.ts` set `url: "https://danbierre.dev"`.
 - [ ] **Step 3:** For now, `worker/index.ts` returns `env.ASSETS.fetch(request)` for everything (the brief route comes in Task 8).
 - [ ] **Step 4:** `playwright.config.ts` uses `webServer: { command: "npm run build && npx wrangler dev --port 8787", url: "http://localhost:8787", reuseExistingServer: true }`, `baseURL: "http://localhost:8787"`, and two projects: `desktop` (1280×800) and `mobile` (`devices['Pixel 7']`).
 - [ ] **Step 5: Write the failing smoke test** in `tests/e2e/smoke.spec.ts`:
@@ -632,7 +632,7 @@ tests/e2e/*.spec.ts
 - [ ] **Step 4:** Run `npm run build && npx lhci autorun`. Expected: all assertions pass.
 - [ ] **Step 5:** Run the full suite: `npx vitest run && npx playwright test`. Expected: all PASS.
 - [ ] **Step 6:** Commit: `Add quality gates and Lighthouse budgets`
-- [ ] **Step 7 (Dan does this; needs his accounts):** Add the domain to Cloudflare, enable Email Service / Email Routing and verify `BRIEF_TO`, create the Cal.com 20-minute event, create the Umami site and paste its ID into `site.config.ts`. Then `npx wrangler deploy`. After deploying, send one real brief and confirm it arrives with Reply-To set to the sender.
+- [ ] **Step 7 (Dan does this; needs his accounts):** Make sure `danbierre.dev` uses Cloudflare nameservers (it stays registered wherever it is now). `.dev` is HTTPS-only, which Cloudflare handles automatically. Enable Email Service / Email Routing and verify `BRIEF_TO`, create the Cal.com 20-minute event, create the Umami site and paste its ID into `site.config.ts`. Then `npx wrangler deploy`. After deploying, send one real brief and confirm it arrives with Reply-To set to the sender.
 
 ---
 
