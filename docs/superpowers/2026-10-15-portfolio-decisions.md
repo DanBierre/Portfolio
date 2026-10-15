@@ -41,3 +41,15 @@ Decisions made during the build (from the execution ledger), each with its cost 
 
 - no rate limit on /api/brief (needs Workers ratelimit binding; low traffic risk).
 - name check only blocks CR/LF, not other control chars (send fails harmlessly).
+
+## Redesign: Gallery Index (feat/gallery-redesign)
+
+- Direction chosen by Dan: "Gallery Index" (Kolkhoze-led), both signature moments (diffusion reveal + pipeline reveal), shoji added mid-round. Cost if wrong: token and section rework.
+- Site is dark for every visitor (no device light/dark switching); light moments come from washi bands. Cost if wrong: re-add a light token set.
+- Typeface Hanken Grotesk (closest free Suisse/Helvetica-style grotesk, picked from a 3-font specimen); Geist Mono only for pipeline data. Cost if wrong: font swap in tokens.css.
+- No accent colour: buttons invert their ground (light pill on dark, dark pill on washi). Cost if wrong: one token.
+- Pipeline values (model, steps, seed, render) are [PLACEHOLDER] demonstration data in each case study file; replace with real numbers. Cost if wrong: misleading claims if left in.
+- Work index row layout (with the hover reveal) applies from 1280px wide with a mouse; narrower screens show each project open with its image and pipeline data. Cost if wrong: breakpoint tweak.
+- Shoji proportions: frames are 1:2 panels (hero and work screens are two-panel 1:1 diptychs). Cost if wrong: aspect-ratio tweaks.
+- Washi texture is a vector SVG (public/textures/washi.svg), not a raster scan. Reviewer note (not blocking): rotating one fibre layer slightly off-axis would read more like kozo paper.
+- Detector advisories left as-is: before/after overlay colours, focus-ring 2px corner, band backlight are documented exceptions in DESIGN.md.
