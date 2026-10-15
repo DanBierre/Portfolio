@@ -1,0 +1,60 @@
+---
+import { site } from '../site.config';
+
+interface Props {
+  variant?: 'primary' | 'secondary' | 'nav';
+  label?: string;
+  class?: string;
+}
+
+const { variant = 'primary', label = 'Book a call', class: className } = Astro.props;
+const calLink = new URL(site.calUrl).pathname.slice(1);
+---
+
+<a
+  href={site.calUrl}
+  class:list={['btn', `btn--${variant}`, className]}
+  data-book-call={calLink}
+  data-umami-event="book_call_click">{label}</a
+>
+
+<script>
+  // Cal.com's embed loads on first intent. Until it has loaded, or if it is blocked,
+  // the link simply opens the booking page.
+  const EMBED = 'https://app.cal.com/embed/embed.js';
+  let ready = false;
+  let requested = false;
+
+  function load() {
+    if (requested) return;
+    requested = true;
+    const w = window as any;
+    // Cal.com loader: queues calls until embed.js arrives.
+    w.Cal =
+      w.Cal ||
+      function (...args: unknown[]) {
+        const cal = w.Cal;
+        if (!cal.loaded) {
+          cal.ns = {};
+          cal.q = cal.q || [];
+          const s = document.head.appendChild(document.createElement('script'));
+          s.src = EMBED;
+          s.addEventListener('load', () => (ready = true));
+          cal.loaded = true;
+        }
+        cal.q.push(args);
+      };
+    w.Cal('init', { origin: 'https://app.cal.com' });
+  }
+
+  for (const el of document.querySelectorAll<HTMLAnchorElement>('[data-book-call]')) {
+    el.addEventListener('pointerenter', load, { once: true });
+    el.addEventListener('focus', load, { once: true });
+    el.addEventListener('touchstart', load, { once: true, passive: true });
+    el.addEventListener('click', (event) => {
+      if (!ready) return;
+      event.preventDefault();
+      (window as any).Cal('modal', { calLink: el.dataset.bookCall, config: { layout: 'month_view' } });
+    });
+  }
+</script>

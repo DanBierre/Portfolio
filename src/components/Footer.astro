@@ -1,0 +1,27 @@
+---
+import { site } from '../site.config';
+import CopyEmail from './CopyEmail.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap footer">
+    <CopyEmail />
+    <a href={site.linkedin}>LinkedIn</a>
+    <p class="footer__legal">© {year} {site.name}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer { border-top: 1px solid var(--border); margin-top: var(--space-2xl); }
+  .footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-m) var(--space-l);
+    padding-block: var(--space-l);
+    font-size: var(--step--1);
+  }
+  .footer__legal { margin-left: auto; color: var(--text-muted); }
+</style>

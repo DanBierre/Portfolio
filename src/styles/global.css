@@ -57,3 +57,25 @@ a:hover { text-decoration-thickness: 2px; }
   padding: var(--space-xs) var(--space-s); background: var(--text); color: var(--bg);
 }
 .skip-link:focus { top: var(--space-xs); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-height: 2.75rem;
+  padding: 0.6em 1.25em;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-weight: 520;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.25s var(--ease-out), color 0.25s var(--ease-out), border-color 0.25s var(--ease-out);
+}
+.btn--primary { background: var(--accent); color: var(--accent-contrast); }
+.btn--secondary { border-color: var(--text); color: var(--text); }
+.btn--nav { min-height: 2.25rem; padding: 0.4em 1em; font-size: var(--step--1); background: var(--accent); color: var(--accent-contrast); }
+.btn--primary:hover, .btn--secondary:hover, .btn--nav:hover { background: var(--text); color: var(--bg); border-color: var(--text); }

@@ -1,0 +1,31 @@
+---
+import { site } from '../site.config';
+import BookCall from './BookCall.astro';
+---
+
+<div class="mobile-cta" data-testid="mobile-cta">
+  <span class="mobile-cta__note">{site.availability}</span>
+  <BookCall variant="primary" />
+</div>
+
+<style>
+  .mobile-cta { display: none; }
+
+  @media (max-width: 47.99em) {
+    .mobile-cta {
+      position: fixed;
+      inset: auto 0 0 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-s);
+      padding: var(--space-xs) var(--gutter) calc(var(--space-xs) + env(safe-area-inset-bottom));
+      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+    }
+    .mobile-cta__note { font-size: var(--step--1); color: var(--text-muted); line-height: 1.3; }
+    :global(body) { padding-bottom: 4.5rem; }
+  }
+</style>

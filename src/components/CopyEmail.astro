@@ -1,0 +1,41 @@
+---
+import { site } from '../site.config';
+---
+
+<span class="copy-email">
+  <a href={`mailto:${site.email}`}>{site.email}</a>
+  <button type="button" class="copy-email__btn" data-copy={site.email} hidden>Copy email</button>
+  <span class="copy-email__status" aria-live="polite"></span>
+</span>
+
+<script>
+  for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
+    btn.hidden = !navigator.clipboard;
+    btn.addEventListener('click', async () => {
+      const status = btn.nextElementSibling as HTMLElement;
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy!);
+        status.textContent = 'Copied';
+      } catch {
+        status.textContent = 'Copy failed. Use the link instead.';
+      }
+      setTimeout(() => (status.textContent = ''), 2500);
+    });
+  }
+</script>
+
+<style>
+  .copy-email { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-s); }
+  .copy-email__btn {
+    padding: 0.2em 0.7em;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: var(--step--1);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .copy-email__btn:hover { border-color: var(--text); color: var(--text); }
+  .copy-email__status { font-size: var(--step--1); color: var(--text-muted); }
+</style>

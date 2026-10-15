@@ -3,6 +3,9 @@ import '@fontsource-variable/geist';
 import '../styles/tokens.css';
 import '../styles/global.css';
 import { site } from '../site.config';
+import Nav from '../components/Nav.astro';
+import MobileCta from '../components/MobileCta.astro';
+import Footer from '../components/Footer.astro';
 
 interface Props {
   title: string;
@@ -21,9 +24,17 @@ const { title, description } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {
+      site.umamiWebsiteId && (
+        <script is:inline defer src="https://cloud.umami.is/script.js" data-website-id={site.umamiWebsiteId} />
+      )
+    }
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
+    <Nav />
     <main id="main"><slot /></main>
+    <Footer />
+    <MobileCta />
   </body>
 </html>

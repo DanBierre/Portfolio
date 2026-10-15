@@ -1,0 +1,80 @@
+---
+import { site } from '../site.config';
+import BookCall from './BookCall.astro';
+
+const links = [
+  { href: '/#work', label: 'Work' },
+  { href: '/#services', label: 'Services' },
+  { href: '/lab', label: 'Lab' },
+  { href: '/#about', label: 'About' },
+];
+---
+
+<header class="site-header">
+  <nav class="wrap nav" aria-label="Main">
+    <a class="nav__brand" href="/">{site.name}</a>
+    <ul class="nav__links" role="list">
+      {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+    </ul>
+    <details class="nav__menu">
+      <summary>Menu</summary>
+      <ul role="list">
+        {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </details>
+    <BookCall variant="nav" class="nav__cta" />
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: saturate(1.4) blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-l);
+    min-height: 3.75rem;
+  }
+  .nav__brand { font-weight: 600; letter-spacing: -0.02em; text-decoration: none; margin-right: auto; }
+  .nav a:not(.btn) { text-decoration: none; }
+  .nav__links { display: flex; gap: var(--space-l); padding: 0; list-style: none; }
+  .nav__links a { color: var(--text-muted); transition: color 0.2s; }
+  .nav__links a:hover { color: var(--text); }
+  .nav__menu { display: none; }
+
+  @media (max-width: 47.99em) {
+    .nav__links,
+    .nav :global(.nav__cta) { display: none; }
+    .nav__menu { display: block; }
+    .nav__menu summary {
+      list-style: none;
+      cursor: pointer;
+      padding: var(--space-xs) 0;
+      color: var(--text-muted);
+    }
+    .nav__menu summary::-webkit-details-marker { display: none; }
+    .nav__menu[open] summary { color: var(--text); }
+    .nav__menu ul {
+      position: absolute;
+      inset: 100% 0 auto 0;
+      display: grid;
+      padding: var(--space-s) var(--gutter) var(--space-l);
+      margin: 0;
+      list-style: none;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav__menu ul a {
+      display: block;
+      padding: var(--space-s) 0;
+      font-size: var(--step-2);
+      letter-spacing: -0.03em;
+    }
+  }
+</style>
