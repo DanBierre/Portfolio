@@ -4,153 +4,437 @@
   "title": "Design System: Dan Bierre",
   "extensions": {
     "colorMeta": {
-      "ground": { "role": "neutral", "displayName": "Cool Paper Ground", "canonical": "#f2f3f4", "darkCounterpart": "ground-dark", "tonalRamp": ["oklch(15% 0.004 106)", "oklch(27% 0.004 106)", "oklch(39% 0.004 106)", "oklch(51% 0.004 106)", "oklch(63% 0.004 106)", "oklch(75% 0.004 106)", "oklch(87% 0.004 106)", "oklch(96.5% 0.004 106)"] },
-      "surface": { "role": "neutral", "displayName": "White Surface", "canonical": "#ffffff", "darkCounterpart": "surface-dark", "tonalRamp": ["oklch(15% 0 0)", "oklch(27% 0 0)", "oklch(39% 0 0)", "oklch(51% 0 0)", "oklch(63% 0 0)", "oklch(75% 0 0)", "oklch(87% 0 0)", "oklch(100% 0 0)"] },
-      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#121314", "darkCounterpart": "ink-dark", "tonalRamp": ["oklch(17% 0.002 106)", "oklch(27% 0.002 106)", "oklch(39% 0.002 106)", "oklch(51% 0.002 106)", "oklch(63% 0.002 106)", "oklch(75% 0.002 106)", "oklch(87% 0.002 106)", "oklch(95% 0.002 106)"] },
-      "ink-muted": { "role": "neutral", "displayName": "Muted Ink", "canonical": "#585b5f", "darkCounterpart": "ink-muted-dark", "tonalRamp": ["oklch(15% 0.006 106)", "oklch(27% 0.006 106)", "oklch(39% 0.006 106)", "oklch(46% 0.006 106)", "oklch(63% 0.006 106)", "oklch(75% 0.006 106)", "oklch(87% 0.006 106)", "oklch(95% 0.006 106)"] },
-      "moss": { "role": "primary", "displayName": "Moss", "canonical": "#3e4a26", "darkCounterpart": "moss-dark", "tonalRamp": ["oklch(20% 0.05 122)", "oklch(28% 0.055 122)", "oklch(38% 0.06 122)", "oklch(50% 0.07 122)", "oklch(62% 0.08 122)", "oklch(74% 0.085 122)", "oklch(82% 0.09 122)", "oklch(94% 0.04 122)"] },
-      "on-moss": { "role": "neutral", "displayName": "On Moss", "canonical": "#ffffff", "darkCounterpart": "on-moss-dark" },
-      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "#d6d9dc", "darkCounterpart": "hairline-dark", "tonalRamp": ["oklch(15% 0.006 106)", "oklch(27% 0.006 106)", "oklch(39% 0.006 106)", "oklch(51% 0.006 106)", "oklch(63% 0.006 106)", "oklch(75% 0.006 106)", "oklch(88% 0.006 106)", "oklch(95% 0.006 106)"] },
-      "error": { "role": "error", "displayName": "Error Red", "canonical": "#a3261b", "darkCounterpart": "error-dark", "tonalRamp": ["oklch(22% 0.09 30)", "oklch(32% 0.12 30)", "oklch(41% 0.15 30)", "oklch(50% 0.16 30)", "oklch(62% 0.16 30)", "oklch(74% 0.13 30)", "oklch(86% 0.07 30)", "oklch(95% 0.03 30)"] },
-      "ground-dark": { "role": "neutral", "displayName": "Night Ground", "canonical": "#12100d", "theme": "dark" },
-      "surface-dark": { "role": "neutral", "displayName": "Night Surface", "canonical": "#1c1a16", "theme": "dark" },
-      "ink-dark": { "role": "neutral", "displayName": "Night Ink", "canonical": "#ecebe6", "theme": "dark" },
-      "ink-muted-dark": { "role": "neutral", "displayName": "Night Muted Ink", "canonical": "#a6a197", "theme": "dark" },
-      "moss-dark": { "role": "primary", "displayName": "Pale Moss", "canonical": "#c2cd92", "theme": "dark" },
-      "on-moss-dark": { "role": "neutral", "displayName": "On Pale Moss", "canonical": "#12100d", "theme": "dark" },
-      "hairline-dark": { "role": "neutral", "displayName": "Night Hairline", "canonical": "#2e2b26", "theme": "dark" },
-      "error-dark": { "role": "error", "displayName": "Night Error", "canonical": "#ff8f80", "theme": "dark" }
+      "ground": {
+        "role": "primary",
+        "displayName": "Gallery Night",
+        "canonical": "#141414",
+        "tonalRamp": [
+          "oklch(15% 0.002 90)",
+          "oklch(25% 0.002 90)",
+          "oklch(37% 0.002 90)",
+          "oklch(49% 0.002 90)",
+          "oklch(61% 0.002 90)",
+          "oklch(73% 0.002 90)",
+          "oklch(85% 0.002 90)",
+          "oklch(95% 0.002 90)"
+        ]
+      },
+      "ink-light": {
+        "role": "primary",
+        "displayName": "Bone Ink",
+        "canonical": "#ecebe7",
+        "tonalRamp": [
+          "oklch(15% 0.005 95)",
+          "oklch(25% 0.005 95)",
+          "oklch(37% 0.005 95)",
+          "oklch(49% 0.005 95)",
+          "oklch(61% 0.005 95)",
+          "oklch(73% 0.005 95)",
+          "oklch(85% 0.005 95)",
+          "oklch(95% 0.005 95)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Lifted Night",
+        "canonical": "#1e1e1d",
+        "tonalRamp": [
+          "oklch(15% 0.002 100)",
+          "oklch(25% 0.002 100)",
+          "oklch(37% 0.002 100)",
+          "oklch(49% 0.002 100)",
+          "oklch(61% 0.002 100)",
+          "oklch(73% 0.002 100)",
+          "oklch(85% 0.002 100)",
+          "oklch(95% 0.002 100)"
+        ]
+      },
+      "text-muted": {
+        "role": "neutral",
+        "displayName": "Ash Label",
+        "canonical": "#9d9b95",
+        "tonalRamp": [
+          "oklch(15% 0.008 95)",
+          "oklch(25% 0.008 95)",
+          "oklch(37% 0.008 95)",
+          "oklch(49% 0.008 95)",
+          "oklch(61% 0.008 95)",
+          "oklch(73% 0.008 95)",
+          "oklch(85% 0.008 95)",
+          "oklch(95% 0.008 95)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Hairline Night",
+        "canonical": "#2e2e2c",
+        "tonalRamp": [
+          "oklch(15% 0.003 100)",
+          "oklch(25% 0.003 100)",
+          "oklch(37% 0.003 100)",
+          "oklch(49% 0.003 100)",
+          "oklch(61% 0.003 100)",
+          "oklch(73% 0.003 100)",
+          "oklch(85% 0.003 100)",
+          "oklch(95% 0.003 100)"
+        ]
+      },
+      "lattice": {
+        "role": "neutral",
+        "displayName": "Kumiko Ghost",
+        "canonical": "rgb(236 235 231 / 0.06)"
+      },
+      "error": {
+        "role": "error",
+        "displayName": "Signal Coral",
+        "canonical": "#ff8f80",
+        "tonalRamp": [
+          "oklch(15% 0.14 30)",
+          "oklch(25% 0.14 30)",
+          "oklch(37% 0.14 30)",
+          "oklch(49% 0.14 30)",
+          "oklch(61% 0.14 30)",
+          "oklch(73% 0.14 30)",
+          "oklch(85% 0.14 30)",
+          "oklch(95% 0.14 30)"
+        ]
+      },
+      "washi": {
+        "role": "neutral",
+        "displayName": "Backlit Washi",
+        "canonical": "#d8d7d2",
+        "tonalRamp": [
+          "oklch(15% 0.006 100)",
+          "oklch(25% 0.006 100)",
+          "oklch(37% 0.006 100)",
+          "oklch(49% 0.006 100)",
+          "oklch(61% 0.006 100)",
+          "oklch(73% 0.006 100)",
+          "oklch(85% 0.006 100)",
+          "oklch(95% 0.006 100)"
+        ],
+        "scope": ".band (redefines the same CSS custom property)"
+      },
+      "washi-surface": {
+        "role": "neutral",
+        "displayName": "Paper Surface",
+        "canonical": "#ebe8e1",
+        "tonalRamp": [
+          "oklch(15% 0.01 90)",
+          "oklch(25% 0.01 90)",
+          "oklch(37% 0.01 90)",
+          "oklch(49% 0.01 90)",
+          "oklch(61% 0.01 90)",
+          "oklch(73% 0.01 90)",
+          "oklch(85% 0.01 90)",
+          "oklch(95% 0.01 90)"
+        ],
+        "scope": ".band (redefines the same CSS custom property)"
+      },
+      "washi-muted": {
+        "role": "neutral",
+        "displayName": "Sumi Muted",
+        "canonical": "#4a4843",
+        "tonalRamp": [
+          "oklch(15% 0.008 85)",
+          "oklch(25% 0.008 85)",
+          "oklch(37% 0.008 85)",
+          "oklch(49% 0.008 85)",
+          "oklch(61% 0.008 85)",
+          "oklch(73% 0.008 85)",
+          "oklch(85% 0.008 85)",
+          "oklch(95% 0.008 85)"
+        ],
+        "scope": ".band (redefines the same CSS custom property)"
+      },
+      "washi-border": {
+        "role": "neutral",
+        "displayName": "Paper Hairline",
+        "canonical": "#b9b5ab",
+        "tonalRamp": [
+          "oklch(15% 0.012 90)",
+          "oklch(25% 0.012 90)",
+          "oklch(37% 0.012 90)",
+          "oklch(49% 0.012 90)",
+          "oklch(61% 0.012 90)",
+          "oklch(73% 0.012 90)",
+          "oklch(85% 0.012 90)",
+          "oklch(95% 0.012 90)"
+        ],
+        "scope": ".band (redefines the same CSS custom property)"
+      },
+      "washi-lattice": {
+        "role": "neutral",
+        "displayName": "Paper Kumiko",
+        "canonical": "rgb(20 20 20 / 0.07)",
+        "scope": ".band (redefines the same CSS custom property)"
+      },
+      "washi-error": {
+        "role": "error",
+        "displayName": "Oxide",
+        "canonical": "#8f1f15",
+        "tonalRamp": [
+          "oklch(15% 0.14 30)",
+          "oklch(25% 0.14 30)",
+          "oklch(37% 0.14 30)",
+          "oklch(49% 0.14 30)",
+          "oklch(61% 0.14 30)",
+          "oklch(73% 0.14 30)",
+          "oklch(85% 0.14 30)",
+          "oklch(95% 0.14 30)"
+        ],
+        "scope": ".band (redefines the same CSS custom property)"
+      }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "Hero headline, contact closer, case-study title (h1, --step-5)." },
-      "headline": { "displayName": "Headline", "purpose": "Section headings (h2, --step-4)." },
-      "title-large": { "displayName": "Title Large", "purpose": "Service column titles, case prose h2, next-case link (--step-3)." },
-      "title": { "displayName": "Title", "purpose": "Work card and Lab titles, case outcome, pull quote (--step-2)." },
-      "lead": { "displayName": "Lead", "purpose": "Hero sub-line, about bio, proof result, 404/thanks copy (--step-1)." },
-      "body": { "displayName": "Body", "purpose": "Running text, max 65ch (--step-0)." },
-      "label": { "displayName": "Label", "purpose": "Metadata, captions, form labels, footer, nav pill (--step--1). Sentence case." }
+      "statement": {
+        "displayName": "Statement",
+        "purpose": "Hero sentence only, ragged indented lines."
+      },
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page h1s."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section h2s, work-row titles, mobile menu links."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "h3s; service and process item heads."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text at a 62ch measure."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Lowercase muted second voice: metadata, end labels, nav, captions. Never below 12px."
+      },
+      "data": {
+        "displayName": "Data",
+        "purpose": "Geist Mono, pipeline values only."
+      }
     },
     "shadows": [
-      { "name": "handle-divider", "value": "0 0 12px rgb(0 0 0 / 0.35)", "purpose": "Before/after divider line, legibility over imagery only." },
-      { "name": "handle-knob", "value": "0 2px 12px rgb(0 0 0 / 0.3)", "purpose": "Before/after drag knob, legibility over imagery only." }
+      {
+        "name": "kumiko-frame",
+        "value": "inset 0 0 0 1px rgb(236 235 231 / 0.22)",
+        "purpose": "Hairline frame around the hero kumiko overlay; a stroke, not elevation. The system has no drop shadows."
+      }
     ],
     "motion": [
-      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "House easing for every transition and animation." },
-      { "name": "button-state", "value": "0.25s ease-out (background, color, border)", "purpose": "Button hover fill to Ink." },
-      { "name": "hero-rise", "value": "1.1s ease-out; from opacity 0, translateY(0.35em), blur(8px); stagger 0/90/220/320ms", "purpose": "The one authored moment: hero headline lines, sub-line, actions." },
-      { "name": "work-unveil", "value": "scroll-driven view(); clip-path inset(8% 4% 8% 4% round 4px) + scale(1.04) to full frame; range entry 0% to cover 35%", "purpose": "Work card media entering the viewport." },
-      { "name": "media-hover", "value": "transform scale(1.02) over 0.9s ease-out", "purpose": "Work card media on hover." },
-      { "name": "view-transition", "value": "root crossfade 250ms; groups 450ms ease-out", "purpose": "Cross-document navigation; work cover morphs into case header." },
-      { "name": "reduced-motion", "value": "all animation inside prefers-reduced-motion: no-preference; view transitions disabled on reduce", "purpose": "Accessibility gate." }
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "State transitions, fades, the develop reveal."
+      },
+      {
+        "name": "ease-slide",
+        "value": "cubic-bezier(0.7, 0, 0.2, 1)",
+        "purpose": "Shoji panel slides, screen-open, view-transition morphs."
+      },
+      {
+        "name": "develop",
+        "value": "1.6s ease-out; blur(18px) and opacity 0.15 to crisp; SVG displacement scale 90 to 0",
+        "purpose": "Hero diffusion reveal; note and actions follow at 700ms over 1.2s."
+      },
+      {
+        "name": "screen-open",
+        "value": "1.4s ease-slide 200ms; clip-path inset(0 50% 0 50%) to full",
+        "purpose": "Hero footage slides open once from the centre."
+      },
+      {
+        "name": "shoji-panels",
+        "value": "transform 0.9s ease-slide 0.15s; translateX(-101%) / translateX(101%)",
+        "purpose": "Work-row pipeline reveal."
+      },
+      {
+        "name": "button",
+        "value": "0.25s ease-out on background, colour, border",
+        "purpose": "Pill inversion on hover."
+      },
+      {
+        "name": "view-transition",
+        "value": "root crossfade 250ms; groups 500ms ease-slide",
+        "purpose": "Cross-document navigation; the work thumbnail morphs into the case-study cover."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "keyframes gated by prefers-reduced-motion: no-preference; panels hidden and transitions removed under reduce",
+        "purpose": "Content is visible by default; motion only enhances."
+      }
     ],
     "breakpoints": [
-      { "name": "form-row", "value": "40em" },
-      { "name": "md", "value": "48em" },
-      { "name": "lg", "value": "64em" },
-      { "name": "xl", "value": "72em" },
-      { "name": "page-max", "value": "90rem" }
+      {
+        "name": "mobile-max",
+        "value": "47.99em"
+      },
+      {
+        "name": "index-row",
+        "value": "80em, with (hover: hover)"
+      }
     ],
-    "assetProvenance": [
-      { "path": "src/assets/**/*.jpg", "source": "generated", "method": "sharp-rendered gradient placeholders", "status": "placeholder, replace before launch" },
-      { "path": "public/media/*.webm", "source": "generated", "method": "Playwright-recorded animated gradients", "status": "placeholder, replace before launch" },
-      { "path": "public/og-default.png", "source": "generated", "method": "Playwright screenshot of the headline set in Geist", "status": "placeholder, replace before launch" }
-    ]
+    "textures": [
+      {
+        "name": "washi",
+        "value": "/textures/washi.svg",
+        "purpose": "Vector feTurbulence fibres for washi bands; no raster."
+      }
+    ],
+    "literalExceptions": [
+      {
+        "where": "BeforeAfter",
+        "value": "#fff, rgb(0 0 0 / 0.25), rgb(0 0 0 / 0.55)",
+        "purpose": "Handle and labels legible over arbitrary imagery."
+      },
+      {
+        "where": "Hero divide",
+        "value": "rgb(20 20 20 / 0.85)",
+        "purpose": "Centre line splitting the screen into two shoji panels over footage."
+      },
+      {
+        "where": "Hero kumiko and toggle",
+        "value": "rgb(236 235 231 / 0.22), rgb(20 20 20 / 0.7), rgb(236 235 231 / 0.3)",
+        "purpose": "Lattice and pause control legible over footage."
+      }
+    ],
+    "provenance": "Rasters in src/assets/** and public/og-default.png carry embedded provenance (sharp placeholders; the OG card is a Playwright render). public/media/*.webm are Playwright-recorded placeholder loops."
   },
   "components": [
     {
-      "name": "Primary Button",
+      "name": "Primary Pill",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Moss pill for the contact path (Book a call, Send brief).",
-      "html": "<a class=\"ds-btn ds-btn-primary\" href=\"#\">Book a call</a>",
-      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5em; min-height: 2.75rem; padding: 0.6em 1.25em; border: 1px solid transparent; border-radius: 999px; font-family: var(--font-body); font-weight: 520; line-height: 1.2; text-decoration: none; white-space: nowrap; cursor: pointer; transition: background-color 0.25s var(--ease-out), color 0.25s var(--ease-out), border-color 0.25s var(--ease-out); } .ds-btn-primary { background: var(--accent); color: var(--accent-contrast); } .ds-btn-primary:hover { background: var(--text); color: var(--bg); border-color: var(--text); } .ds-btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }"
+      "description": "Main action; inverts its ground (light on night, dark on washi).",
+      "html": "<div class=\"ds-night\"><a class=\"ds-btn ds-btn-primary\" href=\"#\">book a call</a></div>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;min-height:2.75rem;padding:.6em 1.35em;border:1px solid transparent;border-radius:999px;font-family:var(--font-body);font-weight:500;line-height:1.2;text-transform:lowercase;text-decoration:none;cursor:pointer;transition:background-color .25s var(--ease-out),color .25s var(--ease-out),border-color .25s var(--ease-out)}.ds-btn:focus-visible{outline:2px solid currentColor;outline-offset:3px}.ds-night{background:#141414;color:#ecebe7;padding:24px}.ds-btn-primary{background:#ecebe7;color:#141414}.ds-btn-primary:hover{background:transparent;color:#ecebe7;border-color:#ecebe7}"
     },
     {
-      "name": "Secondary Button",
+      "name": "Secondary Pill",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Ink-outlined pill for alternate paths (See the work).",
-      "html": "<a class=\"ds-btn-secondary\" href=\"#\">See the work</a>",
-      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.6em 1.25em; border: 1px solid var(--text); border-radius: 999px; background: transparent; color: var(--text); font-family: var(--font-body); font-weight: 520; line-height: 1.2; text-decoration: none; transition: background-color 0.25s var(--ease-out), color 0.25s var(--ease-out); } .ds-btn-secondary:hover { background: var(--text); color: var(--bg); } .ds-btn-secondary:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }"
+      "description": "Outline pill in the text colour; fills on hover.",
+      "html": "<div class=\"ds-night\"><a class=\"ds-btn ds-btn-secondary\" href=\"#\">see the work</a></div>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;min-height:2.75rem;padding:.6em 1.35em;border:1px solid transparent;border-radius:999px;font-family:var(--font-body);font-weight:500;line-height:1.2;text-transform:lowercase;text-decoration:none;cursor:pointer;transition:background-color .25s var(--ease-out),color .25s var(--ease-out),border-color .25s var(--ease-out)}.ds-btn:focus-visible{outline:2px solid currentColor;outline-offset:3px}.ds-night{background:#141414;color:#ecebe7;padding:24px}.ds-btn-secondary{border-color:#ecebe7;color:#ecebe7}.ds-btn-secondary:hover{background:#ecebe7;color:#141414}"
+    },
+    {
+      "name": "Pill on Washi",
+      "kind": "button",
+      "refersTo": "button-primary-washi",
+      "description": "Inside a band the tokens flip: dark pill on backlit paper.",
+      "html": "<div class=\"ds-washi\"><a class=\"ds-btn ds-btn-w\" href=\"#\">book a call</a></div>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;min-height:2.75rem;padding:.6em 1.35em;border:1px solid transparent;border-radius:999px;font-family:var(--font-body);font-weight:500;line-height:1.2;text-transform:lowercase;text-decoration:none;cursor:pointer;transition:background-color .25s var(--ease-out),color .25s var(--ease-out),border-color .25s var(--ease-out)}.ds-btn:focus-visible{outline:2px solid currentColor;outline-offset:3px}.ds-washi{color:#141414;background-color:#d8d7d2;background-image:radial-gradient(ellipse 70% 60% at 50% 45%,rgb(255 255 255/.16),transparent 70%);padding:24px}.ds-btn-w{background:#141414;color:#ecebe7}.ds-btn-w:hover{background:transparent;color:#141414;border-color:#141414}"
     },
     {
       "name": "Text Field",
       "kind": "input",
       "refersTo": "input",
-      "description": "Brief form field with label above.",
-      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Email</span><input class=\"ds-input\" type=\"email\" placeholder=\"you@studio.com\"></label>",
-      "css": ".ds-field { display: grid; gap: 0.35rem; font-family: var(--font-body); color: var(--text); } .ds-field-label { font-size: var(--step--1); font-weight: 520; } .ds-input { width: 100%; min-height: 2.75rem; padding: 0.6em 0.8em; font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 6px; transition: border-color 0.2s; } .ds-input::placeholder { color: var(--text-muted); } .ds-input:hover { border-color: var(--text-muted); } .ds-input:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; border-color: var(--text); } .ds-input[aria-invalid='true'] { border-color: var(--error); }"
+      "description": "Surface fill, hairline stroke, 6px corner; label at label size.",
+      "html": "<div class=\"ds-night\"><label class=\"ds-field\"><span>Email</span><input class=\"ds-input\" type=\"email\" placeholder=\"you@studio.com\"></label></div>",
+      "css": ".ds-night{background:#141414;color:#ecebe7;padding:24px}.ds-field{display:grid;gap:.35rem;font-family:var(--font-body)}.ds-field span{font-size:.8rem;font-weight:520}.ds-input{min-height:2.75rem;padding:.6em .8em;background:#1e1e1d;color:#ecebe7;border:1px solid #2e2e2c;border-radius:6px;font:inherit;transition:border-color .2s}.ds-input:hover{border-color:#9d9b95}.ds-input:focus-visible{outline:2px solid #ecebe7;outline-offset:1px;border-color:#ecebe7}.ds-input[aria-invalid=true]{border-color:#ff8f80}"
     },
     {
-      "name": "Navigation Bar",
+      "name": "Index Nav",
       "kind": "nav",
       "refersTo": "button-nav",
-      "description": "Sticky hairline row: name, muted links, Moss pill pinned right.",
-      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-brand\" href=\"#\">Dan Bierre</a><a class=\"ds-nav-link\" href=\"#\">Work</a><a class=\"ds-nav-link\" href=\"#\">Services</a><a class=\"ds-nav-link\" href=\"#\">Lab</a><a class=\"ds-nav-cta\" href=\"#\">Book a call</a></nav>",
-      "css": ".ds-nav { display: flex; align-items: center; gap: 2rem; min-height: 3.75rem; padding-inline: var(--gutter); font-family: var(--font-body); background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--border); } .ds-nav-brand { font-weight: 600; letter-spacing: -0.02em; text-decoration: none; color: var(--text); margin-right: auto; } .ds-nav-link { color: var(--text-muted); text-decoration: none; transition: color 0.2s; } .ds-nav-link:hover { color: var(--text); } .ds-nav-cta { display: inline-flex; align-items: center; min-height: 2.25rem; padding: 0.4em 1em; font-size: var(--step--1); font-weight: 520; border-radius: 999px; background: var(--accent); color: var(--accent-contrast); text-decoration: none; transition: background-color 0.25s var(--ease-out), color 0.25s var(--ease-out); } .ds-nav-cta:hover { background: var(--text); color: var(--bg); } .ds-nav a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 2px; }"
+      "description": "Lowercase index with bracket counts and a solid nav pill.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-brand\" href=\"#\">dan bierre</a><a href=\"#\">work<sup>[2]</sup></a><a href=\"#\">services</a><a href=\"#\">lab<sup>[3]</sup></a><a class=\"ds-navpill\" href=\"#\">book a call</a></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;gap:2rem;background:#141414;padding:16px 24px;font-family:var(--font-body)}.ds-nav a{color:#9d9b95;text-decoration:none;transition:color .2s}.ds-nav a:hover{color:#ecebe7}.ds-nav a:focus-visible{outline:2px solid #ecebe7;outline-offset:3px}.ds-nav sup{font-size:.6em}.ds-nav .ds-brand{color:#ecebe7;font-weight:500;letter-spacing:-.02em;margin-right:auto}.ds-nav .ds-navpill{background:#ecebe7;color:#141414;border:1px solid transparent;border-radius:999px;padding:.35em 1em;font-size:.8rem;font-weight:500}.ds-nav .ds-navpill:hover{background:transparent;color:#ecebe7;border-color:#ecebe7}"
     },
     {
-      "name": "Utility Pill",
-      "kind": "chip",
-      "refersTo": "chip-utility",
-      "description": "Small hairline pill for secondary utilities (Copy email).",
-      "html": "<button class=\"ds-chip\" type=\"button\">Copy email</button>",
-      "css": ".ds-chip { padding: 0.2em 0.7em; background: none; border: 1px solid var(--border); border-radius: 999px; font-family: var(--font-body); font-size: var(--step--1); color: var(--text-muted); cursor: pointer; transition: border-color 0.2s, color 0.2s; } .ds-chip:hover { border-color: var(--text); color: var(--text); } .ds-chip:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }"
-    },
-    {
-      "name": "Status Badge",
-      "kind": "chip",
-      "description": "Moss-outlined pill marking Lab item status.",
-      "html": "<span class=\"ds-badge\">In progress</span>",
-      "css": ".ds-badge { display: inline-block; padding: 0.15em 0.6em; border: 1px solid var(--accent); border-radius: 999px; font-family: var(--font-body); font-size: var(--step--1); color: var(--accent); }"
-    },
-    {
-      "name": "Work Card",
-      "kind": "card",
-      "refersTo": "work-media",
-      "description": "Signature: 16:10 media on bare ground with title and meta beneath; media scales on hover. No card chrome.",
-      "html": "<a class=\"ds-work\" href=\"#\"><div class=\"ds-work-media\"><div class=\"ds-work-img\"></div></div><div class=\"ds-work-meta\"><h3 class=\"ds-work-title\">Generative campaign for a global sports brand</h3><p class=\"ds-work-context\">Creative agency, sportswear client</p><p>40,000 personalised posters generated on launch day</p></div></a>",
-      "css": ".ds-work { display: grid; gap: var(--space-m); text-decoration: none; color: var(--text); font-family: var(--font-body); } .ds-work-media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 4px; background: var(--surface); } .ds-work-img { position: absolute; inset: 0; background: var(--text-muted); transition: transform 0.9s var(--ease-out); } .ds-work:hover .ds-work-img { transform: scale(1.02); } .ds-work-meta { display: grid; gap: var(--space-xs); } .ds-work-title { font-family: var(--font-display); font-size: var(--step-2); font-weight: 560; letter-spacing: -0.03em; line-height: 1.2; margin: 0; } .ds-work-context { color: var(--text-muted); font-size: var(--step--1); margin: 0; } .ds-work:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }"
-    },
-    {
-      "name": "Ruled Column",
+      "name": "Hairline With End Labels",
       "kind": "custom",
-      "description": "Structural device: an Ink rule heads a column, Hairline rules separate its rows (services, contact paths).",
-      "html": "<div class=\"ds-col\"><h3 class=\"ds-col-title\">Experiences</h3><p class=\"ds-col-intro\">For your clients: AI they can see, touch and share.</p><ul class=\"ds-col-list\"><li>Campaign sites with generative features built in</li><li>AI-powered installations and live event experiences</li></ul></div>",
-      "css": ".ds-col { border-top: 1px solid var(--text); padding-top: var(--space-m); font-family: var(--font-body); color: var(--text); } .ds-col-title { font-family: var(--font-display); font-size: var(--step-3); font-weight: 560; letter-spacing: -0.035em; line-height: 1.05; margin: 0; } .ds-col-intro { margin: var(--space-s) 0 var(--space-l); color: var(--text-muted); } .ds-col-list { padding: 0; margin: 0; list-style: none; } .ds-col-list li { padding-block: var(--space-s); border-bottom: 1px solid var(--border); }"
+      "refersTo": "border",
+      "description": "Vecna rule: 1px rules top and bottom, lowercase labels at each end.",
+      "html": "<div class=\"ds-rule\"><span class=\"ds-lbl\">proof</span><p>Cut a 3-week asset run to 2 days.</p><span class=\"ds-lbl\">for agencies</span></div>",
+      "css": ".ds-rule{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:1.25rem;padding:1.25rem 24px;border-block:1px solid #2e2e2c;background:#141414;color:#ecebe7;font-family:var(--font-body)}.ds-rule p{text-align:center;margin:0}.ds-lbl{font-size:.8rem;font-weight:450;letter-spacing:.01em;text-transform:lowercase;color:#9d9b95}"
+    },
+    {
+      "name": "Work Row With Shoji Reveal",
+      "kind": "card",
+      "refersTo": "work-row-reveal",
+      "description": "Index row; on hover or focus two 1:2 panels slide apart over the piece, beside its pipeline readout.",
+      "html": "<a class=\"ds-row\" href=\"#\"><span class=\"ds-n\">[01]</span><span class=\"ds-t\">Generative campaign</span><span class=\"ds-scr\"><i class=\"ds-p ds-pl\"></i><i class=\"ds-p ds-pr\"></i></span><dl class=\"ds-pipe\"><dt>model</dt><dd>sdxl</dd><dt>seed</dt><dd>882904</dd></dl></a>",
+      "css": ".ds-row{display:grid;grid-template-columns:3rem 1fr 8rem 8rem;align-items:center;gap:1.25rem;padding:1.25rem 24px;border-block:1px solid #2e2e2c;background:#141414;color:#ecebe7;text-decoration:none;font-family:var(--font-body)}.ds-row:focus-visible{outline:2px solid #ecebe7;outline-offset:3px}.ds-n{font-size:.8rem;color:#9d9b95}.ds-t{font-size:2.2rem;font-weight:440;letter-spacing:-.05em;line-height:.95}.ds-scr{position:relative;aspect-ratio:1/1;overflow:hidden;background:linear-gradient(135deg,#6a7a8a,#c08a5a)}.ds-p{position:absolute;top:0;bottom:0;width:50%;background:#1e1e1d;transition:transform .9s cubic-bezier(.7,0,.2,1) .15s}.ds-pl{left:0;border-right:1px solid #2e2e2c}.ds-pr{right:0}.ds-row:hover .ds-pl,.ds-row:focus-visible .ds-pl{transform:translateX(-101%)}.ds-row:hover .ds-pr,.ds-row:focus-visible .ds-pr{transform:translateX(101%)}.ds-pipe{display:grid;grid-template-columns:1fr 1fr;gap:.25rem .75rem;font-size:.8rem;margin:0}.ds-pipe dt{color:#9d9b95;text-transform:lowercase}.ds-pipe dd{margin:0;font-family:'Geist Mono Variable',ui-monospace,monospace}"
+    },
+    {
+      "name": "Washi Band With Lattice",
+      "kind": "custom",
+      "refersTo": "washi",
+      "description": "Backlit paper section with kumiko hairlines; tokens flip inside.",
+      "html": "<section class=\"ds-band\"><h2>What I do<span class=\"ds-count\">2</span></h2></section>",
+      "css": ".ds-band{position:relative;padding:48px 24px;color:#141414;background-color:#d8d7d2;background-image:linear-gradient(to right,rgb(20 20 20/.07) 1px,transparent 1px),linear-gradient(to bottom,rgb(20 20 20/.07) 1px,transparent 1px),radial-gradient(ellipse 70% 60% at 50% 45%,rgb(255 255 255/.16),transparent 70%);background-size:96px 192px,96px 192px,auto;font-family:var(--font-body)}.ds-band h2{font-size:3rem;font-weight:440;letter-spacing:-.045em;line-height:.95;margin:0}.ds-count{font-size:.32em;font-weight:450;vertical-align:super;margin-left:.15em}.ds-count::before{content:'['}.ds-count::after{content:']'}"
     }
   ],
   "narrative": {
-    "northStar": "The Work Is the Page",
-    "overview": "A classic high-end studio portfolio, played straight. A neutral ground (cool off-white in light, warm near-black in dark), one variable grotesk set at extreme scale contrast, full-bleed project media, and almost no chrome. The type and the work carry everything; the interface recedes into hairlines and muted grey.\n\nDensity is low and vertical: sections are separated by very large air (5–10rem), not by containers. Structure comes from 1px rules above columns and between list rows, never from cards, fills, or shadows. One muted moss accent marks the path to contact (primary buttons, focus, selection) and nothing else.\n\nMotion is a single authored moment (the hero headline rising into place), a scroll-driven unveil on work imagery, and a cross-document view transition where the work cover morphs into the case-study header. Everything is visible without motion and without JavaScript.",
+    "northStar": "The Screened Gallery Index",
+    "overview": "A collectible-design catalogue for generative work, read through shoji. The ground is near-black and constant for every visitor (the site is dark regardless of device theme). Flat light-grey bands interrupt it as backlit washi: paper with fibre texture and a soft light behind it. Over everything runs a kumiko lattice of faint hairlines at a fixed module, so the page's structure is visible as the grid of a screen.\n\nType does the composing. One neo-grotesk, Hanken Grotesk, runs from a giant ragged statement at the top of the page down to 12-13px lowercase labels, with almost nothing in between: the contrast in scale is the hierarchy. Counts sit in superscript brackets, hairlines carry a label at each end, buttons are pills, and Geist Mono appears only where the pipeline data is printed. There is no accent colour. Colour comes only from the work, which stays monochrome until hovered or focused.\n\nMotion is about revealing things. The hero headline develops out of displacement noise as if seen through paper, the hero footage slides open like a shoji door, and each work row opens a two-panel screen showing the piece and how it was made. Everything is visible by default, and every motion is skipped under reduced motion.",
     "keyCharacteristics": [
-      "One family (Geist Variable), weight 560 for headings, extreme size jump from body to display.",
-      "Neutral ground, one moss accent, light and dark themes both WCAG AA.",
-      "Hairline rules as the only structure; no cards, no shadows on surfaces.",
-      "Full-bleed 16:10 work media with a 4px corner; pill-shaped actions.",
-      "Motion only enhances, always gated by `prefers-reduced-motion`."
+      "Near-black ground (#141414) with washi bands (#d8d7d2); ink is only light or dark, no accent.",
+      "One family at extreme scale contrast: a 9.5rem statement against 12-13px lowercase labels.",
+      "Kumiko lattice hairlines at the `--kumiko` module (1:2 cells) as visible page structure.",
+      "Pills for actions, hairlines for structure, 1:1 frames made of two 1:2 shoji panels for media.",
+      "Work is grayscale at rest and turns to colour on hover or focus."
     ],
     "rules": [
-      { "name": "The One Voice Rule", "body": "Moss appears only on the contact path, focus, and selection. It is never a background panel, never decoration, never a text-link colour.", "section": "colors" },
-      { "name": "The Two Rules Rule", "body": "A divider is either Ink (heading a column of content: services, contact paths, case quote) or Hairline (separating rows and chrome). Nothing in between.", "section": "colors" },
-      { "name": "The No-Shouting Rule", "body": "No uppercase, no letter-spaced small labels. Small text is sentence case at the label size and muted grey.", "section": "typography" },
-      { "name": "The Negative Tracking Rule", "body": "Tracking tightens as size grows: -0.015em at lead, -0.03em at title, -0.035em at headline, -0.04em at display. Body is untracked.", "section": "typography" },
-      { "name": "The Flat Ground Rule", "body": "No shadow on any card, button, field, or panel. The only shadow in the system belongs to a control floating on top of an image.", "section": "elevation" }
+      {
+        "name": "The Colour Comes From the Work Rule",
+        "body": "The interface has no accent hue. Thumbnails and footage are grayscale at rest (`filter: grayscale(1)`) and turn to colour on hover or focus; colour on screen is always the work itself.",
+        "section": "colors"
+      },
+      {
+        "name": "The Scoped Inversion Rule",
+        "body": "Washi bands invert by redefining tokens (`--bg`, `--text`, `--btn-bg`, ...) on `.band`, never by adding per-component overrides. Buttons always invert against their ground: a light pill on night, a dark pill on paper.",
+        "section": "colors"
+      },
+      {
+        "name": "The Documented Overlay Exception",
+        "body": "Three literal colours are sanctioned, each for legibility over imagery, not as palette: the before/after slider's handle and labels (`#fff` with `rgb(0 0 0 / 0.25)` and `rgb(0 0 0 / 0.55)`), and the hero screen's centre divide (`rgb(20 20 20 / 0.85)`). The hero's kumiko overlay locally raises `--lattice` to `rgb(236 235 231 / 0.22)` with a matching 1px inset frame, and the pause toggle sits on `rgb(20 20 20 / 0.7)`. These are sanctioned exceptions, not drift.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "Text is either very large or label-sized. Avoid filling the middle of the scale; when in doubt, go bigger or drop to a label.",
+        "section": "typography"
+      },
+      {
+        "name": "The Label Floor Rule",
+        "body": "Labels are lowercase, muted, and never below 12px (the `--step--1` minimum, 0.78rem).",
+        "section": "typography"
+      },
+      {
+        "name": "The Bracket Count Rule",
+        "body": "Counts appear as superscript brackets after a heading or nav link (`.count`, 0.32em, `[n]`). They count real things (case studies, experiments, process steps).",
+        "section": "typography"
+      },
+      {
+        "name": "The Mono Is Data Rule",
+        "body": "Geist Mono is reserved for machine values in the pipeline readout. Headings, labels, and UI chrome never use it.",
+        "section": "typography"
+      },
+      {
+        "name": "The Backlight Not Shadow Rule",
+        "body": "Depth comes from light behind paper and screens sliding apart. Don't add drop shadows to cards, buttons, or popovers.",
+        "section": "elevation"
+      }
     ],
     "dos": [
-      "**Do** set headings in Geist Variable at weight 560 with the negative tracking ladder (-0.015em to -0.04em).",
-      "**Do** separate content with 1px rules (Ink above a column, Hairline between rows) and 5–10rem of section air.",
-      "**Do** keep Moss for primary actions, focus (3px outline, 3px offset) and selection.",
-      "**Do** frame work media at 16:10 (4:3 for Lab, 4:5 for the portrait) with a 4px corner.",
-      "**Do** gate every animation behind `prefers-reduced-motion: no-preference` and use the house ease-out.",
-      "**Do** verify both themes: every colour token has a dark counterpart."
+      "Do take every colour from tokens; inside a washi band, rely on the `.band` scope to flip them.",
+      "Do keep work imagery grayscale at rest and in colour on hover or focus.",
+      "Do set labels lowercase at `--step--1` or larger, in `--text-muted`.",
+      "Do use bracketed superscript counts only for real counts.",
+      "Do size media frames on the shoji module: 1:1 frames made of two 1:2 panels, with the lattice at `--kumiko`.",
+      "Do gate every animation behind `prefers-reduced-motion: no-preference`, with content visible by default.",
+      "Do give any autoplaying footage a visible pause control."
     ],
     "donts": [
-      "**Don't** put content in cards, filled panels, or anything with a drop shadow; the only shadow is the before/after handle over imagery.",
-      "**Don't** use uppercase or letter-spaced labels above headings; small text stays sentence case and muted.",
-      "**Don't** introduce a second typeface or a second accent colour.",
-      "**Don't** use decorative gradients or glow; the hero scrim exists only to dissolve media into the ground.",
-      "**Don't** treat the generated gradient placeholder rasters as an imagery style to imitate."
+      "Don't introduce an accent hue; colour belongs to the work.",
+      "Don't add drop shadows; depth comes from backlight and sliding panels.",
+      "Don't use Geist Mono outside pipeline data.",
+      "Don't fill the middle of the type scale with mid-size headings that weaken the contrast in scale.",
+      "Don't let a reveal cover titles or meta; it opens in the empty track.",
+      "Don't use colour literals outside the documented overlay exception."
     ]
   }
 }

@@ -1,68 +1,62 @@
 ---
 name: Dan Bierre
-description: The AI half of your creative team. A classic studio portfolio, played straight.
+description: The AI half of your creative team. A gallery index for generative work, screened like shoji.
 colors:
-  ground: "#f2f3f4"
-  surface: "#ffffff"
-  ink: "#121314"
-  ink-muted: "#585b5f"
-  moss: "#3e4a26"
-  on-moss: "#ffffff"
-  hairline: "#d6d9dc"
-  error: "#a3261b"
-  ground-dark: "#12100d"
-  surface-dark: "#1c1a16"
-  ink-dark: "#ecebe6"
-  ink-muted-dark: "#a6a197"
-  moss-dark: "#c2cd92"
-  on-moss-dark: "#12100d"
-  hairline-dark: "#2e2b26"
-  error-dark: "#ff8f80"
+  ground: "#141414"
+  ink-light: "#ecebe7"
+  surface: "#1e1e1d"
+  text-muted: "#9d9b95"
+  border: "#2e2e2c"
+  lattice: "rgb(236 235 231 / 0.06)"
+  error: "#ff8f80"
+  washi: "#d8d7d2"
+  washi-surface: "#ebe8e1"
+  washi-muted: "#4a4843"
+  washi-border: "#b9b5ab"
+  washi-lattice: "rgb(20 20 20 / 0.07)"
+  washi-error: "#8f1f15"
 typography:
+  statement:
+    fontFamily: "'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(3rem, 0.9rem + 8vw, 9.5rem)"
+    fontWeight: 430
+    lineHeight: 0.9
+    letterSpacing: "-0.055em"
   display:
-    fontFamily: "Geist Variable, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(2.6rem, 1.5rem + 5.4vw, 6rem)"
-    fontWeight: 560
-    lineHeight: 1.05
-    letterSpacing: "-0.04em"
+    fontFamily: "'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(2.6rem, 1.4rem + 6vw, 6.5rem)"
+    fontWeight: 440
+    lineHeight: 0.95
+    letterSpacing: "-0.045em"
   headline:
-    fontFamily: "Geist Variable, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(2.2rem, 1.6rem + 3vw, 4.2rem)"
-    fontWeight: 560
-    lineHeight: 1.05
-    letterSpacing: "-0.035em"
-  title-large:
-    fontFamily: "Geist Variable, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(1.73rem, 1.45rem + 1.4vw, 2.8rem)"
-    fontWeight: 560
-    lineHeight: 1.05
-    letterSpacing: "-0.035em"
+    fontFamily: "'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(2.2rem, 1.5rem + 3.4vw, 4.6rem)"
+    fontWeight: 440
+    lineHeight: 0.95
+    letterSpacing: "-0.045em"
   title:
-    fontFamily: "Geist Variable, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(1.44rem, 1.28rem + 0.8vw, 2rem)"
-    fontWeight: 560
-    lineHeight: 1.2
-    letterSpacing: "-0.03em"
-  lead:
-    fontFamily: "Geist Variable, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(1.2rem, 1.12rem + 0.4vw, 1.45rem)"
-    fontWeight: 400
-    lineHeight: 1.45
-    letterSpacing: "-0.015em"
+    fontWeight: 480
+    lineHeight: 1.15
+    letterSpacing: "-0.02em"
   body:
-    fontFamily: "Geist Variable, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(1rem, 0.96rem + 0.2vw, 1.125rem)"
     fontWeight: 400
-    lineHeight: 1.55
-    fontFeature: "'ss01'"
+    lineHeight: 1.5
   label:
-    fontFamily: "Geist Variable, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(0.83rem, 0.8rem + 0.15vw, 0.9rem)"
+    fontFamily: "'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(0.78rem, 0.76rem + 0.1vw, 0.84rem)"
+    fontWeight: 450
+    lineHeight: 1.35
+    letterSpacing: "0.01em"
+  data:
+    fontFamily: "'Geist Mono Variable', ui-monospace, monospace"
+    fontSize: "0.95em"
     fontWeight: 400
-    lineHeight: 1.3
 rounded:
-  focus: "2px"
-  image: "4px"
+  media: "4px"
   field: "6px"
   pill: "999px"
 spacing:
@@ -72,198 +66,195 @@ spacing:
   l: "2rem"
   xl: "clamp(3rem, 2rem + 4vw, 5rem)"
   2xl: "clamp(5rem, 3rem + 8vw, 10rem)"
-  gutter: "clamp(1rem, 0.5rem + 2.5vw, 2.5rem)"
+  gutter: "clamp(1rem, 0.5rem + 2.2vw, 2.5rem)"
+  kumiko: "clamp(2.5rem, 1.5rem + 3vw, 4.5rem)"
 components:
   button-primary:
-    backgroundColor: "{colors.moss}"
-    textColor: "{colors.on-moss}"
+    backgroundColor: "{colors.ink-light}"
+    textColor: "{colors.ground}"
     rounded: "{rounded.pill}"
-    padding: "0.6em 1.25em"
+    padding: "0.6em 1.35em"
     height: "2.75rem"
   button-primary-hover:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.ground}"
+    backgroundColor: "transparent"
+    textColor: "{colors.ink-light}"
+  button-primary-washi:
+    backgroundColor: "{colors.ground}"
+    textColor: "{colors.ink-light}"
+    rounded: "{rounded.pill}"
   button-secondary:
     backgroundColor: "transparent"
-    textColor: "{colors.ink}"
+    textColor: "{colors.ink-light}"
     rounded: "{rounded.pill}"
-    padding: "0.6em 1.25em"
+    padding: "0.6em 1.35em"
     height: "2.75rem"
   button-secondary-hover:
-    backgroundColor: "{colors.ink}"
+    backgroundColor: "{colors.ink-light}"
     textColor: "{colors.ground}"
   button-nav:
-    backgroundColor: "{colors.moss}"
-    textColor: "{colors.on-moss}"
+    backgroundColor: "{colors.ink-light}"
+    textColor: "{colors.ground}"
     typography: "{typography.label}"
     rounded: "{rounded.pill}"
-    padding: "0.4em 1em"
+    padding: "0.35em 1em"
     height: "2.25rem"
-  chip-utility:
-    backgroundColor: "transparent"
-    textColor: "{colors.ink-muted}"
-    typography: "{typography.label}"
-    rounded: "{rounded.pill}"
-    padding: "0.2em 0.7em"
   input:
     backgroundColor: "{colors.surface}"
-    textColor: "{colors.ink}"
+    textColor: "{colors.ink-light}"
     rounded: "{rounded.field}"
     padding: "0.6em 0.8em"
     height: "2.75rem"
-  work-media:
-    backgroundColor: "{colors.surface}"
-    rounded: "{rounded.image}"
+  input-washi:
+    backgroundColor: "{colors.washi-surface}"
+    textColor: "{colors.ground}"
+    rounded: "{rounded.field}"
+  work-row-reveal:
+    backgroundColor: "{colors.ground}"
+    width: "min(22rem, 22vw)"
 ---
 
 # Design System: Dan Bierre
 
 ## Overview
 
-**Creative North Star: "The Work Is the Page"**
+**Creative North Star: "The Screened Gallery Index"**
 
-A classic high-end studio portfolio, played straight. A neutral ground (cool off-white in light, warm near-black in dark), one variable grotesk set at extreme scale contrast, full-bleed project media, and almost no chrome. The type and the work carry everything; the interface recedes into hairlines and muted grey.
+A collectible-design catalogue for generative work, read through shoji. The ground is near-black and constant for every visitor (the site is dark regardless of device theme). Flat light-grey bands interrupt it as backlit washi: paper with fibre texture and a soft light behind it. Over everything runs a kumiko lattice of faint hairlines at a fixed module, so the page's structure is visible as the grid of a screen.
 
-Density is low and vertical: sections are separated by very large air (5–10rem), not by containers. Structure comes from 1px rules above columns and between list rows, never from cards, fills, or shadows. One muted moss accent marks the path to contact (primary buttons, focus, selection) and nothing else.
+Type does the composing. One neo-grotesk, Hanken Grotesk, runs from a giant ragged statement at the top of the page down to 12-13px lowercase labels, with almost nothing in between: the contrast in scale is the hierarchy. Counts sit in superscript brackets, hairlines carry a label at each end, buttons are pills, and Geist Mono appears only where the pipeline data is printed. There is no accent colour. Colour comes only from the work, which stays monochrome until hovered or focused.
 
-Motion is a single authored moment (the hero headline rising into place), a scroll-driven unveil on work imagery, and a cross-document view transition where the work cover morphs into the case-study header. Everything is visible without motion and without JavaScript.
+Motion is about revealing things. The hero headline develops out of displacement noise as if seen through paper, the hero footage slides open like a shoji door, and each work row opens a two-panel screen showing the piece and how it was made. Everything is visible by default, and every motion is skipped under reduced motion.
 
 **Key Characteristics:**
-- One family (Geist Variable), weight 560 for headings, extreme size jump from body to display.
-- Neutral ground, one moss accent, light and dark themes both WCAG AA.
-- Hairline rules as the only structure; no cards, no shadows on surfaces.
-- Edge-to-edge 16:9 work media (no corner; meta stays on the page grid); pill-shaped actions.
-- Motion only enhances, always gated by `prefers-reduced-motion`.
+- Near-black ground (#141414) with washi bands (#d8d7d2); ink is only light or dark, no accent.
+- One family at extreme scale contrast: a 9.5rem statement against 12-13px lowercase labels.
+- Kumiko lattice hairlines at the `--kumiko` module (1:2 cells) as visible page structure.
+- Pills for actions, hairlines for structure, 1:1 frames made of two 1:2 shoji panels for media.
+- Work is grayscale at rest and turns to colour on hover or focus.
 
 ## Colors
 
-A near-monochrome neutral ground with a single muted olive-moss voice.
+A two-ink monochrome on two grounds (night and paper), with colour supplied only by the imagery.
 
 ### Primary
-- **Moss** (light #3e4a26 / dark #c2cd92): primary buttons, the nav "Book a call" pill, focus outlines, text selection, caret, and the Lab status badge outline. It marks the route to an enquiry.
+- **Gallery Night** (ground): the page ground for every visitor, and the dark ink on washi bands and dark-pill buttons.
+- **Bone Ink** (ink-light): all primary text on the dark ground, the primary pill fill, the selection highlight, and the focus ring.
 
 ### Neutral
-- **Cool Paper Ground** (#f2f3f4 / dark #12100d): page background, nav and mobile CTA bar (mixed at 88–92% with backdrop blur), hero scrim target.
-- **White Surface** (#ffffff / dark #1c1a16): form fields and the placeholder fill behind media while it loads.
-- **Ink** (#121314 / dark #ecebe6): text, strong 1px rules above service, contact and quote columns, secondary button outline, and the hover fill for every button.
-- **Muted Ink** (#585b5f / dark #a6a197): sub-lines, metadata, nav links at rest, captions, process numerals.
-- **Hairline** (#d6d9dc / dark #2e2b26): quiet dividers (nav bottom, proof strip, list rows, footer top, field borders).
-- **Error** (#a3261b / dark #ff8f80): invalid field border and error text only.
+- **Lifted Night** (surface): media frames before load, form fields on the dark ground.
+- **Ash Label** (text-muted): labels, nav links at rest, secondary copy. 6.6:1 on the ground.
+- **Hairline Night** (border): row rules, the hairlines of the hero proof strip, field strokes.
+- **Kumiko Ghost** (lattice): the lattice hairlines, at 6% bone ink.
+- **Signal Coral** (error): form error text on the dark ground (8.3:1). It is a state colour, not an accent.
+
+### Washi band scope
+The `.band` scope redefines the same token names, so every component inside a band flips automatically. Never hard-code band colours in a component.
+- **Backlit Washi** (washi): band ground, under a white radial inner light (`rgb(255 255 255 / 0.16)`) and the vector fibre texture `public/textures/washi.svg`.
+- **Paper Surface** (washi-surface): fields inside bands.
+- **Sumi Muted** (washi-muted): labels and secondary copy on paper (6.4:1).
+- **Paper Hairline** (washi-border) and **Paper Kumiko** (washi-lattice): rules and lattice on paper.
+- **Oxide** (washi-error): error text on paper (6.2:1).
 
 ### Named Rules
-**The One Voice Rule.** Moss appears only on the contact path, focus, and selection. It is never a background panel, never decoration, never a text-link colour.
+**The Colour Comes From the Work Rule.** The interface has no accent hue. Thumbnails and footage are grayscale at rest (`filter: grayscale(1)`) and turn to colour on hover or focus; colour on screen is always the work itself.
 
-**The Two Rules Rule.** A divider is either Ink (heading a column of content: services, contact paths, case quote) or Hairline (separating rows and chrome). Nothing in between.
+**The Scoped Inversion Rule.** Washi bands invert by redefining tokens (`--bg`, `--text`, `--btn-bg`, ...) on `.band`, never by adding per-component overrides. Buttons always invert against their ground: a light pill on night, a dark pill on paper.
+
+**The Documented Overlay Exception.** Three literal colours are sanctioned, each for legibility over imagery, not as palette: the before/after slider's handle and labels (`#fff` with `rgb(0 0 0 / 0.25)` and `rgb(0 0 0 / 0.55)`), and the hero screen's centre divide (`rgb(20 20 20 / 0.85)`). The hero's kumiko overlay locally raises `--lattice` to `rgb(236 235 231 / 0.22)` with a matching 1px inset frame, and the pause toggle sits on `rgb(20 20 20 / 0.7)`. These are sanctioned exceptions, not drift.
 
 ## Typography
 
-**Display Font:** Geist Variable (with ui-sans-serif, system-ui)
-**Body Font:** Geist Variable (same family; stylistic set `ss01` on)
+**Display Font:** Hanken Grotesk Variable (with ui-sans-serif, system-ui)
+**Body Font:** Hanken Grotesk Variable
+**Label/Mono Font:** Geist Mono Variable, used only for pipeline data values
 
-**Character:** A single neutral grotesk does all the work; hierarchy comes from size and tight negative tracking, not from a second family or weight drama.
+**Character:** A single Swiss-leaning neo-grotesk, set with tight negative tracking at large sizes and plain lowercase at small ones. The mono is evidence, not decoration.
 
 ### Hierarchy
-- **Hero Display** (560, 2.9–9.5rem fluid, 0.95, -0.045em): the hero headline only, the single scale peak of the site (deliberately above the 6rem display default; the contract asks for a headline spanning ~10 of 12 columns).
-- **Display** (560, 2.6–6rem fluid, 1.05, -0.04em): case-study title. Max 18ch, `text-wrap: balance`. The contact closer steps down to Headline so the hero stays the peak.
-- **Headline** (560, 2.2–4.2rem fluid, 1.05, -0.035em): section headings ("Selected work", "What I do for agencies").
-- **Title Large** (560, 1.73–2.8rem, -0.035em): service column titles, case-study prose h2, "next case" link.
-- **Title** (560, 1.44–2rem, -0.03em): work card titles, Lab item titles, case outcome and pull quote (at weight 400, line-height 1.25–1.3).
-- **Lead** (400, 1.2–1.45rem, 1.45): hero sub-line (40ch, ink over the footage tint), about bio, proof strip result, 404/thanks copy.
-- **Body** (400, 1–1.125rem, 1.55): running text, capped at 65ch.
-- **Label** (400–520, 0.83–0.9rem): metadata, captions, form labels (520), footer, nav button, process numerals. Sentence case, no tracking.
+- **Statement** (430, step-6 up to 9.5rem, 0.9, -0.055em): the hero sentence only, in ragged lines with an indent (2.6em) that leaves a gap for the note.
+- **Display** (440, step-5, 0.95, -0.045em): page h1s.
+- **Headline** (440, step-4, 0.95, -0.045em): section h2s, work-row titles (-0.05em), and the mobile menu links.
+- **Title** (480, step-1, 1.15, -0.02em): h3s, service and process item heads.
+- **Body** (400, step-0, 1.5): running text, capped at a 62ch measure; `text-wrap: pretty`.
+- **Label** (450, step--1 ≈ 12.5-13.4px, 0.01em, lowercase): the second voice for metadata, end labels, nav links, list numbering, captions.
+- **Data** (Geist Mono, 0.95em of the label): pipeline values (model, steps, seed, render).
+- **Footer mark** (430, min(18vw, 22rem), -0.06em, lowercase): the closing wordmark, used once per page.
 
 ### Named Rules
-**The No-Shouting Rule.** No uppercase, no letter-spaced small labels. Small text is sentence case at the label size and muted grey.
+**The Two Voices Rule.** Text is either very large or label-sized. Avoid filling the middle of the scale; when in doubt, go bigger or drop to a label.
 
-**The Negative Tracking Rule.** Tracking tightens as size grows: -0.015em at lead, -0.03em at title, -0.035em at headline, -0.04em at display. Body is untracked.
+**The Label Floor Rule.** Labels are lowercase, muted, and never below 12px (the `--step--1` minimum, 0.78rem).
+
+**The Bracket Count Rule.** Counts appear as superscript brackets after a heading or nav link (`.count`, 0.32em, `[n]`). They count real things (case studies, experiments, process steps).
+
+**The Mono Is Data Rule.** Geist Mono is reserved for machine values in the pipeline readout. Headings, labels, and UI chrome never use it.
 
 ## Layout
 
-One centred column, max 90rem, with a fluid gutter (1–2.5rem). Sections stack with `--space-2xl` (5–10rem) above them and no bottom padding; headings sit `--space-xl` above their content. Prose is capped at 65ch.
+Content sits in a full-width wrap (max 100rem) with a fluid gutter (1-2.5rem). The hero uses a 12-column grid: the statement spans the full width and sits at the bottom of the first viewport, with the screened footage frame off-centre at the top right (height min(44svh, 34rem)). On narrow screens the frame falls into the flow at 62% width aligned right, the indent collapses, and the note drops below the headline.
 
-Grids are content-proportioned rather than a fixed 12-column: work card meta splits 7fr/5fr at 64em; about splits 5fr/7fr at 48em; contact paths split 3fr/6fr/3fr at 64em; services 2 columns at 48em; process 2 then 4 columns (48em, 72em); Lab 3 columns on the home page, 2 on the Lab page.
+The kumiko module (`--kumiko`, 2.5-4.5rem) is the structural unit. `.lattice` draws 1:2 cells at the module; `.lattice-field` draws a section-scale grid (2× module wide, 4× tall) behind hero and contact, offset by the gutter so the lines align with the content edge.
 
-Breakpoints in use: 40em (form rows), 48em (nav collapse, most grids), 64em (work meta, contact, Lab page), 72em (process). Below 48em the nav links collapse to a native `<details>` menu and a fixed bottom CTA bar appears.
+Spacing follows `--space-*` (0.5, 0.75, 1.25, 2rem, then fluid xl and 2xl for section padding). The work index is a stack of hairline-ruled rows; on wide screens with a pointer (≥80em) each row becomes a six-track line (number, thumbnail, title, empty reveal track, meta, year), and the empty track is where the screen opens, so the reveal never covers text. Below that, rows stack and the screen and pipeline readout are shown inline.
 
-The hero is bottom-weighted: full viewport height minus the 3.75rem nav, headline anchored to the bottom left, footage filling the whole hero under an even 68% ground tint (no gradient scrim). A round pause/play control sits bottom-right whenever the footage plays (WCAG 2.2.2).
+Case studies use a hanging-indent title (wrapped lines indent 1.6em, max 18ch), a 16:10 cover that morphs from the work thumbnail through a view transition, prose at the 62ch measure, and close on a washi CTA band with 2xl padding.
 
 ## Elevation & Depth
 
-Flat. Surfaces have no shadows; depth comes from tonal layering only where chrome overlays content (sticky nav and mobile CTA bar: translucent ground plus 12px backdrop blur) and from the hero footage sitting under an even 68% ground tint. Work imagery responds to hover with a slow 1.02 scale (only when motion is welcome), not a lift.
-
-### Shadow Vocabulary
-None. The before/after handle stays legible with a solid white line and a white knob ringed by a 1px rgb(0 0 0 / 0.25) hairline.
+Flat. There are no drop shadows. Depth is a matter of light and layering: washi bands read as lit from behind (a radial white inner light plus fibre texture), the lattice reads as a screen in front of the work, and reveals open by sliding panels apart rather than lifting a card. The only `box-shadow` in the build is a 1px inset hairline framing the hero kumiko overlay, used as a stroke rather than a shadow.
 
 ### Named Rules
-**The Flat Ground Rule.** No shadow anywhere: not on cards, buttons, fields, panels, or controls over imagery.
+**The Backlight Not Shadow Rule.** Depth comes from light behind paper and screens sliding apart. Don't add drop shadows to cards, buttons, or popovers.
 
 ## Shapes
 
-Three radii, each tied to a material. Images and media frames: a barely-there 4px corner. Form fields: 6px. Actions and small tags: full pill (999px). Focus rings carry a 2px radius. Rules are always 1px and full-width of their column. No circles except the before/after knob, no clipped silhouettes beyond the scroll unveil (inset clip with a 4px round that opens to full frame).
+Mostly rectangles and hairlines (1px). Actions are full pills (999px): buttons, the copy-email chip, the video toggle, the before/after labels. Form fields take a 6px corner. Editorial media inside case studies, the Lab, and the before/after frame take a quiet 4px. Shoji screens (hero frame, work reveal) are square-cornered and 1:1, divided into two 1:2 panels by a centre line, because the panels slide.
 
 ## Components
 
 ### Buttons
-Quiet pills that turn to Ink on hover.
-- **Shape:** full pill (999px), min height 2.75rem (2.25rem in the nav).
-- **Primary:** Moss fill, white (dark: near-black) text, weight 520, padding 0.6em 1.25em. Used for "Book a call" and "Send brief".
-- **Secondary:** transparent with a 1px Ink outline. Used for "See the work" and alternate paths.
-- **Hover:** every variant fills Ink with ground-coloured text; 0.25s on the house ease-out.
-- **Focus:** 3px Moss outline, 3px offset, global.
-- **Disabled:** 60% opacity, progress cursor.
-
-### Chips
-- **Utility pill** ("Copy email"): transparent, 1px Hairline border, muted label text; hover raises border and text to Ink.
-- **Status badge** (Lab): transparent, 1px Moss outline, Moss label text.
-- **Image label** (before/after): 55% black pill with white label text, over imagery only.
-
-### Cards / Containers
-There are no cards. A "work card" is media plus meta on the bare ground.
-- **Corner Style:** 4px on the media only.
-- **Background:** White Surface behind media while loading; otherwise the page ground.
-- **Shadow Strategy:** none (see Elevation).
-- **Border:** none on media; Ink or Hairline top rules above column content.
-- **Internal Padding:** none; `--space-m` rule-to-content.
+Pills that invert their ground.
+- **Shape:** full pill (999px), min-height 2.75rem, 1px border.
+- **Primary:** bone-ink fill on night, dark fill on washi (via `--btn-bg`), weight 500, lowercase.
+- **Hover / Focus:** primary empties to an outline in the text colour; secondary fills. 0.25s on the out-expo ease. Focus is a 2px ring in `--focus`, offset 3px.
+- **Secondary:** 1px outline in the text colour, transparent fill.
+- **Nav pill:** the persistent "book a call", label-size, 2.25rem tall, solid.
 
 ### Inputs / Fields
-- **Style:** White Surface fill, 1px Hairline border, 6px radius, min height 2.75rem; labels above at label size, weight 520; "(optional)" muted.
-- **Hover:** border to Muted Ink.
-- **Focus:** global Moss ring at 1px offset plus Ink border.
-- **Error:** Error-colour border and an error line below; placeholders in Muted Ink.
+- **Style:** surface fill, 1px border stroke, 6px corner, min-height 2.75rem; labels at label size, weight 520, with "(optional)" muted. Custom select with a hairline chevron.
+- **Hover / Focus:** stroke goes to muted on hover; on focus the stroke goes to the text colour and the 2px focus ring sits 1px out.
+- **Error:** invalid fields take an `--error` stroke with label-size error text below; both flip correctly inside washi bands.
 
 ### Navigation
-One sticky hairline row, 3.75rem tall: name at left (weight 600), muted links at right turning Ink on hover, Moss "Book a call" pill pinned far right. Translucent ground with backdrop blur. Below 48em the links and pill move into a native `<details>` menu of large (title-size) links, and a fixed bottom bar carries a note plus the primary action.
+A lowercase index: brand at the left (500, -0.02em), muted links with bracket counts, and a solid nav pill. On narrow screens a native disclosure opens a full-width night panel of headline-size links. On mobile a fixed bottom bar (MobileCta) keeps the call to action in reach.
 
-### Work Card (signature)
-Edge-to-edge 16:9 media frame (max 88svh, no radius), cover image with a muted preview video that fades in on hover (mouse) or plays once when in view (touch); hover scales media to 1.02 over 0.9s, motion-gated. The media unveils on scroll (inset clip and 1.04 scale resolving to full frame). Its cover morphs into the case-study header via cross-document view transition (450ms, ease-out). Meta beneath: title at Title size spanning two rows at 64em, context in muted label, outcome at body size.
+### Hairline With End Labels
+A full-width 1px rule (top and bottom) with a lowercase label at each end and the content centred between them (the proof strip). The end labels hide on mobile.
 
-### Before/After Comparison
-16:10 frame, 4px radius, draggable solid white divider with a hairline-ringed 2.75rem knob (no shadow), pill labels in the bottom corners; the native range input covers the frame and the frame takes the focus ring.
+### Work Row (signature)
+An index row: number, grayscale thumbnail, headline title, meta, year, ruled by hairlines. On hover or focus, a night-filled screen (min(22rem, 22vw)) opens in the row's empty track: two 1:2 shoji panels slide apart (0.9s, slide ease, 0.15s delay) to reveal the piece and its looping footage, over a two-column pipeline readout (lowercase muted terms, Geist Mono values). The thumbnail turns to colour as it opens.
 
-### Motion
-House ease `cubic-bezier(0.16, 1, 0.3, 1)` for every transition. The hero headline lines, sub-line and actions rise 0.35em from 8px blur over 1.1s, staggered 0/90/220/320ms. All of it sits inside `prefers-reduced-motion: no-preference`; reduced motion disables view transitions too.
+### Hero Screen and Diffusion Reveal (signature)
+Monochrome footage behind a 22% kumiko overlay with a dark centre divide. It slides open from the middle on load (1.4s). The statement develops from an SVG displacement of 90 down to 0 over 1.6s, with blur and opacity resolving in step; the note and actions follow 700ms later. The footage always has a pause toggle.
 
-### Imagery & Raster Provenance
-All shipped rasters are generated placeholders, not photography or client work, and must be replaced before launch:
-- `src/assets/**/*.jpg` (hero poster, portrait, work covers and before/after, Lab images): sharp-rendered gradient placeholders.
-- `public/media/*.webm` (hero and case-study preview loops): Playwright-recorded animated gradients.
-- `public/og-default.png`: Playwright screenshot of the headline set in Geist.
-
-Their gradient look is placeholder provenance, not the system's imagery style. Real imagery is full-bleed project footage and stills, muted enough to sit under the hero scrim.
+### Washi Band
+A section wrapper (services, contact, case-study CTA) that redefines the tokens to paper values and adds inner light plus fibre texture. Often paired with a lattice field.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** set headings in Geist Variable at weight 560 with the negative tracking ladder (-0.015em to -0.04em).
-- **Do** separate content with 1px rules (Ink above a column, Hairline between rows) and 5–10rem of section air.
-- **Do** keep Moss for primary actions, focus (3px outline, 3px offset) and selection.
-- **Do** frame work media at 16:10 (4:3 for Lab, 4:5 for the portrait) with a 4px corner.
-- **Do** gate every animation behind `prefers-reduced-motion: no-preference` and use the house ease-out.
-- **Do** verify both themes: every colour token has a dark counterpart.
+- **Do** take every colour from tokens; inside a washi band, rely on the `.band` scope to flip them.
+- **Do** keep work imagery grayscale at rest and in colour on hover or focus.
+- **Do** set labels lowercase at `--step--1` or larger, in `--text-muted`.
+- **Do** use bracketed superscript counts only for real counts.
+- **Do** size media frames on the shoji module: 1:1 frames made of two 1:2 panels, with the lattice at `--kumiko`.
+- **Do** gate every animation behind `prefers-reduced-motion: no-preference`, with content visible by default.
+- **Do** give any autoplaying footage a visible pause control.
 
 ### Don't:
-- **Don't** put content in cards, filled panels, or anything with a drop shadow; the system has no shadows.
-- **Don't** use uppercase or letter-spaced labels above headings; small text stays sentence case and muted.
-- **Don't** introduce a second typeface or a second accent colour.
-- **Don't** use decorative gradients or glow; the hero scrim exists only to dissolve media into the ground.
-- **Don't** treat the generated gradient placeholder rasters as an imagery style to imitate.
+- **Don't** introduce an accent hue; colour belongs to the work.
+- **Don't** add drop shadows; depth comes from backlight and sliding panels.
+- **Don't** use Geist Mono outside pipeline data.
+- **Don't** fill the middle of the type scale with mid-size headings that weaken the contrast in scale.
+- **Don't** let a reveal cover titles or meta; it opens in the empty track.
+- **Don't** use colour literals outside the documented overlay exception.
