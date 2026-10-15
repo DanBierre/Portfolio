@@ -11,9 +11,9 @@
     "preview": "npm run build && wrangler dev",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "lhci": "npm run build && lhci autorun",
     "deploy": "npm run build && wrangler deploy",
-    "astro": "astro"
+    "astro": "astro",
+    "lighthouse": "npm run build && node scripts/lighthouse.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
@@ -23,8 +23,8 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
     "@cloudflare/workers-types": "^5.20261015.1",
-    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.64.1",
+    "lighthouse": "^13.5.0",
     "vitest": "^5.0.4",
     "wrangler": "^4.151.0"
   },
