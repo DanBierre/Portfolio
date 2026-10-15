@@ -53,3 +53,16 @@ Decisions made during the build (from the execution ledger), each with its cost 
 - Shoji proportions: frames are 1:2 panels (hero and work screens are two-panel 1:1 diptychs). Cost if wrong: aspect-ratio tweaks.
 - Washi texture is a vector SVG (public/textures/washi.svg), not a raster scan. Reviewer note (not blocking): rotating one fibre layer slightly off-axis would read more like kozo paper.
 - Detector advisories left as-is: before/after overlay colours, focus-ring 2px corner, band backlight are documented exceptions in DESIGN.md.
+
+## Identity layer (live site + Shoji app)
+
+- "Shoji" in the redesign request meant Dan's own app; the paper-screen layer came from a misreading and Dan chose to keep it.
+- Hero leads with the live-site headline; "The AI half of your creative team." moves to Services. Headline split into three ragged lines so both gold "with"s align.
+- Email switched to bierredan@gmail.com (from the placeholder hello@danbierre.dev).
+- FH Enso (live site's display face) not used: the files are a trial ("FHEnsoTest"), so licensing for a live site is unclear. Shippori Mincho (free) is used for numerals.
+- Japanese fonts: system fonts (Hiragino Sans / Yu Gothic UI / Meiryo, system Mincho for spine labels) instead of downloading Zen Kaku Gothic New; downloading it pushed the Japanese page to 1.08 MB and 4 s to first content. Cost if wrong: re-add the font and accept the speed hit.
+- Japanese copy drafted by Claude; please review. Already adjusted: 相談を予約 (not 通話を予約), removed a repeated 暮らし. Please confirm the katakana of your name: ダン・ビエール.
+- Japanese version covers the homepage only (/ja); case studies, Lab, thanks and 404 stay English. The 日本語 switch on those pages goes to the Japanese homepage.
+- Light theme uses the live site's palette; bands become dark screens without the washi texture. Dark remains the default for first-time visitors.
+- The live site's AKL/TYO clocks were not selected; the reviewer noted they would be a natural home for the serif numerals and the rust "now" marker if you want them later.
+- Shoji case study copy is drawn from the live site; please check the role line ("Design, build, Japanese localisation") and the results lines are accurate.
