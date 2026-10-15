@@ -1,0 +1,36 @@
+// Kanji Develops deck: 30 JLPT N2-level kanji (approximate; there is no official list since 2010).
+// Meanings and readings drafted by Claude: Dan to check. Kun readings show okurigana in brackets.
+export type Kanji = { char: string; meanings: string[]; on: string[]; kun: string[] };
+
+export const kanji: Kanji[] = [
+  { char: '億', meanings: ['hundred million'], on: ['オク'], kun: [] },
+  { char: '依', meanings: ['depend on', 'request'], on: ['イ', 'エ'], kun: ['よ(る)'] },
+  { char: '越', meanings: ['cross over', 'exceed'], on: ['エツ'], kun: ['こ(す)', 'こ(える)'] },
+  { char: '塩', meanings: ['salt'], on: ['エン'], kun: ['しお'] },
+  { char: '汚', meanings: ['dirty', 'pollute'], on: ['オ'], kun: ['きたな(い)', 'よご(す)', 'けが(す)'] },
+  { char: '恐', meanings: ['fear', 'dread'], on: ['キョウ'], kun: ['おそ(れる)', 'おそ(ろしい)'] },
+  { char: '貝', meanings: ['shellfish', 'shell'], on: [], kun: ['かい'] },
+  { char: '革', meanings: ['leather', 'reform'], on: ['カク'], kun: ['かわ'] },
+  { char: '刻', meanings: ['engrave', 'moment'], on: ['コク'], kun: ['きざ(む)'] },
+  { char: '骨', meanings: ['bone'], on: ['コツ'], kun: ['ほね'] },
+  { char: '込', meanings: ['crowded', 'include'], on: [], kun: ['こ(む)', 'こ(める)'] },
+  { char: '婚', meanings: ['marriage'], on: ['コン'], kun: [] },
+  { char: '札', meanings: ['label', 'banknote'], on: ['サツ'], kun: ['ふだ'] },
+  { char: '祭', meanings: ['festival'], on: ['サイ'], kun: ['まつ(り)', 'まつ(る)'] },
+  { char: '咲', meanings: ['bloom'], on: [], kun: ['さ(く)'] },
+  { char: '皿', meanings: ['plate', 'dish'], on: [], kun: ['さら'] },
+  { char: '寺', meanings: ['temple'], on: ['ジ'], kun: ['てら'] },
+  { char: '枝', meanings: ['branch'], on: ['シ'], kun: ['えだ'] },
+  { char: '舌', meanings: ['tongue'], on: ['ゼツ'], kun: ['した'] },
+  { char: '祝', meanings: ['celebrate'], on: ['シュク', 'シュウ'], kun: ['いわ(う)'] },
+  { char: '城', meanings: ['castle'], on: ['ジョウ'], kun: ['しろ'] },
+  { char: '震', meanings: ['shake', 'tremble'], on: ['シン'], kun: ['ふる(える)', 'ふる(う)'] },
+  { char: '炭', meanings: ['charcoal', 'coal'], on: ['タン'], kun: ['すみ'] },
+  { char: '沈', meanings: ['sink'], on: ['チン'], kun: ['しず(む)', 'しず(める)'] },
+  { char: '泥', meanings: ['mud'], on: ['デイ'], kun: ['どろ'] },
+  { char: '塔', meanings: ['tower', 'pagoda'], on: ['トウ'], kun: [] },
+  { char: '灯', meanings: ['lamp', 'light'], on: ['トウ'], kun: ['ひ'] },
+  { char: '脳', meanings: ['brain'], on: ['ノウ'], kun: [] },
+  { char: '筆', meanings: ['brush', 'writing'], on: ['ヒツ'], kun: ['ふで'] },
+  { char: '涙', meanings: ['tears'], on: ['ルイ'], kun: ['なみだ'] },
+];

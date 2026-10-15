@@ -6,10 +6,12 @@ test('lab lists all experiments with honest live/in-progress status', async ({ p
   const items = page.getByRole('main').getByRole('article');
   await expect(items).toHaveCount(6);
   await expect(items.first().getByRole('heading')).toHaveText('Ensō Generator');
-  // Only built experiments are live and linked; the rest say so.
-  await expect(page.getByText('live', { exact: true })).toHaveCount(1);
-  await expect(page.getByText('in progress', { exact: true })).toHaveCount(5);
-  await expect(page.getByRole('link', { name: /try it/i })).toHaveAttribute('href', '/lab/enso');
+  // Every live experiment links to its page; anything still in progress has no link.
+  for (const item of await items.all()) {
+    const live = (await item.locator('.lab__badge').textContent())!.trim() === 'live';
+    await expect(item.getByRole('link', { name: /try it/i })).toHaveCount(live ? 1 : 0);
+    if (live) await expect(item.getByRole('link', { name: /try it/i })).toHaveAttribute('href', /^/lab/[a-z-]+$/);
+  }
 });
 
 test('unknown URL shows branded 404 with recovery links', async ({ page }) => {

@@ -9,7 +9,7 @@ import lighthouse from 'lighthouse';
 import { chromium } from '@playwright/test';
 
 const DIST = path.resolve('dist');
-const PAGES = ['/', '/ja', '/work/shoji', '/work/case-study-one', '/lab', '/lab/enso'];
+const PAGES = ['/', '/ja', '/work/shoji', '/work/case-study-one', '/lab', '/lab/enso', '/lab/kanji'];
 const MIN_SCORE = 0.95;
 const MAX_LCP_MS = 2000;
 const MAX_BYTES = 1_000_000;
