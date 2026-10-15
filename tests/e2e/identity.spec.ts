@@ -76,3 +76,15 @@ test('Japanese homepage: toggle, lang, translated copy, way back', async ({ page
   await page.getByRole('link', { name: ja.langSwitchName }).first().click();
   await expect(page).toHaveURL(/\/$/);
 });
+
+test('offer line separators are real middle dots, clipped at line starts', async ({ page }) => {
+  await page.goto('/');
+  const items = page.locator('#hero .hero__note .sep-item');
+  expect(await items.first().evaluate((el) => getComputedStyle(el, '::before').content)).toBe('"·"');
+  // The first item starts its line, so its dot must fall outside the clipped list box.
+  const [dotLeft, listLeft] = await items.first().evaluate((el) => [
+    el.getBoundingClientRect().left + parseFloat(getComputedStyle(el, '::before').left),
+    el.parentElement!.getBoundingClientRect().left,
+  ]);
+  expect(dotLeft).toBeLessThan(listLeft);
+});
