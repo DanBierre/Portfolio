@@ -36,6 +36,14 @@ import poster from '../../assets/hero-poster.jpg';
   </div>
 </section>
 
+<script>
+  const video = document.querySelector<HTMLVideoElement>('.hero__video');
+  if (video && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    video.addEventListener('playing', () => video.classList.add('is-playing'), { once: true });
+    video.play().catch(() => {});
+  }
+</script>
+
 <style>
   .hero {
     position: relative;

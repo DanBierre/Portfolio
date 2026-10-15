@@ -37,6 +37,35 @@ const { title, clientType, role, outcome, cover, coverAlt, preview } = entry.dat
   </a>
 </article>
 
+<script>
+  // Previews play on hover (mouse) or when mostly in view (touch). Never under reduced motion.
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const canHover = matchMedia('(hover: hover)').matches;
+  const play = (v: HTMLVideoElement) => {
+    if (reduce.matches) return;
+    v.addEventListener('playing', () => v.classList.add('is-playing'), { once: true });
+    v.play().catch(() => {});
+  };
+  const stop = (v: HTMLVideoElement) => {
+    v.pause();
+    v.classList.remove('is-playing');
+  };
+  const io = new IntersectionObserver(
+    (entries) => entries.forEach((e) => (e.isIntersecting ? play : stop)(e.target as HTMLVideoElement)),
+    { threshold: 0.6 },
+  );
+  for (const card of document.querySelectorAll<HTMLElement>('.work-card')) {
+    const video = card.querySelector<HTMLVideoElement>('.work-card__preview');
+    if (!video) continue;
+    if (canHover) {
+      card.addEventListener('pointerenter', () => play(video));
+      card.addEventListener('pointerleave', () => stop(video));
+    } else {
+      io.observe(video);
+    }
+  }
+</script>
+
 <style>
   .work-card__link { display: grid; gap: var(--space-m); text-decoration: none; }
   .work-card__media {
