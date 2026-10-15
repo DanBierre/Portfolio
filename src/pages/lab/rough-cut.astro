@@ -159,7 +159,8 @@ const fmt = (n: number) => `${n.toFixed(1)} s`;
   document.querySelector<HTMLElement>('[data-rc-controls]')!.hidden = false;
 </script>
 
-<style>
+<style is:global>
+  /* Global (this page only): the replay script creates elements that scoped styles would miss. */
   .rc { padding-block: var(--space-xl) 0; }
   .rc__head { display: grid; gap: var(--space-m); margin-bottom: var(--space-l); }
   .rc__head a { text-decoration: none; }

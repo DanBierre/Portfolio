@@ -147,7 +147,8 @@ const words = layoutWords(example);
   form.querySelector<HTMLElement>('[data-kinetic-actions]')!.hidden = false;
 </script>
 
-<style>
+<style is:global>
+  /* Global (this page only): the replay script creates elements that scoped styles would miss. */
   .kinetic-page { padding-block: var(--space-xl) 0; }
   .kinetic-page__head { display: grid; gap: var(--space-m); margin-bottom: var(--space-xl); }
   .kinetic-page__head a { text-decoration: none; }

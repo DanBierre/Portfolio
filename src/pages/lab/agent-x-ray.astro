@@ -168,7 +168,8 @@ const kindLabel = { think: 'thinking', tool: 'tool call', result: 'result', back
   form.querySelector<HTMLElement>('[data-xray-actions]')!.hidden = false;
 </script>
 
-<style>
+<style is:global>
+  /* Global (this page only): the replay script creates elements that scoped styles would miss. */
   .xray { padding-block: var(--space-xl) 0; }
   .xray__head { display: grid; gap: var(--space-m); margin-bottom: var(--space-xl); }
   .xray__head a { text-decoration: none; }
