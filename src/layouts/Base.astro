@@ -29,6 +29,8 @@ const { title, description } = Astro.props;
         <script is:inline defer src="https://cloud.umami.is/script.js" data-website-id={site.umamiWebsiteId} />
       )
     }
+
+    <slot name="head" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>

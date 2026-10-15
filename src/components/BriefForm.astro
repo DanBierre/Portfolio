@@ -1,0 +1,165 @@
+---
+import { BUDGET_OPTIONS, site } from '../site.config';
+---
+
+<form class="brief" method="post" action="/api/brief" data-brief-form data-email={site.email} data-cal={site.calUrl} novalidate>
+  <div class="brief__row">
+    <div class="field">
+      <label for="brief-name">Name</label>
+      <input id="brief-name" name="name" type="text" autocomplete="name" required maxlength="100" aria-describedby="brief-name-error" />
+      <p class="field__error" id="brief-name-error" data-error-for="name"></p>
+    </div>
+    <div class="field">
+      <label for="brief-email">Email</label>
+      <input id="brief-email" name="email" type="email" autocomplete="email" required maxlength="254" aria-describedby="brief-email-error" />
+      <p class="field__error" id="brief-email-error" data-error-for="email"></p>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="brief-project">What's the project?</label>
+    <textarea id="brief-project" name="project" rows="4" required maxlength="5000" aria-describedby="brief-project-error"></textarea>
+    <p class="field__error" id="brief-project-error" data-error-for="project"></p>
+  </div>
+
+  <div class="brief__row">
+    <div class="field">
+      <label for="brief-timeline">Timeline <span class="field__optional">(optional)</span></label>
+      <input id="brief-timeline" name="timeline" type="text" maxlength="200" placeholder="e.g. Pitch on 12 March" aria-describedby="brief-timeline-error" />
+      <p class="field__error" id="brief-timeline-error" data-error-for="timeline"></p>
+    </div>
+    <div class="field">
+      <label for="brief-budget">Budget range <span class="field__optional">(optional)</span></label>
+      <select id="brief-budget" name="budget" aria-describedby="brief-budget-error">
+        <option value="">Choose…</option>
+        {BUDGET_OPTIONS.map((b) => <option value={b}>{b}</option>)}
+      </select>
+      <p class="field__error" id="brief-budget-error" data-error-for="budget"></p>
+    </div>
+  </div>
+
+  <div class="brief__trap" aria-hidden="true">
+    <label for="brief-company-website">Leave this empty</label>
+    <input id="brief-company-website" name="company_website" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div class="brief__submit">
+    <button class="btn btn--primary" type="submit">Send brief</button>
+    <p class="brief__status" role="status" aria-live="polite"></p>
+  </div>
+</form>
+
+<script>
+  for (const form of document.querySelectorAll<HTMLFormElement>('[data-brief-form]')) {
+    const status = form.querySelector<HTMLElement>('.brief__status')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const { email, cal } = form.dataset;
+
+    const clearErrors = () => {
+      for (const el of form.querySelectorAll<HTMLElement>('[data-error-for]')) el.textContent = '';
+      for (const el of form.querySelectorAll('[aria-invalid]')) el.removeAttribute('aria-invalid');
+    };
+    const showErrors = (errors: Record<string, string>) => {
+      for (const [name, message] of Object.entries(errors)) {
+        const target = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
+        if (target) target.textContent = message;
+        form.elements.namedItem(name) instanceof HTMLElement &&
+          (form.elements.namedItem(name) as HTMLElement).setAttribute('aria-invalid', 'true');
+      }
+      (form.querySelector('[aria-invalid="true"]') as HTMLElement | null)?.focus();
+    };
+    const fail = () => {
+      status.dataset.state = 'error';
+      status.replaceChildren(
+        'Your brief didn’t send. Your text is still here, so try again or email it to ',
+        Object.assign(document.createElement('a'), { href: `mailto:${email}`, textContent: email }),
+        '.',
+      );
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      clearErrors();
+      status.textContent = '';
+      delete status.dataset.state;
+
+      if (!form.checkValidity()) {
+        const errors: Record<string, string> = {};
+        for (const el of form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[required], textarea[required], input[type="email"]')) {
+          if (!el.validity.valid) {
+            errors[el.name] =
+              el.name === 'email' ? 'Please add a valid email address.' : el.name === 'name' ? 'Please add your name.' : 'Tell me a little about the project.';
+          }
+        }
+        showErrors(errors);
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = 'Sending…';
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new URLSearchParams(new FormData(form) as unknown as Record<string, string>),
+          headers: { accept: 'application/json' },
+        });
+        const body = await res.json().catch(() => ({}));
+        if (res.ok && body.ok) {
+          form.reset();
+          status.dataset.state = 'success';
+          status.replaceChildren(
+            'Thanks, I’ll reply within 1 working day. Or ',
+            Object.assign(document.createElement('a'), { href: cal, textContent: 'book a call now' }),
+            '.',
+          );
+          (window as any).umami?.track('brief_submitted');
+        } else if (res.status === 400 && body.errors) {
+          showErrors(body.errors);
+        } else {
+          fail();
+        }
+      } catch {
+        fail();
+      } finally {
+        button.disabled = false;
+        button.textContent = 'Send brief';
+      }
+    });
+  }
+</script>
+
+<style>
+  .brief { display: grid; gap: var(--space-m); width: 100%; }
+  .brief__row { display: grid; gap: var(--space-m); }
+  .field { display: grid; gap: 0.35rem; }
+  label { font-size: var(--step--1); font-weight: 520; }
+  .field__optional { color: var(--text-muted); font-weight: 400; }
+  input,
+  textarea,
+  select {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.6em 0.8em;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: border-color 0.2s;
+  }
+  textarea { resize: vertical; min-height: 7rem; }
+  input:hover, textarea:hover, select:hover { border-color: var(--text-muted); }
+  input:focus-visible, textarea:focus-visible, select:focus-visible { outline-offset: 1px; border-color: var(--text); }
+  ::placeholder { color: var(--text-muted); opacity: 1; }
+  [aria-invalid='true'] { border-color: var(--error); }
+  .field__error { font-size: var(--step--1); color: var(--error); min-height: 0; }
+  .field__error:empty { display: none; }
+  .brief__trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .brief__submit { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-m); }
+  .brief__status { font-size: var(--step--1); }
+  .brief__status[data-state='error'] { color: var(--error); }
+  .brief__status a { color: inherit; }
+  button[disabled] { opacity: 0.6; cursor: progress; }
+
+  @media (min-width: 40em) {
+    .brief__row { grid-template-columns: 1fr 1fr; }
+  }
+</style>

@@ -9,6 +9,7 @@ import Process from '../components/sections/Process.astro';
 import LabTeaser from '../components/sections/LabTeaser.astro';
 import About from '../components/sections/About.astro';
 import Contact from '../components/sections/Contact.astro';
+import BriefForm from '../components/BriefForm.astro';
 ---
 
 <Base
@@ -22,5 +23,7 @@ import Contact from '../components/sections/Contact.astro';
   <Process />
   <LabTeaser />
   <About />
-  <Contact />
+  <Contact>
+    <BriefForm slot="form" />
+  </Contact>
 </Base>
