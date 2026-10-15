@@ -88,3 +88,9 @@ test('offer line separators are real middle dots, clipped at line starts', async
   ]);
   expect(dotLeft).toBeLessThan(listLeft);
 });
+
+test('Japanese headings render one weight up (semibold)', async ({ page }) => {
+  await page.goto('/ja');
+  for (const sel of ['#hero h1', '#services h2'])
+    expect(await page.locator(sel).evaluate((el) => getComputedStyle(el).fontWeight), sel).toBe('600');
+});
