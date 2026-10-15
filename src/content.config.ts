@@ -11,6 +11,7 @@ const work = defineCollection({
       role: z.string(),
       timeline: z.string(),
       outcome: z.string(),
+      results: z.array(z.string()).min(1),
       order: z.number(),
       cover: image(),
       coverAlt: z.string(),

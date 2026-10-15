@@ -4,6 +4,9 @@ clientType: "[PLACEHOLDER] Creative agency, sportswear client"
 role: "Concept, AI pipeline, front-end build"
 timeline: "[PLACEHOLDER] 6 weeks"
 outcome: "[PLACEHOLDER] One-line result, e.g. 40,000 personalised posters generated on launch day"
+results:
+  - "[PLACEHOLDER] Result one, with a number where possible"
+  - "[PLACEHOLDER] Result two"
 order: 1
 cover: ../../assets/work/case-study-one-cover.jpg
 coverAlt: "[PLACEHOLDER] Campaign hero visual"
@@ -27,7 +30,3 @@ beforeAfter:
 ## Process
 
 [PLACEHOLDER] How the work moved from prototype to production, with in-progress visuals.
-
-## Results
-
-[PLACEHOLDER] Numbers where possible.
