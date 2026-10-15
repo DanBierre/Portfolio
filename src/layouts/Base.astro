@@ -9,6 +9,7 @@ import { site } from '../site.config';
 import { langOf } from '../i18n/ui';
 import Nav from '../components/Nav.astro';
 import MobileCta from '../components/MobileCta.astro';
+import Playhead from '../components/Playhead.astro';
 import Footer from '../components/Footer.astro';
 
 interface Props {
@@ -75,5 +76,6 @@ const image = new URL(ogImage, base).href;
     <main id="main"><slot /></main>
     <Footer />
     <MobileCta />
+    <Playhead />
   </body>
 </html>

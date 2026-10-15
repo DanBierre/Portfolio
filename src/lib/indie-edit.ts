@@ -36,7 +36,7 @@ export function warp(p: number, ramp: number): number {
   return p + (k * Math.sin(2 * Math.PI * p)) / (2 * Math.PI);
 }
 /** Camera speed (derivative of warp), used for motion blur. 0 at slow-mo, up to ~2 at the rush. */
-const speed = (p: number, ramp: number) => 1 + 0.95 * ramp * Math.cos(2 * Math.PI * p);
+export const speed = (p: number, ramp: number) => 1 + 0.95 * ramp * Math.cos(2 * Math.PI * p);
 
 export type Frame = {
   shot: number;
