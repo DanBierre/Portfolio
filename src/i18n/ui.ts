@@ -60,7 +60,7 @@ const en = {
       { title: 'Handover', text: 'Documented code and a walkthrough, so your team can own what we built.' },
     ],
   },
-  lab: { title: 'From the Lab', all: 'See the Lab', interactive: 'interactive', study: 'study' },
+  lab: { title: 'From the Lab', all: 'See the Lab', interactive: 'interactive', study: 'study', live: 'live', progress: 'in progress' },
   about: {
     title: 'Auckland, NZ, heading to Japan.',
     caption: 'Fushimi Inari, Kyoto',
@@ -170,7 +170,7 @@ const ja: Dict = {
       { title: '引き継ぎ', text: 'ドキュメント付きのコードと説明で、チームが自分たちで運用できる状態にします。' },
     ],
   },
-  lab: { title: 'ラボから', all: 'ラボを見る', interactive: 'インタラクティブ', study: '習作' },
+  lab: { title: 'ラボから', all: 'ラボを見る', interactive: 'インタラクティブ', study: '習作', live: '公開中', progress: '制作中' },
   about: {
     title: 'ニュージーランド・オークランドから、日本へ。',
     caption: '伏見稲荷大社、京都',

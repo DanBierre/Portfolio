@@ -31,8 +31,11 @@ const items = (await getCollection('lab')).sort((a, b) => a.data.order - b.data.
             />
             <div class="lab__meta">
               <h2>{item.data.title}</h2>
-              {item.data.interactive && <span class="lab__badge">Interactive</span>}
+              <span class:list={['lab__badge', { 'lab__badge--live': item.data.status === 'live' }]}>
+                {item.data.status === 'live' ? 'live' : 'in progress'}
+              </span>
             </div>
+            <p class="label">{item.data.interactive ? 'interactive' : 'study'}</p>
             <p>{item.data.summary}</p>
             {item.data.link && (
               <a href={item.data.link}>
@@ -58,7 +61,7 @@ const items = (await getCollection('lab')).sort((a, b) => a.data.order - b.data.
   .lab__intro { font-size: var(--step-1); color: var(--text-muted); max-width: 40ch; }
   .lab__grid { display: grid; gap: var(--space-xl) var(--space-l); }
   .lab__item { display: grid; gap: var(--space-s); align-content: start; }
-  .lab__item :global(img) { aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4px; margin-bottom: var(--space-xs); }
+  .lab__item :global(img) { aspect-ratio: 1 / 1; /* two 1:2 shoji panels */ object-fit: cover; border-radius: 4px; margin-bottom: var(--space-xs); }
   .lab__meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-s); }
   h2 { font-size: var(--step-2); letter-spacing: -0.03em; }
   .lab__badge {
@@ -68,6 +71,9 @@ const items = (await getCollection('lab')).sort((a, b) => a.data.order - b.data.
     font-size: var(--step--1);
     color: var(--text-muted);
   }
+  /* Rust means live: the same "now" marker as the hero and Shoji. */
+  .lab__badge--live { border-color: var(--rust); color: var(--text); }
+  .lab__badge--live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 0.45em; rotate: 45deg; background: var(--rust); vertical-align: 0.1em; }
   .lab__item p { color: var(--text-muted); }
   .lab__cta {
     display: flex;
@@ -81,6 +87,6 @@ const items = (await getCollection('lab')).sort((a, b) => a.data.order - b.data.
   .lab__cta p { font-size: var(--step-1); }
 
   @media (min-width: 64em) {
-    .lab__grid { grid-template-columns: 1fr 1fr; }
+    .lab__grid { grid-template-columns: repeat(3, 1fr); }
   }
 </style>

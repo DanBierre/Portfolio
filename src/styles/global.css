@@ -112,6 +112,7 @@ a:hover { text-decoration-thickness: 2px; }
 /* Buttons: pills that invert their ground. */
 .btn {
   display: inline-flex;
+  background: transparent; /* <button>s otherwise keep the browser's grey ButtonFace */
   align-items: center;
   justify-content: center;
   gap: 0.5em;

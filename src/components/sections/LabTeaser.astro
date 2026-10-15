@@ -30,7 +30,7 @@ const items = all.slice(0, 3);
             <div class="lab__caption">
               <h3>{item.data.title}</h3>
               <p class="label">
-                <span class="num">{String(i + 1).padStart(2, '0')}</span> / {item.data.interactive ? t.lab.interactive : t.lab.study}
+                <span class="num">{String(i + 1).padStart(2, '0')}</span> / {item.data.status === 'live' ? t.lab.live : t.lab.progress}
               </p>
             </div>
             <p class="lab__summary">{item.data.summary}</p>

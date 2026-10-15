@@ -10,23 +10,27 @@ const pt = (r: number, deg: number, cx: number, cy: number): [number, number] =>
 };
 const xy = ([x, y]: [number, number]) => `${x.toFixed(2)} ${y.toFixed(2)}`;
 
-export function brushRing({ cx = 50, cy = 50, r, width, seed = 1, steps = 90 }: {
+export function brushRing({ cx = 50, cy = 50, r, width, seed = 1, steps = 90, wobble = 1, sweep = SWEEP }: {
   cx?: number;
   cy?: number;
   r: number;
   width: number;
   seed?: number;
   steps?: number;
+  /** Hand-wobble multiplier: 0 is a machine-perfect stroke, 1 is the original brush. */
+  wobble?: number;
+  /** How far round the brush travels, in degrees (338 leaves the classic open gap). */
+  sweep?: number;
 }): string {
   const outer: [number, number][] = [];
   const inner: [number, number][] = [];
   for (let i = 0; i <= steps; i++) {
     const t = i / steps;
     const pressure = t < 0.08 ? 0.55 + 0.45 * (t / 0.08) : 1 - 0.68 * ((t - 0.08) / 0.92) ** 1.35;
-    const wobble = 1 + 0.07 * Math.sin(t * 13 + seed) + 0.04 * Math.sin(t * 31 + seed * 2.3);
-    const half = (width * pressure * wobble) / 2;
-    const rr = r * (1 + 0.014 * Math.sin(t * 6 + seed * 1.7));
-    const deg = START + SWEEP * t;
+    const shake = 1 + wobble * (0.07 * Math.sin(t * 13 + seed) + 0.04 * Math.sin(t * 31 + seed * 2.3));
+    const half = (width * pressure * shake) / 2;
+    const rr = r * (1 + wobble * 0.014 * Math.sin(t * 6 + seed * 1.7));
+    const deg = START + sweep * t;
     outer.push(pt(rr + half, deg, cx, cy));
     inner.push(pt(rr - half, deg, cx, cy));
   }

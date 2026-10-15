@@ -1,0 +1,172 @@
+---
+import Base from '../../layouts/Base.astro';
+import BookCall from '../../components/BookCall.astro';
+import { brushRing } from '../../lib/enso';
+import { site } from '../../site.config';
+
+// First stroke is drawn at build time, so the page shows a ring even without JavaScript.
+const initial = { width: 9, wobble: 1, sweep: 338, seed: 2 };
+const d = brushRing({ r: 40, ...initial });
+const inks = [
+  { id: 'rust', label: 'Rust', hex: '#c8613a' },
+  { id: 'bone', label: 'Bone', hex: '#ecebe7' },
+  { id: 'gold', label: 'Gold', hex: '#c9a24f' },
+];
+---
+
+<Base
+  title={`Ensō Generator | ${site.name}`}
+  description="Draw brush ensō rings with the code that paints Shoji's focus rings: pressure, wobble and sweep, exported as SVG."
+>
+  <div class="wrap enso-page">
+    <header class="enso-page__head">
+      <a class="label" href="/lab">← Lab</a>
+      <h1>Ensō Generator</h1>
+      <p class="enso-page__intro">
+        The same brush that paints the focus rings in Shoji. Each stroke follows a pressure curve with a little hand
+        wobble, so no two are alike: a tiny system for generative brand marks.
+      </p>
+    </header>
+
+    <div class="enso-page__grid">
+      <figure class="enso-page__stage">
+        <svg id="enso-canvas" viewBox="0 0 100 100" role="img" aria-label="A brush ensō ring" style={`color: ${inks[0].hex}`}>
+          <path d={d} fill="currentColor"></path>
+        </svg>
+        <figcaption class="label">seed <span class="num" data-seed-out>{initial.seed}</span></figcaption>
+      </figure>
+
+      <form class="enso-page__controls" data-enso-controls>
+        <noscript><p class="enso-page__nojs">The generator needs JavaScript to draw new strokes.</p></noscript>
+        <div class="control">
+          <label for="enso-width">Brush width</label>
+          <input id="enso-width" name="width" type="range" min="3" max="18" step="0.5" value={initial.width} />
+          <output for="enso-width" class="num">{initial.width}</output>
+        </div>
+        <div class="control">
+          <label for="enso-wobble">Wobble</label>
+          <input id="enso-wobble" name="wobble" type="range" min="0" max="2.5" step="0.1" value={initial.wobble} />
+          <output for="enso-wobble" class="num">{initial.wobble}</output>
+        </div>
+        <div class="control">
+          <label for="enso-sweep">Sweep</label>
+          <input id="enso-sweep" name="sweep" type="range" min="240" max="350" step="1" value={initial.sweep} />
+          <output for="enso-sweep" class="num">{initial.sweep}°</output>
+        </div>
+        <fieldset class="control control--inks">
+          <legend>Ink</legend>
+          {
+            inks.map((ink, i) => (
+              <label class="ink">
+                <input type="radio" name="ink" value={ink.hex} checked={i === 0} />
+                <span class="ink__swatch" style={`background: ${ink.hex}`} />
+                {ink.label}
+              </label>
+            ))
+          }
+        </fieldset>
+        <div class="enso-page__actions">
+          <button class="btn btn--primary" type="button" data-new-stroke>New stroke</button>
+          <button class="btn btn--secondary" type="button" data-download>Download SVG</button>
+        </div>
+      </form>
+    </div>
+
+    <aside class="enso-page__cta">
+      <p>Want a generative system like this for a brand or campaign?</p>
+      <BookCall variant="primary" />
+    </aside>
+  </div>
+</Base>
+
+<script>
+  import { brushRing } from '../../lib/enso';
+
+  const form = document.querySelector<HTMLFormElement>('[data-enso-controls]')!;
+  const svg = document.getElementById('enso-canvas') as unknown as SVGSVGElement;
+  const path = svg.querySelector('path')!;
+  const seedOut = document.querySelector<HTMLElement>('[data-seed-out]')!;
+  let seed = 2;
+
+  const read = () => {
+    const data = new FormData(form);
+    return {
+      width: Number(data.get('width')),
+      wobble: Number(data.get('wobble')),
+      sweep: Number(data.get('sweep')),
+      ink: String(data.get('ink')),
+    };
+  };
+
+  const draw = () => {
+    const { width, wobble, sweep, ink } = read();
+    path.setAttribute('d', brushRing({ r: 40, width, wobble, sweep, seed }));
+    svg.style.color = ink;
+    seedOut.textContent = String(seed);
+    for (const out of form.querySelectorAll('output')) {
+      const input = form.elements.namedItem(out.htmlFor.value) as HTMLInputElement;
+      out.textContent = input.name === 'sweep' ? `${input.value}°` : input.value;
+    }
+  };
+
+  form.addEventListener('input', draw);
+  form.querySelector('[data-new-stroke]')!.addEventListener('click', () => {
+    seed = 1 + Math.floor(Math.random() * 99999);
+    draw();
+  });
+  form.querySelector('[data-download]')!.addEventListener('click', () => {
+    const { ink } = read();
+    const file = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="1000" height="1000"><path d="${path.getAttribute('d')}" fill="${ink}"/></svg>\n`;
+    const a = Object.assign(document.createElement('a'), {
+      href: URL.createObjectURL(new Blob([file], { type: 'image/svg+xml' })),
+      download: `enso-${seed}.svg`,
+    });
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+</script>
+
+<style>
+  .enso-page { padding-block: var(--space-xl) 0; }
+  .enso-page__head { display: grid; gap: var(--space-m); margin-bottom: var(--space-xl); }
+  .enso-page__head a { text-decoration: none; }
+  .enso-page__intro { font-size: var(--step-1); color: var(--text-muted); max-width: 46ch; }
+
+  .enso-page__grid { display: grid; gap: var(--space-xl); align-items: start; }
+  .enso-page__stage {
+    display: grid;
+    gap: var(--space-s);
+    padding: var(--space-l);
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+  #enso-canvas { width: 100%; height: auto; aspect-ratio: 1; transition: color 0.3s var(--ease-out); }
+
+  .enso-page__controls { display: grid; gap: var(--space-m); }
+  .control { display: grid; grid-template-columns: 1fr auto; gap: var(--space-xs) var(--space-m); align-items: center; }
+  .control label, .control legend { font-weight: 500; }
+  .control input[type='range'] { grid-column: 1 / -1; grid-row: 2; width: 100%; accent-color: var(--text); }
+  .control output { grid-column: 2; grid-row: 1; color: var(--text-muted); }
+  .control--inks { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-s) var(--space-m); }
+  .control--inks legend { width: 100%; margin-bottom: var(--space-xs); }
+  .ink { display: inline-flex; align-items: center; gap: 0.5em; cursor: pointer; }
+  .ink input { accent-color: var(--text); }
+  .ink__swatch { width: 1rem; height: 1rem; border-radius: 50%; border: 1px solid var(--border); }
+  .enso-page__actions { display: flex; flex-wrap: wrap; gap: var(--space-s); margin-top: var(--space-s); }
+  .enso-page__nojs { color: var(--text-muted); }
+
+  .enso-page__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-m);
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--border);
+  }
+  .enso-page__cta p { font-size: var(--step-1); }
+
+  @media (min-width: 64em) {
+    .enso-page__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); }
+  }
+</style>
