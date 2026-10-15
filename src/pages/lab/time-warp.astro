@@ -31,6 +31,7 @@ const curve = (fn: (p: number) => number) =>
         <video
           data-video
           src={`/media/japan/${CLIPS[0]}.mp4`}
+          poster={`/media/japan/${CLIPS[0]}.jpg`}
           muted
           playsinline
           preload="none"
@@ -87,6 +88,7 @@ const curve = (fn: (p: number) => number) =>
 
 <script>
   import { warp, speed } from '../../lib/indie-edit';
+  import { onFirstInteraction } from '../../lib/first-interaction';
 
   const $ = <T extends Element>(s: string) => document.querySelector<T>(s)!;
   const video = $<HTMLVideoElement>('[data-video]');
@@ -108,6 +110,7 @@ const curve = (fn: (p: number) => number) =>
   };
   form.addEventListener('input', (e) => {
     if ((e.target as HTMLInputElement).name === 'clip') {
+      video.poster = `/media/japan/${form.clip.value}.jpg`;
       video.src = `/media/japan/${form.clip.value}.mp4`;
       if (running) video.play().catch(() => {});
     } else redraw();
@@ -148,12 +151,9 @@ const curve = (fn: (p: number) => number) =>
   play.addEventListener('click', () => setRunning(!running));
   video.addEventListener('error', () => ($<HTMLElement>('[data-missing]').hidden = false));
 
-  // Motion welcome: start by itself once idle and on screen. Reduced motion: wait for Play.
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const begin = () =>
-      new IntersectionObserver(([e]) => setRunning(e.isIntersecting)).observe(video);
-    'requestIdleCallback' in window ? requestIdleCallback(begin, { timeout: 2000 }) : setTimeout(begin, 1200);
-  }
+  // Motion welcome: starts by itself once someone is here and it is on screen. Reduced motion: wait for Play.
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches)
+    onFirstInteraction(() => new IntersectionObserver(([e]) => setRunning(e.isIntersecting)).observe(video));
 </script>
 
 <style>

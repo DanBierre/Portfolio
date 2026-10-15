@@ -1,7 +1,7 @@
 // Indie edit renderer: one WebGL fragment shader that cuts between shots with speed ramps,
 // motion blur and trails, night halation, film burns, flash frames, grain and gate weave.
 // Returns null when WebGL is unavailable so the caller can keep the still frame.
-import { frameAt, CLIPS, type Clip, type Frame } from './indie-edit';
+import { frameAt, shots, type Clip, type Frame } from './indie-edit';
 
 const VERT = `attribute vec2 a; varying vec2 vUv; void main(){ vUv = a * .5 + .5; gl_Position = vec4(a, 0., 1.); }`;
 
@@ -160,14 +160,19 @@ export function createIndieEdit(
   };
   img.src = photoUrl;
 
-  // Footage: one muted, off-DOM video per cut, fetched once the edit starts (never during first load).
-  const videos = {} as Record<Clip, HTMLVideoElement>;
-  const loadClips = () => {
-    if (!clipBase || videos.street) return;
-    for (const c of CLIPS)
-      videos[c] = Object.assign(document.createElement('video'), {
-        src: `${clipBase}${c}.mp4`, muted: true, playsInline: true, preload: 'auto',
-      });
+  // Footage: one muted, off-DOM video per cut, fetched a shot or two ahead of when it plays, never
+  // during first load. Visitors asking to save data get the photo and the night scene only.
+  const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+  const videos: Partial<Record<Clip, HTMLVideoElement>> = {};
+  const prime = (from: number) => {
+    if (!clipBase || saveData) return;
+    for (const k of [0, 1, 2]) {
+      const c = shots[(from + k) % shots.length].clip;
+      if (c && !videos[c])
+        videos[c] = Object.assign(document.createElement('video'), {
+          src: `${clipBase}${c}.mp4`, muted: true, playsInline: true, preload: 'auto',
+        });
+    }
   };
   let shown = -1;
   let playing: HTMLVideoElement | null = null;
@@ -176,6 +181,7 @@ export function createIndieEdit(
   const bindSource = (f: Frame): number => {
     if (f.shot !== shown) {
       shown = f.shot;
+      prime(f.shot);
       playing?.pause();
       playing = f.clip ? (videos[f.clip] ?? null) : null;
       if (playing) {
@@ -241,7 +247,6 @@ export function createIndieEdit(
   return {
     start() {
       if (raf) return;
-      loadClips();
       shown = -1; // restart the current cut's footage
       last = 0;
       raf = requestAnimationFrame(draw);

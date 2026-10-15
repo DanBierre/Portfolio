@@ -52,6 +52,52 @@
       animation-timeline: view();
       animation-range: entry 0% cover 30%;
     }
+
+    /* End credits: the footer wordmark wipes on and pulls focus, the last frame of the page. */
+    @keyframes credits {
+      from { clip-path: inset(0 100% 0 0); filter: blur(12px); }
+      60% { filter: blur(0); }
+    }
+    .footer__mark {
+      animation: credits linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 45%;
+    }
+
+    /* Service lines drop in like clips onto a timeline. */
+    @keyframes clip-in { from { opacity: 0; translate: -1.5rem 0; clip-path: inset(0 100% 0 0); } }
+    #services li {
+      animation: clip-in linear both;
+      animation-timeline: view();
+      animation-range: entry 5% entry 70%;
+    }
+
+    /* How we work as an edit track: a rust playhead sweeps the four steps and each number cuts in
+       with a flash frame as it passes. Four columns only, where the track reads left to right. */
+    @media (min-width: 72em) {
+      #process .process__steps { position: relative; view-timeline: --steps; }
+      #process .process__steps::before {
+        content: '';
+        position: absolute;
+        inset: -1px 0 auto;
+        height: 2px;
+        background: var(--rust);
+        transform-origin: left;
+        animation: track linear both;
+        animation-timeline: --steps;
+        animation-range: cover 10% cover 45%;
+      }
+      @keyframes track { from { scale: 0 1; } }
+      @keyframes cut-num {
+        from { opacity: 0; filter: brightness(3) blur(4px); }
+        40% { opacity: 1; }
+      }
+      #process li .num { animation: cut-num linear both; animation-timeline: --steps; }
+      #process li:nth-child(1) .num { animation-range: cover 10% cover 14%; }
+      #process li:nth-child(2) .num { animation-range: cover 18.75% cover 22.75%; }
+      #process li:nth-child(3) .num { animation-range: cover 27.5% cover 31.5%; }
+      #process li:nth-child(4) .num { animation-range: cover 36.25% cover 40.25%; }
+    }
   }
   ::view-transition-group(*) {
     animation-duration: 500ms;

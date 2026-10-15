@@ -19,13 +19,17 @@ const steps = [
   ['Colour as accent', 'Saturation to 80% everywhere, so colour lands where the eye should go.'],
   ['Lens', 'A 0.7 px blur and a light vignette take the digital edge off.'],
 ];
-const first = 'crossing'; // the biggest change: day to dusk
+const first = 'subway'; // a clear change (fluorescent green out) with light posters for a fast first paint
 ---
 
 <Base
   title={`Grade | ${site.name}`}
   description="Wipe between raw stock footage and the graded cut used on the homepage, and see each step of the night-film look."
 >
+  <Fragment slot="head">
+    <link rel="preload" as="image" href={`/media/japan/${first}.jpg`} fetchpriority="high" />
+    <link rel="preload" as="image" href={`/media/japan/raw/${first}.jpg`} />
+  </Fragment>
   <div class="wrap grade-page">
     <header class="grade-page__head">
       <a class="label" href="/lab">← Lab</a>
@@ -37,10 +41,11 @@ const first = 'crossing'; // the biggest change: day to dusk
     </header>
 
     <figure class="grade-page__frame" data-frame style="--wipe: 50%">
-      <video data-raw src={`/media/japan/raw/${first}.mp4`} muted loop playsinline preload="none" aria-hidden="true"></video>
+      <video data-raw src={`/media/japan/raw/${first}.mp4`} poster={`/media/japan/raw/${first}.jpg`} muted loop playsinline preload="none" aria-hidden="true"></video>
       <video
         data-graded
         src={`/media/japan/${first}.mp4`}
+        poster={`/media/japan/${first}.jpg`}
         muted
         loop
         playsinline
@@ -51,7 +56,7 @@ const first = 'crossing'; // the biggest change: day to dusk
       <span class="grade-page__tag grade-page__tag--graded label" aria-hidden="true">graded</span>
     </figure>
 
-    <form class="grade-page__controls" data-controls>
+    <form class="grade-page__controls" data-controls data-notes={JSON.stringify(notes)}>
       <fieldset class="clips">
         <legend class="label">Clip</legend>
         {
@@ -94,13 +99,16 @@ const first = 'crossing'; // the biggest change: day to dusk
   </div>
 </Base>
 
-<script define:vars={{ notes }}>
+<script>
+  import { onFirstInteraction } from '../../lib/first-interaction';
+
   const frame = document.querySelector('[data-frame]');
   const raw = document.querySelector('[data-raw]');
   const graded = document.querySelector('[data-graded]');
   const form = document.querySelector('[data-controls]');
   const play = document.querySelector('[data-play]');
   const note = document.querySelector('[data-note]');
+  const notes = JSON.parse(form.dataset.notes);
   let playing = false;
 
   const setWipe = (v) => frame.style.setProperty('--wipe', `${v}%`);
@@ -126,22 +134,18 @@ const first = 'crossing'; // the biggest change: day to dusk
   form.addEventListener('input', (e) => {
     if (e.target.name === 'wipe') return setWipe(e.target.value);
     const c = form.clip.value;
+    raw.poster = `/media/japan/raw/${c}.jpg`;
+    graded.poster = `/media/japan/${c}.jpg`;
     raw.src = `/media/japan/raw/${c}.mp4`;
     graded.src = `/media/japan/${c}.mp4`;
     note.textContent = notes[c];
     if (playing) setPlaying(true);
-    else both((v) => (v.currentTime = 1));
   });
   play.addEventListener('click', () => setPlaying(!playing));
 
-  // Fetch footage only when the frame is on screen. Motion welcome: it plays; otherwise a still frame.
-  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  new IntersectionObserver(([e], io) => {
-    if (!e.isIntersecting) return;
-    io.disconnect();
-    both((v) => (v.preload = 'auto'));
-    still ? both((v) => (v.currentTime = 1)) : setPlaying(true);
-  }).observe(frame);
+  // Posters until someone is here; then, with motion welcome, it plays while on screen.
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches)
+    onFirstInteraction(() => new IntersectionObserver(([e]) => setPlaying(e.isIntersecting)).observe(frame));
 </script>
 
 <style>

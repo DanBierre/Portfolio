@@ -50,4 +50,7 @@ for c in "${CLIPS[@]}"; do
   # Ungraded twin for the Lab's Grade wipe: same frames, no look, 720p is plenty under a wipe.
   mkdir -p "$OUT/raw"
   "$FF" -v error -y -ss "$in" -t "$LEN" -i "$SRC/$id-1080.mp4" -an -vf "fps=24,scale=1280:-2,format=yuv420p"     -c:v libx264 -preset slow -crf 28 -g 12 -movflags +faststart "$OUT/raw/$name.mp4"
+  # Posters: the Lab pages show these until a visitor interacts, so footage never weighs on first load.
+  "$FF" -v error -y -ss 1 -i "$OUT/$name.mp4" -frames:v 1 -vf scale=800:-2 -q:v 7 "$OUT/$name.jpg"
+  "$FF" -v error -y -ss 1 -i "$OUT/raw/$name.mp4" -frames:v 1 -vf scale=800:-2 -q:v 7 "$OUT/raw/$name.jpg"
 done

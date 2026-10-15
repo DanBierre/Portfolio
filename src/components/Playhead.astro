@@ -57,6 +57,11 @@
       color: var(--text-muted);
       pointer-events: none;
     }
+    /* Off the end of the timeline: clear the footer's contact row. */
+    @supports (animation-timeline: scroll()) {
+      .timecode { animation: tc-out linear both; animation-timeline: scroll(root); }
+      @keyframes tc-out { 0%, 93% { opacity: 1; } 97%, 100% { opacity: 0; } }
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {

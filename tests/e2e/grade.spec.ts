@@ -13,8 +13,8 @@ test('grade: the wipe reveals more of the graded footage as it moves', async ({ 
 
 test('grade: picking a clip swaps raw and graded together', async ({ page }) => {
   await page.goto('/lab/grade');
-  await page.getByRole('radio', { name: 'subway' }).check();
-  await expect(page.locator('[data-raw]')).toHaveAttribute('src', /raw\/subway\.mp4$/);
-  await expect(page.locator('[data-graded]')).toHaveAttribute('src', /japan\/subway\.mp4$/);
-  await expect(page.locator('[data-note]')).toContainText(/green/i);
+  await page.getByRole('radio', { name: 'crossing' }).check();
+  await expect(page.locator('[data-raw]')).toHaveAttribute('src', /raw\/crossing\.mp4$/);
+  await expect(page.locator('[data-graded]')).toHaveAttribute('src', /japan\/crossing\.mp4$/);
+  await expect(page.locator('[data-note]')).toContainText(/dusk/i);
 });
