@@ -204,7 +204,7 @@ export function createIndieEdit(
 
   // Render below device resolution: softer, more "film", and cheaper.
   const resize = () => {
-    const scale = Math.min(window.devicePixelRatio || 1, 1.25) * 0.8;
+    const scale = Math.min(window.devicePixelRatio || 1, 1) * 0.6; // full bleed: soft, film-like and cheap
     canvas.width = Math.max(1, Math.round(canvas.clientWidth * scale));
     canvas.height = Math.max(1, Math.round(canvas.clientHeight * scale));
     gl.viewport(0, 0, canvas.width, canvas.height);

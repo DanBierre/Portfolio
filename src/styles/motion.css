@@ -1,8 +1,7 @@
 /* All motion lives here, and only runs when the visitor hasn't asked for less.
    Everything is visible by default; animation only enhances. */
 @media (prefers-reduced-motion: no-preference) {
-  /* The authored moment: the headline develops as if seen through washi, from blurred grain to crisp.
-     The grain itself is an SVG displacement driven from Hero.astro; this is the focus and exposure. */
+  /* Focus pull, used by section headings as they scroll in and the hero's note and actions. */
   @keyframes develop {
     from {
       opacity: 0.15;
@@ -12,20 +11,35 @@
       opacity: 0.9;
     }
   }
-  #hero .hero__title .line {
-    animation: develop 1.6s var(--ease-out) both;
-  }
-  #hero .hero__title .line--indent { animation-delay: 120ms; }
-  #hero .hero__note,
-  #hero .hero__actions {
-    animation: develop 1.2s var(--ease-out) 700ms both;
-  }
 
-  /* Screened footage slides open once, like a shoji door. */
+  /* The authored moment, a kinetic intro cut like the edit behind it. Each word hard-cuts in with
+     a horizontal smear (motion blur) and settles; gold words flash like a burn; the last word
+     lands on a speed ramp; then the footage slides open like a shoji door. Delays come from Hero. */
+  @keyframes kin-cut {
+    0% { opacity: 0; translate: -0.3em 0; scale: 1.25 1; filter: blur(6px); }
+    0.1% { opacity: 1; }
+    45% { translate: 0.02em 0; scale: 0.99 1; filter: blur(0); }
+    100% { opacity: 1; translate: 0 0; scale: 1; filter: none; }
+  }
+  @keyframes kin-flash {
+    0% { color: #fff4da; text-shadow: 0 0 0.45em rgb(201 162 79 / 0.9); }
+  }
+  @keyframes kin-ramp {
+    0% { letter-spacing: 0.5em; }
+    30% { letter-spacing: 0.06em; }
+    70% { letter-spacing: 0; }
+  }
+  #hero .kw { animation: kin-cut 560ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--d) both; }
+  #hero .kw.accent { animation: kin-cut 560ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--d) both, kin-flash 900ms ease-out var(--d) both; }
+  #hero .kw--ramp { animation: kin-cut 560ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--d) both, kin-ramp 900ms cubic-bezier(0.1, 0.9, 0.9, 0.1) var(--d) both; }
+  #hero .hero__note,
+  #hero .hero__actions,
+  #hero .hero__slate { animation: develop 0.9s var(--ease-out) var(--open) both; }
+
   @keyframes screen-open {
     from { clip-path: inset(0 50% 0 50%); }
   }
-  #hero .hero__screen { animation: screen-open 1.4s var(--ease-slide) 200ms both; }
+  #hero .hero__media { animation: screen-open 1.3s var(--ease-slide) var(--open) both; }
 
   /* Page transitions: a hard cut with a flash frame, like the hero edit; the work thumbnail still
      morphs into the case study header. */

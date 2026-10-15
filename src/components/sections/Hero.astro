@@ -9,49 +9,65 @@ import { shots } from '../../lib/indie-edit';
 const lang = langOf(Astro.currentLocale);
 const t = ui[lang];
 
+// Kinetic intro: every word is its own cut. Beats tighten like the edit (0.1 s apart) with a held
+// beat before each gold word, and the last word lands on a speed ramp.
+type Word = { text: string; accent?: boolean; delay: number; last?: boolean };
+let beat = 0;
+const lines: (Word | string)[][] = t.hero.lines.map((line) =>
+  line.flatMap((seg) =>
+    (seg.accent || lang === 'ja' ? [seg.text] : seg.text.split(/(\s+)/)).map((text) => {
+      if (!text.trim()) return text;
+      if (seg.accent) beat += 0.1;
+      const w: Word = { text, accent: seg.accent, delay: +beat.toFixed(2) };
+      beat += 0.1;
+      return w;
+    }),
+  ),
+);
+const words = lines.flat().filter((w): w is Word => typeof w !== 'string');
+words[words.length - 1].last = true;
+const open = +(beat + 0.05).toFixed(2); // the footage opens once the headline has landed
+
 // The still is a frame of the edit itself (behind the paper), shown until the edit runs, and for
-// reduced motion, no WebGL and software-only graphics.
+// reduced motion, no WebGL, Save-Data and software-only graphics.
 ---
 
-<section id="hero" class="hero lattice-field spined" aria-labelledby="hero-title">
+<section id="hero" class="hero spined" aria-labelledby="hero-title" style={`--open: ${open}s`}>
+  <div class="hero__media" aria-hidden="true">
+    <Picture
+      src={still}
+      formats={['avif', 'webp']}
+      widths={[480, 800, 1080]}
+      sizes="100vw"
+      alt=""
+      loading="eager"
+      class="hero__still"
+      data-hero-still
+    />
+    <canvas class="hero__edit" data-hero-edit data-clips="/media/japan/" hidden></canvas>
+    <span class="hero__paper"></span>
+    <span class="hero__scrim"></span>
+    <span class="hero__kumiko lattice"></span>
+  </div>
   <SpineMark section="hero" top="var(--space-l)" />
   <div class="wrap hero__grid">
-    <figure class="hero__screen" aria-hidden="true">
-      <Picture
-        src={still}
-        formats={['avif', 'webp']}
-        widths={[400, 640, 800]}
-        sizes="(min-width: 48em) 30vw, 60vw"
-        alt=""
-        loading="eager"
-        class="hero__still"
-        data-hero-still
-      />
-      <canvas class="hero__edit" data-hero-edit data-clips="/media/japan/" hidden></canvas>
-      <span class="hero__paper"></span>
-      <!-- Burn-in, as on an editor's dailies: the code driving this frame and the cut's timeline. -->
-      <div class="hero__slate" data-hero-slate hidden>
-        <ol class="hero__track">
-          {shots.map((s, i) => <li data-shot={i} style={`flex-grow: ${s.duration}`}></li>)}
-        </ol>
-        <p>
-          <span class="hero__code" data-read="code"></span>
-          <span>frameAt(<b data-read="clock">00.00</b>) ×<b data-read="rate">1.00</b></span>
-        </p>
-      </div>
-      <span class="hero__kumiko lattice"></span>
-      <span class="hero__divide"></span>
-    </figure>
-
     <div class="hero__statement">
       <h1 id="hero-title" class="hero__title" aria-label={t.hero.title}>
         {
-          t.hero.lines.map((line, i) => (
+          lines.map((line, i) => (
             <>
               <span class:list={['line', { 'line--indent': i > 0 }]} aria-hidden="true">
-                {line.map((seg) => (seg.accent ? <span class="accent">{seg.text}</span> : seg.text))}
+                {line.map((w) =>
+                  typeof w === 'string' ? (
+                    w
+                  ) : (
+                    <span class:list={['kw', { accent: w.accent, 'kw--ramp': w.last }]} style={`--d: ${w.delay}s`}>
+                      {w.text}
+                    </span>
+                  ),
+                )}
               </span>
-              {i < t.hero.lines.length - 1 && lang !== 'ja' && ' '}
+              {i < lines.length - 1 && lang !== 'ja' && ' '}
             </>
           ))
         }
@@ -65,25 +81,27 @@ const t = ui[lang];
       <p class="hero__live label"><span class="hero__now" aria-hidden="true"></span>{t.contact.availability}</p>
     </div>
 
-    <button
-      class="hero__toggle label"
-      type="button"
-      aria-label={t.hero.pause}
-      data-pause={t.hero.pause}
-      data-play={t.hero.play}
-      hidden>
-      <span class="when-playing" aria-hidden="true">pause</span><span class="when-paused" aria-hidden="true">play</span>
-    </button>
+    <!-- Burn-in, as on an editor's dailies: the code driving this frame and the cut's timeline. -->
+    <div class="hero__slate" data-hero-slate aria-hidden="true" hidden>
+      <ol class="hero__track">
+        {shots.map((s, i) => <li data-shot={i} style={`flex-grow: ${s.duration}`}></li>)}
+      </ol>
+      <p>
+        <span class="hero__code" data-read="code"></span>
+        <span>frameAt(<b data-read="clock">00.00</b>) ×<b data-read="rate">1.00</b></span>
+      </p>
+    </div>
   </div>
 
-  <!-- The diffusion reveal: displacement noise that resolves to zero as the headline "develops". -->
-  <svg class="hero__filters" width="0" height="0" aria-hidden="true" focusable="false">
-    <filter id="develop" x="-10%" y="-20%" width="120%" height="140%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="11" result="noise"></feTurbulence>
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G"
-      ></feDisplacementMap>
-    </filter>
-  </svg>
+  <button
+    class="hero__toggle label"
+    type="button"
+    aria-label={t.hero.pause}
+    data-pause={t.hero.pause}
+    data-play={t.hero.play}
+    hidden>
+    <span class="when-playing" aria-hidden="true">pause</span><span class="when-paused" aria-hidden="true">play</span>
+  </button>
 </section>
 
 <script>
@@ -91,23 +109,6 @@ const t = ui[lang];
   import { shots, LOOP, type Frame } from '../../lib/indie-edit';
 
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // Diffusion reveal: the headline resolves out of noise, like an image generating through paper.
-  const title = document.querySelector<HTMLElement>('.hero__title');
-  const displace = document.querySelector('#develop feDisplacementMap');
-  if (title && displace && !reduce) {
-    const start = performance.now();
-    const duration = 1600;
-    title.classList.add('is-developing');
-    const step = (now: number) => {
-      const t = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - t, 4);
-      displace.setAttribute('scale', String(90 * (1 - eased)));
-      if (t < 1) requestAnimationFrame(step);
-      else title.classList.remove('is-developing');
-    };
-    requestAnimationFrame(step);
-  }
 
   // Indie edit: a looping Gawx-style cut (speed ramps, motion blur, film burns) rendered in WebGL.
   // Only when motion is welcome and WebGL exists; otherwise the graded still stays. Always pausable (WCAG 2.2.2).
@@ -171,7 +172,9 @@ const t = ui[lang];
       // Start once the page is idle (never competing with first load), and only run while on screen.
       const begin = () =>
         new IntersectionObserver(([e]) => (e.isIntersecting && !paused ? edit.start() : edit.stop())).observe(canvas);
-      'requestIdleCallback' in window ? requestIdleCallback(begin, { timeout: 2000 }) : setTimeout(begin, 1200);
+      // ...and not before the intro has opened the doors, so the first shot plays in full.
+      const opens = parseFloat(getComputedStyle(canvas.closest('section')!).getPropertyValue('--open')) * 1000 || 0;
+      setTimeout(() => ('requestIdleCallback' in window ? requestIdleCallback(begin, { timeout: 2000 }) : begin()), opens);
       toggle.hidden = false;
       sync();
     }
@@ -179,8 +182,46 @@ const t = ui[lang];
 </script>
 
 <style>
-  .hero { padding-block: var(--space-l); overflow: hidden; }
-  .hero__filters { position: absolute; }
+  /* The hero is always a dark screen with footage behind it, in both themes. */
+  .hero {
+    --text: #ecebe7;
+    --text-muted: #c2c0ba;
+    --border: rgb(236 235 231 / 0.28);
+    --gold: #c9a24f;
+    --rust: #c8613a;
+    --focus: #ecebe7;
+    --btn-bg: #ecebe7;
+    --btn-text: #141414;
+    --spine-line: rgb(236 235 231 / 0.45);
+    --lattice: rgb(236 235 231 / 0.07);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: #141414;
+    color: var(--text);
+  }
+
+  /* Footage, full bleed, behind paper and a kumiko lattice. */
+  .hero__media { position: absolute; inset: 0; z-index: -1; }
+  .hero__media :global(picture) { display: contents; }
+  .hero__media :global(.hero__still),
+  .hero__edit { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero__paper {
+    position: absolute;
+    inset: 0;
+    background: url('/textures/washi.svg');
+    mix-blend-mode: soft-light;
+    opacity: 0.5;
+  }
+  /* Scrim: the headline corner falls to charcoal so the type always reads; the top right stays open. */
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top, rgb(20 20 20 / 0.92) 0%, rgb(20 20 20 / 0.55) 45%, rgb(20 20 20 / 0.2) 75%, rgb(20 20 20 / 0.35)),
+      linear-gradient(to right, rgb(20 20 20 / 0.6), transparent 65%);
+  }
+  .hero__kumiko { position: absolute; inset: 0; opacity: 0.8; }
 
   .hero__grid {
     position: relative;
@@ -188,67 +229,9 @@ const t = ui[lang];
     grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: var(--space-m);
     row-gap: var(--space-l);
-    min-height: calc(100svh - 3.75rem - var(--space-l) * 2);
-    padding-top: calc(min(44svh, 34rem) + var(--space-m));
+    min-height: calc(100svh - 3.75rem);
+    padding-block: var(--space-2xl) var(--space-m);
     align-content: end;
-  }
-
-  /* Screened footage: an off-centre portrait panel behind a kumiko lattice, in tall shoji proportion. */
-  .hero__screen {
-    position: absolute;
-    top: 0;
-    right: var(--gutter);
-    height: min(44svh, 34rem);
-    aspect-ratio: 1 / 1; /* two 1:2 shoji panels side by side */
-    overflow: hidden;
-    background: var(--surface);
-  }
-  .hero__divide { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; translate: -1px 0; background: rgb(20 20 20 / 0.85); }
-  .hero__screen :global(.hero__still),
-  .hero__edit { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  /* The still is graded like the edit: warm, crushed, a little faded. */
-  .hero__edit { image-rendering: auto; }
-  /* Washi over the footage: the light reads as coming through paper. */
-  .hero__paper {
-    position: absolute;
-    inset: 0;
-    background: url('/textures/washi.svg'), radial-gradient(ellipse 80% 70% at 50% 45%, rgb(255 244 220 / 0.08), transparent 70%);
-    mix-blend-mode: soft-light;
-    opacity: 0.55;
-    pointer-events: none;
-  }
-
-  /* Burn-in slate along the foot of the footage. Fixed light-on-footage colours in both themes. */
-  .hero__slate {
-    position: absolute;
-    inset: auto 0 0;
-    padding: var(--space-s) var(--space-s) var(--space-xs);
-    background: linear-gradient(to top, rgb(20 20 20 / 0.55), transparent);
-    color: rgb(236 235 231 / 0.72);
-    font: 400 clamp(0.58rem, 0.45rem + 0.28vw, 0.7rem) / 1.4 var(--font-data);
-    letter-spacing: 0.02em;
-    text-shadow: 0 1px 2px rgb(0 0 0 / 0.6);
-    z-index: 1;
-    pointer-events: none;
-  }
-  .hero__slate p { display: flex; justify-content: space-between; gap: 1em; margin: 0.5em 0 0; white-space: nowrap; }
-  .hero__slate b { font-weight: 400; color: #ecebe7; font-variant-numeric: tabular-nums; }
-  .hero__code { overflow: hidden; text-overflow: ellipsis; }
-  /* The cut as a track: one segment per shot, sized by its length; the playing one fills in gold. */
-  .hero__track { display: flex; gap: 2px; margin: 0; padding: 0; list-style: none; }
-  .hero__track li {
-    --p: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #c9a24f calc(var(--p) * 100%), rgb(236 235 231 / 0.25) 0);
-  }
-  .hero__track li:not(.is-live) { --p: 0; }
-
-  .hero__kumiko {
-    position: absolute;
-    inset: 0;
-    background-position: 0 0, 0 0;
-    --lattice: rgb(236 235 231 / 0.22);
-    box-shadow: inset 0 0 0 1px rgb(236 235 231 / 0.22);
   }
 
   .hero__statement {
@@ -263,11 +246,11 @@ const t = ui[lang];
     letter-spacing: -0.04em;
     font-weight: 430;
     text-wrap: initial;
+    text-shadow: 0 0.04em 0.4em rgb(20 20 20 / 0.45);
   }
   .hero__title .line { display: block; }
   .hero__title .line--indent { padding-left: 2.6em; }
-  .hero__title.is-developing { filter: url(#develop); }
-  /* Japanese glyphs are full width: a smaller size keeps each line on one line. */
+  .hero__title .kw { display: inline-block; }
   .hero__title:lang(ja) { letter-spacing: 0; line-height: 1.1; font-weight: 600; }
 
   /* The note sits in the gap the indent leaves, as in a Kolkhoze statement. */
@@ -286,15 +269,36 @@ const t = ui[lang];
   .hero__live { display: inline-flex; align-items: center; gap: 0.6em; margin-left: var(--space-s); text-transform: none; }
   .hero__now { width: 8px; height: 8px; rotate: 45deg; background: var(--rust); flex: none; }
 
+  /* Burn-in slate: bottom right of the frame, like timecode on dailies. */
+  .hero__slate {
+    grid-column: 1 / -1;
+    justify-self: end;
+    width: min(26rem, 100%);
+    color: rgb(236 235 231 / 0.72);
+    font: 400 clamp(0.6rem, 0.48rem + 0.25vw, 0.72rem) / 1.4 var(--font-data);
+    letter-spacing: 0.02em;
+    pointer-events: none;
+  }
+  .hero__slate p { display: flex; justify-content: space-between; gap: 1em; margin: 0.5em 0 0; white-space: nowrap; }
+  .hero__slate b { font-weight: 400; color: #ecebe7; font-variant-numeric: tabular-nums; }
+  .hero__code { overflow: hidden; text-overflow: ellipsis; }
+  /* The cut as a track: one segment per shot, sized by its length; the playing one fills in gold. */
+  .hero__track { display: flex; gap: 2px; margin: 0; padding: 0; list-style: none; }
+  .hero__track li {
+    --p: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #c9a24f calc(var(--p) * 100%), rgb(236 235 231 / 0.25) 0);
+  }
+  .hero__track li:not(.is-live) { --p: 0; }
+
   .hero__toggle {
     position: absolute;
-    top: 0;
+    top: var(--space-s);
     right: var(--gutter);
     z-index: 1;
-    margin: var(--space-xs);
     padding: 0.3em 0.8em;
-    background: rgb(20 20 20 / 0.7);
-    color: #ecebe7; /* always light: it sits on the footage */
+    background: rgb(20 20 20 / 0.6);
+    color: #ecebe7;
     border: 1px solid rgb(236 235 231 / 0.3);
     border-radius: 999px;
     cursor: pointer;
@@ -305,11 +309,10 @@ const t = ui[lang];
   .hero__toggle[data-state='paused'] .when-paused { display: inline; }
 
   @media (max-width: 47.99em) {
-    .hero__grid { min-height: auto; padding-top: 0; }
-    .hero__screen { position: relative; top: auto; right: auto; grid-column: 1 / -1; justify-self: end; height: auto; width: 62%; }
-    .hero__toggle { right: 0; }
-    .hero__code { display: none; } /* too narrow for the code line on phones: track and clock stay */
+    .hero__grid { min-height: calc(100svh - 3.75rem - 4.5rem); padding-top: var(--space-xl); }
     .hero__title .line--indent { padding-left: 0; }
     .hero__note { position: static; width: auto; margin-top: var(--space-m); font-size: var(--step-0); }
+    .hero__code { display: none; } /* too narrow for the code line on phones: track and clock stay */
+    .hero__scrim { background: linear-gradient(to top, rgb(20 20 20 / 0.92) 0%, rgb(20 20 20 / 0.6) 55%, rgb(20 20 20 / 0.3)); }
   }
 </style>

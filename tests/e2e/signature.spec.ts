@@ -1,35 +1,45 @@
 import { test, expect, type Page } from '@playwright/test';
 
-// Records the largest noise displacement the headline went through, and whether it ended crisp.
-async function watchDiffusion(page: Page) {
-  await page.addInitScript(() => {
-    (window as any).__maxScale = 0;
-    new MutationObserver((records) => {
-      for (const r of records) {
-        const v = Number((r.target as Element).getAttribute('scale'));
-        (window as any).__maxScale = Math.max((window as any).__maxScale, v);
-      }
-    }).observe(document, { attributes: true, attributeFilter: ['scale'], subtree: true });
-  });
-}
+// Kinetic intro: the headline cuts in word by word on the edit's beats, then the footage opens.
+const words = (page: Page) => page.locator('#hero h1 .kw');
 
-test('diffusion reveal: headline develops out of noise and ends crisp', async ({ page }) => {
+test('kinetic intro: words cut in one after another and all land', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await watchDiffusion(page);
   await page.goto('/');
-  const title = page.locator('#hero h1');
-  await expect(title).not.toHaveClass(/is-developing/, { timeout: 4000 });
-  expect(await page.evaluate(() => (window as any).__maxScale)).toBeGreaterThan(40);
-  expect(await page.locator('#develop feDisplacementMap').getAttribute('scale')).toBe('0');
+  const n = await words(page).count();
+  expect(n).toBeGreaterThanOrEqual(7);
+  const delays = await words(page).evaluateAll((els) => els.map((e) => parseFloat(getComputedStyle(e).animationDelay)));
+  for (let i = 1; i < delays.length; i++) expect(delays[i]).toBeGreaterThan(delays[i - 1]);
+  expect(delays.at(-1)!).toBeLessThan(1.6); // the headline is fully in well inside the LCP budget
+  await expect
+    .poll(() => words(page).evaluateAll((els) => els.every((e) => getComputedStyle(e).opacity === '1')), { timeout: 4000 })
+    .toBe(true);
+  await expect(page.locator('#hero h1')).toHaveAccessibleName(/I’m Dan/);
 });
 
-test('diffusion reveal: skipped entirely under reduced motion', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await watchDiffusion(page);
+test('kinetic intro: the footage opens after the words', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
-  await page.waitForTimeout(600);
-  expect(await page.evaluate(() => (window as any).__maxScale)).toBe(0);
-  await expect(page.locator('#hero h1')).not.toHaveClass(/is-developing/);
+  const media = page.locator('.hero__media');
+  const delay = await media.evaluate((e) => parseFloat(getComputedStyle(e).animationDelay));
+  const last = await words(page).last().evaluate((e) => parseFloat(getComputedStyle(e).animationDelay));
+  expect(delay).toBeGreaterThanOrEqual(last);
+});
+
+test('kinetic intro: skipped entirely under reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const names = await words(page).evaluateAll((els) => els.map((e) => getComputedStyle(e).animationName));
+  expect(names.every((n) => n === 'none')).toBe(true);
+  expect(await page.locator('.hero__media').evaluate((e) => getComputedStyle(e).animationName)).toBe('none');
+});
+
+test('the footage is the hero background, behind the headline', async ({ page }) => {
+  await page.goto('/');
+  const hero = await page.locator('#hero').boundingBox();
+  const media = await page.locator('.hero__media').boundingBox();
+  expect(media!.width).toBeGreaterThanOrEqual(hero!.width - 1);
+  expect(media!.height).toBeGreaterThanOrEqual(hero!.height - 1);
 });
 
 test('pipeline reveal: each project lists how it was made', async ({ page }) => {
