@@ -4,43 +4,69 @@ import type { CollectionEntry } from 'astro:content';
 
 interface Props {
   entry: CollectionEntry<'work'>;
+  index: number;
 }
 
-const { entry } = Astro.props;
-const { title, clientType, role, outcome, cover, coverAlt, preview } = entry.data;
+const { entry, index } = Astro.props;
+const { title, clientType, role, year, cover, coverAlt, preview, pipeline } = entry.data;
+const num = String(index + 1).padStart(2, '0');
 ---
 
-<article class="work-card">
-  <a href={`/work/${entry.id}`} class="work-card__link">
-    <div class="work-card__media">
+<article class="row">
+  <a href={`/work/${entry.id}`} class="row__link">
+    <span class="row__num label tabular" aria-hidden="true">[{num}]</span>
+    <Picture
+      src={cover}
+      formats={['avif', 'webp']}
+      widths={[240, 480]}
+      sizes="10rem"
+      alt=""
+      class="row__thumb"
+      style={`view-transition-name: work-${entry.id}`}
+    />
+    <h3 class="row__title">{title}</h3>
+    <span class="row__meta label">{clientType}<br />{role}</span>
+    <span class="row__year label tabular">{year}</span>
+  </a>
+
+  <!-- Pipeline reveal: shoji screens slide apart to show the piece in colour and how it was made. -->
+  <div class="row__reveal">
+    <div class="screen">
       <Picture
         src={cover}
         formats={['avif', 'webp']}
-        widths={[640, 960, 1280, 1600]}
-        sizes="100vw"
+        widths={[480, 800, 1200]}
+        sizes="(min-width: 64em) 32vw, 100vw"
         alt={coverAlt}
-        style={`view-transition-name: work-${entry.id}`}
+        class="screen__img"
       />
       {
         preview && (
-          <video class="work-card__preview" muted loop playsinline preload="none" aria-hidden="true">
+          <video class="screen__video" muted loop playsinline preload="none" aria-hidden="true">
             <source src={preview} type="video/webm" />
           </video>
         )
       }
+      <span class="screen__panel screen__panel--left band lattice" aria-hidden="true"></span>
+      <span class="screen__panel screen__panel--right band lattice" aria-hidden="true"></span>
     </div>
-    <div class="wrap work-card__meta">
-      <h3 class="work-card__title">{title}</h3>
-      <p class="work-card__context">{clientType} · {role}</p>
-      <p class="work-card__outcome">{outcome}</p>
-    </div>
-  </a>
+    {
+      pipeline && (
+        <dl class="pipeline">
+          <div><dt>model</dt><dd>{pipeline.model}</dd></div>
+          <div><dt>steps</dt><dd>{pipeline.steps}</dd></div>
+          <div><dt>seed</dt><dd>{pipeline.seed}</dd></div>
+          <div><dt>render</dt><dd>{pipeline.render}</dd></div>
+        </dl>
+      )
+    }
+  </div>
 </article>
 
 <script>
-  // Previews play on hover (mouse) or when mostly in view (touch). Never under reduced motion.
+  // Previews play on hover or focus (mouse/keyboard) or once when in view (touch). Never under reduced motion.
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-  const canHover = matchMedia('(hover: hover)').matches;
+  const canHover = matchMedia('(hover: hover) and (min-width: 64em)').matches;
   const play = (v: HTMLVideoElement) => {
     if (reduce.matches) return;
     v.addEventListener('playing', () => v.classList.add('is-playing'), { once: true });
@@ -54,12 +80,14 @@ const { title, clientType, role, outcome, cover, coverAlt, preview } = entry.dat
     (entries) => entries.forEach((e) => (e.isIntersecting ? play : stop)(e.target as HTMLVideoElement)),
     { threshold: 0.6 },
   );
-  for (const card of document.querySelectorAll<HTMLElement>('.work-card')) {
-    const video = card.querySelector<HTMLVideoElement>('.work-card__preview');
+  for (const row of document.querySelectorAll<HTMLElement>('.row')) {
+    const video = row.querySelector<HTMLVideoElement>('.screen__video');
     if (!video) continue;
     if (canHover) {
-      card.addEventListener('pointerenter', () => play(video));
-      card.addEventListener('pointerleave', () => stop(video));
+      row.addEventListener('pointerenter', () => play(video));
+      row.addEventListener('pointerleave', () => stop(video));
+      row.addEventListener('focusin', () => play(video));
+      row.addEventListener('focusout', () => stop(video));
     } else {
       video.loop = false; // auto-started on touch: play once, so no pause control is needed (WCAG 2.2.2)
       io.observe(video);
@@ -68,43 +96,93 @@ const { title, clientType, role, outcome, cover, coverAlt, preview } = entry.dat
 </script>
 
 <style>
-  .work-card__link { display: grid; gap: var(--space-m); text-decoration: none; }
-  .work-card__media {
-    position: relative;
-    aspect-ratio: 16 / 9;
-    max-height: 88svh;
-    width: 100%;
-    overflow: hidden;
-    background: var(--surface);
-  }
-  .work-card__media :global(img),
-  .work-card__preview {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .work-card__preview { opacity: 0; transition: opacity 0.4s var(--ease-out); }
-  .work-card__preview.is-playing { opacity: 1; }
-  @media (prefers-reduced-motion: no-preference) {
-    .work-card__media :global(img),
-    .work-card__preview { transition: transform 0.9s var(--ease-out), opacity 0.4s var(--ease-out); }
-    .work-card__link:hover .work-card__media :global(img),
-    .work-card__link:hover .work-card__preview { transform: scale(1.02); }
-  }
+  .row { position: relative; border-top: 1px solid var(--border); }
+  .row:last-child { border-bottom: 1px solid var(--border); }
 
-  .work-card__meta {
+  .row__link {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-xs);
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'num year'
+      'title title'
+      'meta meta';
+    gap: var(--space-xs) var(--space-m);
+    padding-block: var(--space-m) var(--space-l);
+    text-decoration: none;
   }
-  .work-card__title { font-size: var(--step-2); letter-spacing: -0.03em; }
-  .work-card__context { color: var(--text-muted); font-size: var(--step--1); }
-  .work-card__outcome { font-size: var(--step-0); }
+  .row__num { grid-area: num; }
+  .row__year { grid-area: year; justify-self: end; }
+  .row__title { grid-area: title; font-size: var(--step-4); line-height: 0.95; letter-spacing: -0.05em; }
+  .row__meta { grid-area: meta; }
+  .row__link :global(.row__thumb) { display: none; }
 
-  @media (min-width: 64em) {
-    .work-card__meta { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: var(--space-l); }
-    .work-card__title { grid-row: span 2; }
+  .row__reveal { display: grid; gap: var(--space-s); padding-bottom: var(--space-l); }
+  .screen { position: relative; overflow: hidden; aspect-ratio: 4 / 3; background: var(--surface); }
+  .screen :global(.screen__img),
+  .screen__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .screen__video { opacity: 0; transition: opacity 0.4s var(--ease-out); }
+  .screen__video.is-playing { opacity: 1; }
+  .screen__panel { position: absolute; top: 0; bottom: 0; width: 50%; display: none; }
+  .screen__panel--left { left: 0; border-right: 1px solid var(--border); }
+  .screen__panel--right { right: 0; }
+
+  .pipeline {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-xs) var(--space-m);
+    font-size: var(--step--1);
+  }
+  .pipeline dt { text-transform: lowercase; color: var(--text-muted); }
+  .pipeline dd { margin: 0; font-family: var(--font-data); font-size: 0.95em; overflow-wrap: anywhere; }
+
+  /* Desktop with a pointer: an index of rows; the screen slides open beside the hovered or focused row. */
+  @media (hover: hover) and (min-width: 64em) {
+    .row__link {
+      grid-template-columns: 4rem 8rem minmax(0, 1fr) 16rem 4rem;
+      grid-template-areas: 'num thumb title meta year';
+      align-items: center;
+      column-gap: var(--space-l);
+      padding-block: var(--space-m);
+    }
+    .row__link :global(.row__thumb) {
+      grid-area: thumb;
+      display: block;
+      width: 8rem;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      filter: grayscale(1);
+      transition: filter 0.4s var(--ease-out);
+    }
+    .row:hover .row__link :global(.row__thumb),
+    .row:focus-within .row__link :global(.row__thumb) { filter: none; }
+
+    .row__reveal {
+      position: absolute;
+      z-index: 5;
+      top: 50%;
+      right: 0;
+      width: min(30vw, 30rem);
+      translate: 0 -50%;
+      padding: var(--space-s);
+      background: var(--ground);
+      border: 1px solid var(--border);
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s var(--ease-out), visibility 0s linear 0.3s;
+    }
+    .row:hover .row__reveal,
+    .row:focus-within .row__reveal { opacity: 1; visibility: visible; transition-delay: 0s; }
+
+    .screen__panel { display: block; transition: transform 0.9s var(--ease-slide) 0.15s; }
+    .row:hover .screen__panel--left,
+    .row:focus-within .screen__panel--left { transform: translateX(-101%); }
+    .row:hover .screen__panel--right,
+    .row:focus-within .screen__panel--right { transform: translateX(101%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .screen__panel { display: none !important; }
+    .row__reveal, .row__link :global(.row__thumb) { transition: none !important; }
   }
 </style>

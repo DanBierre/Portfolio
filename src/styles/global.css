@@ -4,7 +4,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
-  scrollbar-color: var(--text-muted) var(--bg);
+  scrollbar-color: var(--text-muted) var(--ground);
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
@@ -14,27 +14,27 @@ body {
   color: var(--text);
   font-family: var(--font-body);
   font-size: var(--step-0);
-  line-height: 1.55;
-  font-feature-settings: 'ss01';
+  line-height: 1.5;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  caret-color: var(--accent);
+  caret-color: currentColor;
   overflow-wrap: break-word;
 }
 
-::selection { background: var(--accent); color: var(--accent-contrast); }
+::selection { background: var(--ink-light); color: var(--ground); }
 
 h1, h2, h3 {
   font-family: var(--font-display);
-  font-weight: 560;
-  line-height: 1.05;
-  letter-spacing: -0.035em;
+  font-weight: 440;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
   text-wrap: balance;
   overflow-wrap: anywhere;
 }
-h1 { font-size: var(--step-5); letter-spacing: -0.04em; }
+h1 { font-size: var(--step-5); }
 h2 { font-size: var(--step-4); }
-h3 { font-size: var(--step-1); letter-spacing: -0.015em; line-height: 1.2; }
+h3 { font-size: var(--step-1); font-weight: 480; letter-spacing: -0.02em; line-height: 1.15; }
 p { text-wrap: pretty; max-width: var(--measure); }
 
 [hidden] { display: none !important; }
@@ -42,14 +42,28 @@ p { text-wrap: pretty; max-width: var(--measure); }
 img, picture, video, svg { display: block; max-width: 100%; height: auto; }
 input, button, textarea, select { font: inherit; color: inherit; }
 
-a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.22em; }
 a:hover { text-decoration-thickness: 2px; }
 
-:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
 
 .wrap { width: 100%; max-width: var(--page-max); margin-inline: auto; padding-inline: var(--gutter); }
 .muted { color: var(--text-muted); }
 .tabular { font-variant-numeric: tabular-nums; }
+
+/* The second voice: small lowercase labels. Never below 12px. */
+.label {
+  font-size: var(--step--1);
+  font-weight: 450;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+  text-transform: lowercase;
+  color: var(--text-muted);
+}
+/* Kolkhoze-style counts: superscript, bracketed. */
+.count { font-size: 0.32em; font-weight: 450; letter-spacing: 0; vertical-align: super; margin-left: 0.15em; }
+.count::before { content: '['; }
+.count::after { content: ']'; }
 
 .visually-hidden {
   position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -58,31 +72,63 @@ a:hover { text-decoration-thickness: 2px; }
 
 .skip-link {
   position: absolute; left: var(--gutter); top: -100%; z-index: 100;
-  padding: var(--space-xs) var(--space-s); background: var(--text); color: var(--bg);
+  padding: var(--space-xs) var(--space-s); background: var(--ink-light); color: var(--ground);
 }
 .skip-link:focus { top: var(--space-xs); }
 
-/* Buttons */
+/* Washi band: backlit paper. The grey section grounds read as shoji screens with light behind them. */
+.band {
+  --bg: #dcd8cf;
+  --surface: #ebe8e1;
+  --text: #141414;
+  --text-muted: #4a4843;
+  --border: #b9b5ab;
+  --lattice: rgb(20 20 20 / 0.08);
+  --focus: #141414;
+  --error: #8f1f15;
+  --btn-bg: #141414;
+  --btn-text: #ecebe7;
+  position: relative;
+  isolation: isolate;
+  background-color: var(--bg);
+  color: var(--text);
+  /* Inner light (warmer at the centre, as if lit from behind) plus long paper fibres. */
+  background-image:
+    radial-gradient(ellipse 70% 60% at 50% 45%, rgb(255 250 238 / 0.35), transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.045 0.11' numOctaves='4' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.28 0 0 0 0 0.24 0 0 0 0.32 -0.08'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
+}
+
+/* Kumiko lattice: the shoji grid, drawn as hairlines at the --kumiko module. */
+.lattice {
+  background-image:
+    linear-gradient(to right, var(--lattice) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--lattice) 1px, transparent 1px);
+  background-size: var(--kumiko) calc(var(--kumiko) * 1.5);
+}
+
+/* Buttons: pills that invert their ground. */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5em;
   min-height: 2.75rem;
-  padding: 0.6em 1.25em;
+  padding: 0.6em 1.35em;
   border: 1px solid transparent;
   border-radius: 999px;
-  font-weight: 520;
+  font-weight: 500;
   line-height: 1.2;
   text-decoration: none;
+  text-transform: lowercase;
   white-space: nowrap;
   cursor: pointer;
   transition: background-color 0.25s var(--ease-out), color 0.25s var(--ease-out), border-color 0.25s var(--ease-out);
 }
-.btn--primary { background: var(--accent); color: var(--accent-contrast); }
+.btn--primary, .btn--nav { background: var(--btn-bg); color: var(--btn-text); }
 .btn--secondary { border-color: var(--text); color: var(--text); }
-.btn--nav { min-height: 2.25rem; padding: 0.4em 1em; font-size: var(--step--1); background: var(--accent); color: var(--accent-contrast); }
-.btn--primary:hover, .btn--secondary:hover, .btn--nav:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+.btn--nav { min-height: 2.25rem; padding: 0.35em 1em; font-size: var(--step--1); }
+.btn--primary:hover, .btn--nav:hover { background: transparent; color: var(--text); border-color: var(--text); }
+.btn--secondary:hover { background: var(--text); color: var(--bg); }
 
 /* Native cross-document page transitions; unsupported browsers just navigate. */
 @view-transition { navigation: auto; }

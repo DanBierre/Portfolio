@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-const BG = { light: 'rgb(242, 243, 244)', dark: 'rgb(18, 16, 13)' } as const;
+// Gallery Index is one dark world for every visitor, whatever their device theme.
+const BG = { light: 'rgb(20, 20, 20)', dark: 'rgb(20, 20, 20)' } as const;
 
 for (const scheme of ['light', 'dark'] as const) {
   test(`${scheme} theme applies tokens`, async ({ page }) => {

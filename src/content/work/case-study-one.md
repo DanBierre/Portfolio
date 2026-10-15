@@ -8,6 +8,12 @@ results:
   - "[PLACEHOLDER] Result one, with a number where possible"
   - "[PLACEHOLDER] Result two"
 order: 1
+year: "2026"
+pipeline:
+  model: "[PLACEHOLDER] SDXL + custom brand LoRA"
+  steps: "[PLACEHOLDER] 30"
+  seed: "[PLACEHOLDER] 4127"
+  render: "[PLACEHOLDER] 2.1 s per image"
 cover: ../../assets/work/case-study-one-cover.jpg
 coverAlt: "[PLACEHOLDER] Campaign hero visual"
 preview: /media/case-study-one-preview.webm

@@ -1,47 +1,40 @@
 /* All motion lives here, and only runs when the visitor hasn't asked for less.
    Everything is visible by default; animation only enhances. */
 @media (prefers-reduced-motion: no-preference) {
-  /* The one authored moment: the headline rises into place, then its supporting lines follow. */
-  @keyframes rise {
+  /* The authored moment: the headline develops as if seen through washi, from blurred grain to crisp.
+     The grain itself is an SVG displacement driven from Hero.astro; this is the focus and exposure. */
+  @keyframes develop {
     from {
-      opacity: 0;
-      transform: translateY(0.35em);
-      filter: blur(8px);
+      opacity: 0.15;
+      filter: blur(18px);
+    }
+    60% {
+      opacity: 0.9;
     }
   }
-
-  #hero h1 .line,
-  #hero .hero__sub,
+  #hero .hero__title .line {
+    animation: develop 1.6s var(--ease-out) both;
+  }
+  #hero .hero__title .line--indent { animation-delay: 120ms; }
+  #hero .hero__note,
   #hero .hero__actions {
-    animation: rise 1.1s var(--ease-out) both;
-  }
-  #hero h1 .line:nth-child(2) { animation-delay: 90ms; }
-  #hero .hero__sub { animation-delay: 220ms; }
-  #hero .hero__actions { animation-delay: 320ms; }
-
-  /* Work imagery unveils as it scrolls in (native scroll-driven animation; skipped where unsupported). */
-  @supports (animation-timeline: view()) {
-    @keyframes unveil {
-      from {
-        clip-path: inset(8% 4% 8% 4% round 4px);
-        transform: scale(1.04);
-      }
-    }
-    .work-card__media {
-      animation: unveil linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 35%;
-    }
+    animation: develop 1.2s var(--ease-out) 700ms both;
   }
 
-  /* Page transitions: a short crossfade; the work image morphs into the case study header. */
+  /* Screened footage slides open once, like a shoji door. */
+  @keyframes screen-open {
+    from { clip-path: inset(0 50% 0 50%); }
+  }
+  #hero .hero__screen { animation: screen-open 1.4s var(--ease-slide) 200ms both; }
+
+  /* Page transitions: a short crossfade; the work thumbnail morphs into the case study header. */
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation-duration: 250ms;
   }
   ::view-transition-group(*) {
-    animation-duration: 450ms;
-    animation-timing-function: var(--ease-out);
+    animation-duration: 500ms;
+    animation-timing-function: var(--ease-slide);
   }
 }
 

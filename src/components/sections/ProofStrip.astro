@@ -9,13 +9,14 @@ const logos = Object.entries(
 ---
 
 <section id="proof" class="proof" aria-label="Proof">
-  <div class="wrap proof__inner">
+  <div class="wrap proof__rule">
+    <span class="label" aria-hidden="true">proof</span>
     {
       logos.length > 0 ? (
         <ul class="proof__logos" role="list">
           {logos.map((l) => (
             <li>
-              <Image src={l.src} alt={l.name} height={32} />
+              <Image src={l.src} alt={l.name} height={28} />
             </li>
           ))}
         </ul>
@@ -23,20 +24,34 @@ const logos = Object.entries(
         <p class="proof__result">{site.proofResult}</p>
       )
     }
+    <span class="label" aria-hidden="true">for agencies</span>
   </div>
 </section>
 
 <style>
-  .proof { border-block: 1px solid var(--border); }
-  .proof__inner { padding-block: var(--space-m); }
-  .proof__result { font-size: var(--step-1); letter-spacing: -0.015em; max-width: none; }
+  /* Vècna-style hairline with a label at each end. */
+  .proof__rule {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-m);
+    padding-block: var(--space-m);
+    border-block: 1px solid var(--border);
+  }
+  .proof__result { max-width: none; text-align: center; }
   .proof__logos {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    justify-content: center;
     gap: var(--space-l) var(--space-xl);
     padding: 0;
     list-style: none;
   }
-  .proof__logos :global(img) { height: 2rem; width: auto; opacity: 0.75; }
+  .proof__logos :global(img) { height: 1.75rem; width: auto; opacity: 0.8; filter: grayscale(1) invert(1); }
+
+  @media (max-width: 47.99em) {
+    .proof__rule { grid-template-columns: 1fr; }
+    .proof__rule .label { display: none; }
+    .proof__result { text-align: left; }
+  }
 </style>

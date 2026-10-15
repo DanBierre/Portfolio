@@ -7,15 +7,27 @@ const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.
 
 <section id="work" class="work" aria-labelledby="work-title">
   <div class="wrap">
-    <h2 id="work-title">Selected work</h2>
-  </div>
-  <div class="work__list">
-    {work.map((entry) => <WorkCard entry={entry} />)}
+    <div class="work__head">
+      <h2 id="work-title">Selected work<span class="count" aria-hidden="true">{work.length}</span></h2>
+      <p class="label">hover a piece to see how it was made</p>
+    </div>
+    <div class="work__index">
+      {work.map((entry, i) => <WorkCard entry={entry} index={i} />)}
+    </div>
   </div>
 </section>
 
 <style>
   .work { padding-block: var(--space-2xl) 0; }
-  h2 { margin-bottom: var(--space-xl); }
-  .work__list { display: grid; gap: var(--space-2xl); }
+  .work__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-s) var(--space-l);
+    margin-bottom: var(--space-xl);
+  }
+  @media not ((hover: hover) and (min-width: 64em)) {
+    .work__head .label { display: none; }
+  }
 </style>

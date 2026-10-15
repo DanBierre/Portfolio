@@ -26,7 +26,7 @@ test('reduced motion: work card hover does not zoom', async ({ page }, info) => 
   const card = page.locator('#work article').first();
   await card.hover();
   await page.waitForTimeout(1000);
-  expect(await card.locator('img').evaluate((i) => getComputedStyle(i).transform)).toBe('none');
+  expect(await card.locator('img.row__thumb').evaluate((i) => getComputedStyle(i).transform)).toBe('none');
 });
 
 test('modifier-clicks on Book a call are left to the browser after Cal loads', async ({ page, context }, info) => {

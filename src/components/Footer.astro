@@ -7,20 +7,35 @@ const year = new Date().getFullYear();
 
 <footer class="site-footer">
   <div class="wrap footer">
-    <CopyEmail />
-    <a href={site.linkedin}>LinkedIn</a>
-    <p class="footer__legal">© {year} {site.name}</p>
+    <a class="footer__mark" href="/">{site.name}</a>
+    <div class="footer__row">
+      <CopyEmail />
+      <a href={site.linkedin}>LinkedIn</a>
+      <p class="footer__legal">© {year}</p>
+    </div>
   </div>
 </footer>
 
 <style>
-  .site-footer { border-top: 1px solid var(--border); margin-top: var(--space-2xl); }
-  .footer {
+  .site-footer { padding-block: var(--space-xl) var(--space-l); overflow: hidden; }
+  .footer { display: grid; gap: var(--space-l); }
+  /* Kolkhoze-style closing wordmark: lowercase, enormous. */
+  .footer__mark {
+    font-size: clamp(3rem, 1rem + 11vw, 13rem);
+    font-weight: 430;
+    letter-spacing: -0.06em;
+    line-height: 0.8;
+    text-transform: lowercase;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .footer__row {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
     gap: var(--space-m) var(--space-l);
-    padding-block: var(--space-l);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--border);
     font-size: var(--step--1);
   }
   .footer__legal { margin-left: auto; color: var(--text-muted); }

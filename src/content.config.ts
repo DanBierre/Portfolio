@@ -16,6 +16,9 @@ const work = defineCollection({
       cover: image(),
       coverAlt: z.string(),
       preview: z.string().optional(),
+      year: z.string(),
+      // "How it was made": shown in the pipeline reveal on the work index and on the case study.
+      pipeline: z.object({ model: z.string(), steps: z.string(), seed: z.string(), render: z.string() }).optional(),
       quote: z.object({ text: z.string(), who: z.string() }).optional(),
       beforeAfter: z
         .object({

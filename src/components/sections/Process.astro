@@ -11,13 +11,13 @@ const steps = [
 
 <section id="process" class="process" aria-labelledby="process-title">
   <div class="wrap">
-    <h2 id="process-title">How we work together</h2>
+    <h2 id="process-title">How we work<br />together<span class="count" aria-hidden="true">4</span></h2>
     <ol class="process__steps" role="list">
       {
         steps.map((s, i) => (
           <li>
-            <span class="process__num tabular" aria-hidden="true">
-              {i + 1}
+            <span class="label tabular" aria-hidden="true">
+              [0{i + 1}]
             </span>
             <h3>{s.title}</h3>
             <p>{s.text}</p>
@@ -34,21 +34,22 @@ const steps = [
 <style>
   .process { padding-block: var(--space-2xl) 0; }
   h2 { margin-bottom: var(--space-xl); }
-  .process__steps {
+  .process__steps { display: grid; gap: 0 var(--space-l); padding: 0; list-style: none; }
+  li {
     display: grid;
-    gap: var(--space-l);
-    padding: 0;
-    list-style: none;
+    gap: var(--space-s);
+    align-content: start;
+    padding-block: var(--space-m) var(--space-l);
+    border-top: 1px solid var(--border);
   }
-  li { display: grid; gap: var(--space-s); align-content: start; border-top: 1px solid var(--border); padding-top: var(--space-m); }
-  .process__num { font-size: var(--step--1); color: var(--text-muted); }
   li p { color: var(--text-muted); }
-  .process__cta { margin-top: var(--space-xl); }
+  .process__cta { margin-top: var(--space-l); }
 
   @media (min-width: 48em) {
     .process__steps { grid-template-columns: repeat(2, 1fr); }
   }
   @media (min-width: 72em) {
     .process__steps { grid-template-columns: repeat(4, 1fr); }
+    li { min-height: calc(var(--kumiko) * 4); }
   }
 </style>

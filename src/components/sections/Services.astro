@@ -21,18 +21,21 @@ const columns = [
 ];
 ---
 
-<section id="services" class="services" aria-labelledby="services-title">
+<section id="services" class="services band" aria-labelledby="services-title">
   <div class="wrap">
-    <h2 id="services-title">What I do for agencies</h2>
+    <h2 id="services-title">What I do<br />for agencies</h2>
     <div class="services__grid">
       {
-        columns.map((c) => (
+        columns.map((c, i) => (
           <section class="services__col" aria-label={c.name}>
+            <p class="label tabular" aria-hidden="true">
+              [0{i + 1}]
+            </p>
             <h3>{c.name}</h3>
             <p class="services__intro">{c.intro}</p>
             <ul role="list">
-              {c.items.map((i) => (
-                <li>{i}</li>
+              {c.items.map((item) => (
+                <li>{item}</li>
               ))}
             </ul>
           </section>
@@ -43,13 +46,13 @@ const columns = [
 </section>
 
 <style>
-  .services { padding-block: var(--space-2xl) 0; }
-  h2 { margin-bottom: var(--space-xl); max-width: 16ch; }
-  .services__grid { display: grid; gap: var(--space-xl) var(--space-l); }
-  .services__col { border-top: 1px solid var(--text); padding-top: var(--space-m); }
-  h3 { font-size: var(--step-3); letter-spacing: -0.035em; }
-  .services__intro { margin-block: var(--space-s) var(--space-l); color: var(--text-muted); }
-  ul { padding: 0; list-style: none; }
+  .services { margin-top: var(--space-2xl); padding-block: var(--space-2xl); }
+  h2 { margin-bottom: var(--space-xl); }
+  .services__grid { display: grid; gap: var(--space-xl) var(--space-xl); }
+  .services__col { display: grid; gap: var(--space-s); align-content: start; }
+  h3 { font-size: var(--step-3); font-weight: 440; letter-spacing: -0.045em; }
+  .services__intro { color: var(--text-muted); margin-bottom: var(--space-s); }
+  ul { padding: 0; list-style: none; border-top: 1px solid var(--text); }
   li { padding-block: var(--space-s); border-bottom: 1px solid var(--border); }
 
   @media (min-width: 48em) {

@@ -1,29 +1,37 @@
-/* Design tokens. Contrast (WCAG): light text/bg 16.7, muted/bg 6.1, accent/bg 8.5, error/bg 6.6;
-   dark text/bg 15.9, muted/bg 7.4, accent/bg 11.3, on-accent 11.3, error/bg 8.6. */
+/* Gallery Index tokens. One world for every visitor: near-black ground, backlit washi bands.
+   Contrast (WCAG): ink/ground 15.4, muted/ground 6.6, muted/surface 6.0, error/ground 8.3;
+   washi: ink 13.0, muted 6.4, error 6.2. */
 :root {
-  color-scheme: light dark;
+  color-scheme: dark;
 
-  --bg: #f2f3f4;
-  --surface: #ffffff;
-  --text: #121314;
-  --text-muted: #585b5f;
-  --accent: #3e4a26;
-  --accent-contrast: #ffffff;
-  --border: #d6d9dc;
-  --focus: #3e4a26;
-  --error: #a3261b;
+  --ground: #141414;
+  --ink-light: #ecebe7;
 
-  --font-display: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
-  --font-body: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+  --bg: var(--ground);
+  --surface: #1e1e1d;
+  --text: var(--ink-light);
+  --text-muted: #9d9b95;
+  --border: #2e2e2c;
+  --lattice: rgb(236 235 231 / 0.09);
+  --focus: var(--ink-light);
+  --error: #ff8f80;
+  /* Buttons invert the ground: light pill on dark, dark pill on washi. */
+  --btn-bg: var(--ink-light);
+  --btn-text: var(--ground);
 
-  /* Fluid type scale, 360px → 1440px */
-  --step--1: clamp(0.83rem, 0.8rem + 0.15vw, 0.9rem);
+  --font-display: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-data: 'Geist Mono Variable', ui-monospace, monospace;
+
+  /* Fluid type scale, 360px → 1440px. --step-6 is the statement size. */
+  --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.84rem);
   --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
   --step-1: clamp(1.2rem, 1.12rem + 0.4vw, 1.45rem);
   --step-2: clamp(1.44rem, 1.28rem + 0.8vw, 2rem);
   --step-3: clamp(1.73rem, 1.45rem + 1.4vw, 2.8rem);
-  --step-4: clamp(2.2rem, 1.6rem + 3vw, 4.2rem);
-  --step-5: clamp(2.6rem, 1.5rem + 5.4vw, 6rem);
+  --step-4: clamp(2.2rem, 1.5rem + 3.4vw, 4.6rem);
+  --step-5: clamp(2.6rem, 1.4rem + 6vw, 6.5rem);
+  --step-6: clamp(3rem, 0.9rem + 8vw, 9.5rem);
 
   --space-xs: 0.5rem;
   --space-s: 0.75rem;
@@ -32,22 +40,11 @@
   --space-xl: clamp(3rem, 2rem + 4vw, 5rem);
   --space-2xl: clamp(5rem, 3rem + 8vw, 10rem);
 
-  --measure: 65ch;
-  --page-max: 90rem;
-  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+  --measure: 62ch;
+  --page-max: 100rem;
+  --gutter: clamp(1rem, 0.5rem + 2.2vw, 2.5rem);
+  /* Shoji module: lattice cell size used by frames and screen panels. */
+  --kumiko: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #12100d;
-    --surface: #1c1a16;
-    --text: #ecebe6;
-    --text-muted: #a6a197;
-    --accent: #c2cd92;
-    --accent-contrast: #12100d;
-    --border: #2e2b26;
-    --focus: #c2cd92;
-    --error: #ff8f80;
-  }
+  --ease-slide: cubic-bezier(0.7, 0, 0.2, 1);
 }

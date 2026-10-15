@@ -1,11 +1,13 @@
 ---
+import { getCollection } from 'astro:content';
 import { site } from '../site.config';
 import BookCall from './BookCall.astro';
 
+const [work, lab] = await Promise.all([getCollection('work'), getCollection('lab')]);
 const links = [
-  { href: '/#work', label: 'Work' },
+  { href: '/#work', label: 'Work', count: work.length },
   { href: '/#services', label: 'Services' },
-  { href: '/lab', label: 'Lab' },
+  { href: '/lab', label: 'Lab', count: lab.length },
   { href: '/#about', label: 'About' },
 ];
 ---
@@ -14,12 +16,30 @@ const links = [
   <nav class="wrap nav" aria-label="Main">
     <a class="nav__brand" href="/">{site.name}</a>
     <ul class="nav__links" role="list">
-      {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      {
+        links.map((l) => (
+          <li>
+            <a href={l.href}>
+              {l.label}
+              {l.count !== undefined && <sup aria-hidden="true">[{l.count}]</sup>}
+            </a>
+          </li>
+        ))
+      }
     </ul>
     <details class="nav__menu">
       <summary>Menu</summary>
       <ul role="list">
-        {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        {
+          links.map((l) => (
+            <li>
+              <a href={l.href}>
+                {l.label}
+                {l.count !== undefined && <sup aria-hidden="true">[{l.count}]</sup>}
+              </a>
+            </li>
+          ))
+        }
       </ul>
     </details>
     <BookCall variant="nav" class="nav__cta" />
@@ -31,21 +51,22 @@ const links = [
     position: sticky;
     top: 0;
     z-index: 50;
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
-    backdrop-filter: saturate(1.4) blur(12px);
-    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--ground) 86%, transparent);
+    backdrop-filter: blur(10px);
   }
   .nav {
     display: flex;
     align-items: center;
     gap: var(--space-l);
     min-height: 3.75rem;
+    text-transform: lowercase;
   }
-  .nav__brand { font-weight: 600; letter-spacing: -0.02em; text-decoration: none; margin-right: auto; }
+  .nav__brand { font-weight: 500; letter-spacing: -0.02em; text-decoration: none; margin-right: auto; }
   .nav a:not(.btn) { text-decoration: none; }
   .nav__links { display: flex; gap: var(--space-l); padding: 0; list-style: none; }
   .nav__links a { color: var(--text-muted); transition: color 0.2s; }
   .nav__links a:hover { color: var(--text); }
+  sup { font-size: 0.7em; margin-left: 0.15em; }
   .nav__menu { display: none; }
 
   @media (max-width: 47.99em) {
@@ -67,14 +88,15 @@ const links = [
       padding: var(--space-s) var(--gutter) var(--space-l);
       margin: 0;
       list-style: none;
-      background: var(--bg);
+      background: var(--ground);
       border-bottom: 1px solid var(--border);
     }
     .nav__menu ul a {
       display: block;
-      padding: var(--space-s) 0;
-      font-size: var(--step-2);
-      letter-spacing: -0.03em;
+      padding: var(--space-xs) 0;
+      font-size: var(--step-4);
+      letter-spacing: -0.045em;
+      line-height: 1;
     }
   }
 </style>
