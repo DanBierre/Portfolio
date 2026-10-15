@@ -30,7 +30,7 @@ test('speed ramp (time warp) is monotonic and hits both ends', () => {
 test('film burn and flash peak at the cuts and are quiet mid-shot', () => {
   const firstCut = shots[0].duration;
   expect(frameAt(firstCut + 0.02).burn).toBeGreaterThan(0.6);
-  expect(frameAt(firstCut + 0.01).flash).toBeGreaterThan(0.5);
+  expect(frameAt(firstCut + 0.01).flash).toBeGreaterThan(0.15);
   expect(frameAt(shots[0].duration / 2).burn).toBeLessThan(0.1);
   expect(frameAt(shots[0].duration / 2).flash).toBe(0);
 });
@@ -44,10 +44,20 @@ test('fast sections blur more than slow ones', () => {
   expect(Math.max(mid, edge)).toBeGreaterThan(0.3);
 });
 
-test('the edit cuts real footage alongside the photo', () => {
+test('the edit is all footage: every clip, no portrait', () => {
   const clips = new Set(shots.filter((s) => s.source === 'clip').map((s) => s.clip));
   expect([...clips].sort()).toEqual([...CLIPS].sort());
-  expect(shots.some((s) => s.source === 'photo')).toBe(true);
+  expect(shots.every((s) => s.source !== ('photo' as string))).toBe(true);
+});
+
+test('the cut breathes: holds of at least 1.6 s, gentle ramps on most shots', () => {
+  for (const s of shots.filter((s) => s.source === 'clip')) expect(s.duration).toBeGreaterThanOrEqual(1.6);
+  expect(shots.filter((s) => s.ramp > 0.7).length).toBeLessThanOrEqual(2);
+});
+
+test('flash frames are soft: a warm lift, never a white pop', () => {
+  const firstCut = shots[0].duration;
+  expect(frameAt(firstCut + 0.01).flash).toBeLessThanOrEqual(0.35);
 });
 
 test('clip playback rate follows the speed ramp within browser-safe bounds', () => {

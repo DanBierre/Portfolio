@@ -4,14 +4,16 @@ import CopyEmail from './CopyEmail.astro';
 import { langOf, homeOf } from '../i18n/ui';
 
 const year = new Date().getFullYear();
+const lang = langOf(Astro.currentLocale);
 ---
 
 <footer class="site-footer">
   <div class="wrap footer">
-    <a class="footer__mark" href={homeOf(langOf(Astro.currentLocale))}>{site.name}</a>
+    <a class="footer__mark" href={homeOf(lang)}>{site.name}</a>
     <div class="footer__row">
       <CopyEmail />
       <a href={site.linkedin}>LinkedIn</a>
+      <a class="footer__top" href="#main">{lang === 'ja' ? 'トップへ' : 'Back to top'} <span aria-hidden="true">↑</span></a>
       <p class="footer__legal">© {year}</p>
     </div>
   </div>
@@ -19,10 +21,11 @@ const year = new Date().getFullYear();
 
 <style>
   .site-footer { padding-block: var(--space-xl) var(--space-l); overflow: hidden; }
-  .footer { display: grid; gap: var(--space-l); }
-  /* Kolkhoze-style closing wordmark: lowercase, enormous. */
+  .footer { display: grid; gap: var(--space-l); container-type: inline-size; }
+  /* Kolkhoze-style closing wordmark: lowercase, edge to edge of the content column. */
   .footer__mark {
-    font-size: min(18vw, 22rem);
+    font-size: 23.4cqi;
+    justify-self: start;
     font-weight: 430;
     letter-spacing: -0.04em;
     line-height: 0.8;
@@ -30,14 +33,22 @@ const year = new Date().getFullYear();
     text-decoration: none;
     white-space: nowrap;
   }
+  /* One hairline row, like the credits' last card: contact left, way out right. */
   .footer__row {
     display: flex;
     flex-wrap: wrap;
-    align-items: baseline;
-    gap: var(--space-m) var(--space-l);
+    align-items: center;
+    gap: var(--space-s) var(--space-l);
     padding-top: var(--space-m);
     border-top: 1px solid var(--border);
     font-size: var(--step--1);
   }
-  .footer__legal { margin-left: auto; color: var(--text-muted); }
+  .footer__top { margin-left: auto; text-decoration: none; color: var(--text-muted); }
+  .footer__top:hover { color: var(--text); }
+  .footer__legal { margin: 0; color: var(--text-muted); font-family: var(--font-data); }
+
+  /* Phones: contact on its own line, then LinkedIn, top and © on one line. */
+  @media (max-width: 47.99em) {
+    .footer__row > :first-child { flex-basis: 100%; }
+  }
 </style>

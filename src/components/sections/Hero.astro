@@ -1,7 +1,7 @@
 ---
-import { Picture, getImage } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import BookCall from '../BookCall.astro';
-import portrait from '../../assets/portrait.jpg';
+import still from '../../assets/hero-still.jpg';
 import SpineMark from '../SpineMark.astro';
 import { ui, langOf } from '../../i18n/ui';
 import { shots } from '../../lib/indie-edit';
@@ -9,12 +9,8 @@ import { shots } from '../../lib/indie-edit';
 const lang = langOf(Astro.currentLocale);
 const t = ui[lang];
 
-
-// Indie edit source: Dan's Fushimi Inari photo as a texture; the still frame is the same photo, graded.
-const texture = await getImage({ src: portrait, width: 800, format: 'jpg' });
-// The code panel prints the real shot list that drives the edit; the playing line lights up.
-const name = (s: (typeof shots)[number]) => s.clip ?? s.source;
-const pad = (n: number) => n.toFixed(2).replace(/^0/, '');
+// The still is a frame of the edit itself (behind the paper), shown until the edit runs, and for
+// reduced motion, no WebGL and software-only graphics.
 ---
 
 <section id="hero" class="hero lattice-field spined" aria-labelledby="hero-title">
@@ -22,7 +18,7 @@ const pad = (n: number) => n.toFixed(2).replace(/^0/, '');
   <div class="wrap hero__grid">
     <figure class="hero__screen" aria-hidden="true">
       <Picture
-        src={portrait}
+        src={still}
         formats={['avif', 'webp']}
         widths={[400, 640, 800]}
         sizes="(min-width: 48em) 30vw, 60vw"
@@ -31,19 +27,17 @@ const pad = (n: number) => n.toFixed(2).replace(/^0/, '');
         class="hero__still"
         data-hero-still
       />
-      <canvas class="hero__edit" data-hero-edit data-photo={texture.src} data-clips="/media/japan/" hidden></canvas>
-      <div class="hero__code" data-hero-code>
-        <p class="hero__file">indie-edit.ts</p>
-        <pre><code><span class="c">// [cut, secs, ramp]</span>
-<span class="k">const</span> shots = [
-{shots.map((s, i) => (
-  <span class="hero__shot" data-shot={i}>  [<span class="s">'{name(s)}'</span>,{' '.repeat(9 - name(s).length)}{s.duration.toFixed(1)}, {pad(s.ramp)}],</span>
-))}];
-
-<span class="f">frameAt</span>(<span data-read="clock">0.00</span>)
-  rate  ×<span data-read="rate">1.00</span>
-  blur  <span data-read="blur">.00</span>
-  burn  <span data-read="burn">▯▯▯▯▯▯▯▯</span></code></pre>
+      <canvas class="hero__edit" data-hero-edit data-clips="/media/japan/" hidden></canvas>
+      <span class="hero__paper"></span>
+      <!-- Burn-in, as on an editor's dailies: the code driving this frame and the cut's timeline. -->
+      <div class="hero__slate" data-hero-slate hidden>
+        <ol class="hero__track">
+          {shots.map((s, i) => <li data-shot={i} style={`flex-grow: ${s.duration}`}></li>)}
+        </ol>
+        <p>
+          <span class="hero__code" data-read="code"></span>
+          <span>frameAt(<b data-read="clock">00.00</b>) ×<b data-read="rate">1.00</b></span>
+        </p>
       </div>
       <span class="hero__kumiko lattice"></span>
       <span class="hero__divide"></span>
@@ -120,29 +114,43 @@ const pad = (n: number) => n.toFixed(2).replace(/^0/, '');
   const canvas = document.querySelector<HTMLCanvasElement>('[data-hero-edit]');
   const still = document.querySelector<HTMLElement>('[data-hero-still]');
   const toggle = document.querySelector<HTMLButtonElement>('.hero__toggle');
-  if (canvas && still && toggle && !reduce) {
+  // Visitors asking to save data keep the still: the edit streams about 9 MB of footage.
+  const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+  if (canvas && still && toggle && !reduce && !saveData) {
     canvas.hidden = false;
     // Tests run in software-rendered Chromium; they opt in explicitly. Real visitors need a GPU.
     const allowSoftware = (window as any).__indieEditAllowSoftware === true;
-    // The code panel follows the edit: the playing shot's line fills as the cut runs, the readout ticks.
-    const code = document.querySelector<HTMLElement>('[data-hero-code]');
-    const lines = code ? [...code.querySelectorAll<HTMLElement>('[data-shot]')] : [];
-    const read = (k: string) => code?.querySelector<HTMLElement>(`[data-read="${k}"]`);
-    const out = { clock: read('clock'), rate: read('rate'), blur: read('blur'), burn: read('burn') };
+    // The slate follows the edit: the line of code for this shot, its clock and rate, and the cut's
+    // track with the playing shot filling. On each cut the page answers: the gold words and the rust
+    // "now" diamond catch the light, so the headline and the footage read as one piece.
+    const slate = document.querySelector<HTMLElement>('[data-hero-slate]');
+    const segs = slate ? [...slate.querySelectorAll<HTMLElement>('[data-shot]')] : [];
+    const read = (k: string) => slate?.querySelector<HTMLElement>(`[data-read="${k}"]`);
+    const out = { code: read('code'), clock: read('clock'), rate: read('rate') };
+    const glow = [...document.querySelectorAll<HTMLElement>('.hero__title .accent, .hero__now')];
+    const line = (i: number) => {
+      const s = shots[i];
+      return `shots[${i}] = ['${s.clip ?? s.source}', ${s.duration.toFixed(1)}, ${s.ramp.toFixed(2).replace(/^0/, '')}]`;
+    };
     let lit = -1;
     const onFrame = (clock: number, f: Frame) => {
       if (f.shot !== lit) {
-        lines[lit]?.classList.remove('is-live');
-        lines[f.shot]?.classList.add('is-live');
+        segs[lit]?.classList.remove('is-live');
+        segs[f.shot]?.classList.add('is-live');
+        if (out.code) out.code.textContent = line(f.shot);
+        if (lit !== -1)
+          for (const el of glow)
+            el.animate(
+              [{ filter: 'brightness(1.6) drop-shadow(0 0 0.35em rgb(201 162 79 / 0.55))' }, { filter: 'none' }],
+              { duration: 700, easing: 'cubic-bezier(.2,.7,.2,1)' },
+            );
         lit = f.shot;
       }
-      lines[f.shot]?.style.setProperty('--p', String(f.local / shots[f.shot].duration));
+      segs[f.shot]?.style.setProperty('--p', String(Math.min(1, f.local / shots[f.shot].duration)));
       if (out.clock) out.clock.textContent = (clock % LOOP).toFixed(2).padStart(5, '0');
       if (out.rate) out.rate.textContent = f.rate.toFixed(2);
-      if (out.blur) out.blur.textContent = f.blur.toFixed(2).replace(/^0/, '');
-      if (out.burn) out.burn.textContent = '▮'.repeat(Math.round(f.burn * 8)).padEnd(8, '▯');
     };
-    const edit = createIndieEdit(canvas, canvas.dataset.photo!, () => (still.hidden = true), {
+    const edit = createIndieEdit(canvas, () => ((still.hidden = true), slate && (slate.hidden = false)), {
       allowSoftware,
       clipBase: canvas.dataset.clips,
       onFrame,
@@ -199,39 +207,41 @@ const pad = (n: number) => n.toFixed(2).replace(/^0/, '');
   .hero__screen :global(.hero__still),
   .hero__edit { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   /* The still is graded like the edit: warm, crushed, a little faded. */
-  .hero__screen :global(.hero__still) { filter: contrast(1.15) saturate(0.85) sepia(0.18) brightness(0.85); }
   .hero__edit { image-rendering: auto; }
-  /* Right shoji panel: frosted paper over the footage with the edit's own code written on it.
-     Fixed light-on-dark colours in both themes: it always sits on footage. */
-  .hero__code {
+  /* Washi over the footage: the light reads as coming through paper. */
+  .hero__paper {
     position: absolute;
-    inset: 0 0 0 50%;
-    padding: var(--space-s) var(--space-xs) var(--space-s) var(--space-s);
-    backdrop-filter: blur(12px) brightness(0.42) saturate(0.7);
-    -webkit-backdrop-filter: blur(12px) brightness(0.42) saturate(0.7);
-    background: rgb(27 27 26 / 0.25);
-    color: rgb(236 235 231 / 0.62);
-    font: 400 clamp(0.56rem, 0.42rem + 0.32vw, 0.72rem) / 1.55 var(--font-data);
-    overflow: hidden;
+    inset: 0;
+    background: url('/textures/washi.svg'), radial-gradient(ellipse 80% 70% at 50% 45%, rgb(255 244 220 / 0.08), transparent 70%);
+    mix-blend-mode: soft-light;
+    opacity: 0.55;
+    pointer-events: none;
   }
-  .hero__file { color: rgb(236 235 231 / 0.4); letter-spacing: 0.08em; margin-bottom: 0.9em; }
-  .hero__file::before { content: ''; display: inline-block; width: 6px; height: 6px; rotate: 45deg; background: #c8613a; margin-right: 0.7em; translate: 0 -1px; }
-  .hero__code pre { margin: 0; font: inherit; white-space: pre; }
-  .hero__code .c { color: rgb(236 235 231 / 0.38); }
-  .hero__code .k { color: #c8613a; }
-  .hero__code .f { color: #ecebe7; }
-  .hero__code .s { color: #c9a24f; }
-  .hero__code [data-read] { color: #ecebe7; font-variant-numeric: tabular-nums; }
-  /* The playing shot: a gold rule plus a fill that sweeps across the line as the cut runs. */
-  .hero__shot {
+
+  /* Burn-in slate along the foot of the footage. Fixed light-on-footage colours in both themes. */
+  .hero__slate {
+    position: absolute;
+    inset: auto 0 0;
+    padding: var(--space-s) var(--space-s) var(--space-xs);
+    background: linear-gradient(to top, rgb(20 20 20 / 0.55), transparent);
+    color: rgb(236 235 231 / 0.72);
+    font: 400 clamp(0.58rem, 0.45rem + 0.28vw, 0.7rem) / 1.4 var(--font-data);
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 2px rgb(0 0 0 / 0.6);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .hero__slate p { display: flex; justify-content: space-between; gap: 1em; margin: 0.5em 0 0; white-space: nowrap; }
+  .hero__slate b { font-weight: 400; color: #ecebe7; font-variant-numeric: tabular-nums; }
+  .hero__code { overflow: hidden; text-overflow: ellipsis; }
+  /* The cut as a track: one segment per shot, sized by its length; the playing one fills in gold. */
+  .hero__track { display: flex; gap: 2px; margin: 0; padding: 0; list-style: none; }
+  .hero__track li {
     --p: 0;
-    display: block;
-    background: linear-gradient(90deg, rgb(201 162 79 / 0.2) calc(var(--p) * 100%), transparent 0);
-    box-shadow: inset 2px 0 0 transparent;
-    transition: color 120ms;
+    height: 2px;
+    background: linear-gradient(90deg, #c9a24f calc(var(--p) * 100%), rgb(236 235 231 / 0.25) 0);
   }
-  .hero__shot.is-live { color: #ecebe7; box-shadow: inset 2px 0 0 #c9a24f; }
-  .hero__shot:not(.is-live) { background: none; }
+  .hero__track li:not(.is-live) { --p: 0; }
 
   .hero__kumiko {
     position: absolute;
@@ -298,7 +308,7 @@ const pad = (n: number) => n.toFixed(2).replace(/^0/, '');
     .hero__grid { min-height: auto; padding-top: 0; }
     .hero__screen { position: relative; top: auto; right: auto; grid-column: 1 / -1; justify-self: end; height: auto; width: 62%; }
     .hero__toggle { right: 0; }
-    .hero__code { display: none; } /* too narrow for code on phones: the edit takes the whole screen */
+    .hero__code { display: none; } /* too narrow for the code line on phones: track and clock stay */
     .hero__title .line--indent { padding-left: 0; }
     .hero__note { position: static; width: auto; margin-top: var(--space-m); font-size: var(--step-0); }
   }

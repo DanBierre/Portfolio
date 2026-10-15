@@ -1,5 +1,7 @@
 // Indie edit renderer: one WebGL fragment shader that cuts between shots with speed ramps,
-// motion blur and trails, night halation, film burns, flash frames, grain and gate weave.
+// motion blur and trails, halation, film burns and grain, then lays it all behind shoji paper:
+// a charcoal-to-gold split tone, paper fibres and soft diffusion, so the footage reads as light
+// moving behind a screen rather than video pasted onto the page.
 // Returns null when WebGL is unavailable so the caller can keep the still frame.
 import { frameAt, shots, type Clip, type Frame } from './indie-edit';
 
@@ -8,8 +10,8 @@ const VERT = `attribute vec2 a; varying vec2 vUv; void main(){ vUv = a * .5 + .5
 const FRAG = `
 precision highp float;
 varying vec2 vUv;
-uniform sampler2D uPhoto;
-uniform vec2 uRes, uPhotoSize, uDir;
+uniform sampler2D uImage;
+uniform vec2 uRes, uImageSize, uDir;
 uniform vec3 uCam;
 uniform float uTime, uLocal, uShot, uSource, uBlur, uBurn, uFlash;
 
@@ -21,12 +23,12 @@ float noise(vec2 p) {
 }
 float fbm(vec2 p) { float v = 0., a = .5; for (int i = 0; i < 5; i++) { v += a * noise(p); p *= 2.03; a *= .5; } return v; }
 
-// The current image (Dan's photo or a frame of footage), cover-fitted and moved by the camera.
-vec3 photo(vec2 uv) {
-  float fa = uRes.x / uRes.y, pa = uPhotoSize.x / uPhotoSize.y;
+// The current frame of footage, cover-fitted and moved by the camera.
+vec3 image(vec2 uv) {
+  float fa = uRes.x / uRes.y, pa = uImageSize.x / uImageSize.y;
   vec2 scale = fa > pa ? vec2(1., pa / fa) : vec2(fa / pa, 1.);
   vec2 p = (uv - .5) * scale / uCam.z + vec2(uCam.x, 1. - uCam.y);
-  return texture2D(uPhoto, clamp(p, .001, .999)).rgb;
+  return texture2D(uImage, clamp(p, .001, .999)).rgb;
 }
 
 // Generated Tokyo night: neon bokeh that streaks along the camera move.
@@ -42,12 +44,12 @@ vec3 night(vec2 uv) {
     tint = mix(tint, vec3(1., .66, .28), step(.68, hash(vec2(fi, 6.))));
     vec2 d = p - c;
     d -= uDir * dot(d, uDir) * clamp(uBlur * 1.7, 0., .92);
-    col += tint * smoothstep(r, r * .55, length(d)) * .5;
+    col += tint * smoothstep(r, r * .55, length(d)) * .26;
   }
   return col;
 }
 
-vec3 scene(vec2 uv) { return uSource < .5 ? photo(uv) : night(uv); }
+vec3 scene(vec2 uv) { return uSource < .5 ? image(uv) : night(uv); }
 
 void main() {
   vec2 uv = vUv + vec2(sin(uTime * 13.) * .0016, cos(uTime * 9.) * .0013); // gate weave
@@ -60,19 +62,29 @@ void main() {
   col.r = mix(col.r, scene(uv + uDir * ca + vec2(ca, 0.)).r, .6);
   col.b = mix(col.b, scene(uv - uDir * ca - vec2(ca, 0.)).b, .6);
 
-  // Night film: soft halation around highlights, crushed warm grade.
+  // Soft halation around highlights.
   float lum = dot(col, vec3(.299, .587, .114));
-  col += vec3(1., .32, .12) * smoothstep(.45, 1., lum) * .45;
-  col = pow(col, vec3(1.12)) * vec3(1.06, .97, .88);
+  col += vec3(1., .5, .2) * smoothstep(.5, 1., lum) * .25;
+
+  // Behind shoji: split tone toward the site's charcoal (#1b1b1a) and gold (#c9a24f), most of the
+  // colour drained so neon reads as warm light through paper, blacks lifted to paper grey.
+  lum = dot(col, vec3(.299, .587, .114));
+  vec3 tone = mix(vec3(.106, .106, .102), vec3(.95, .79, .5), smoothstep(.02, .95, lum));
+  col = mix(col, tone, .62);
+  col = col * .88 + vec3(.035, .033, .03);
 
   // Film burn: a light leak blooming from a corner at each cut.
   vec2 corner = vec2(step(.5, hash(vec2(uShot, 9.))), step(.5, hash(vec2(uShot, 4.))));
   float n = fbm(uv * 3. + vec2(uLocal * 1.7, uShot * 7.1));
   float leak = smoothstep(.35, .9, n + (1. - length(uv - corner)) * .6 - .55 + uBurn * .7);
-  col += leak * uBurn * mix(vec3(1., .3, .03), vec3(1., .88, .55), leak) * 1.8;
+  col += leak * uBurn * mix(vec3(.9, .45, .15), vec3(1., .88, .6), leak) * .8;
 
-  col += uFlash * .85;                                                 // flash frame
-  col += (hash(uv * uRes + fract(uTime) * 91.) - .5) * .09;            // grain
+  col += uFlash * vec3(.9, .78, .55);                                  // flash frame: warm, soft
+
+  // Washi fibres: long horizontal strands and a fine tooth, as if the light comes through paper.
+  float fibre = fbm(vec2(uv.x * 9., uv.y * 70.)) * .6 + noise(uv * uRes * .35) * .4;
+  col *= .9 + fibre * .16;
+  col += (hash(uv * uRes + fract(uTime) * 91.) - .5) * .05;            // grain
   col *= smoothstep(1.25, .35, length(uv - .5));                       // vignette
 
   // Alpha < 1 leaves a trail of earlier frames (preserveDrawingBuffer + blending): the time-warp smear.
@@ -85,7 +97,6 @@ const FRAME_MS = 1000 / 24; // film cadence: looks right and halves the GPU work
 
 export function createIndieEdit(
   canvas: HTMLCanvasElement,
-  photoUrl: string,
   onFirstFrame: () => void,
   {
     allowSoftware = false,
@@ -136,7 +147,7 @@ export function createIndieEdit(
 
   const u = (name: string) => gl.getUniformLocation(prog, name);
   const U = {
-    res: u('uRes'), size: u('uPhotoSize'), dir: u('uDir'), cam: u('uCam'), time: u('uTime'), local: u('uLocal'),
+    res: u('uRes'), size: u('uImageSize'), dir: u('uDir'), cam: u('uCam'), time: u('uTime'), local: u('uLocal'),
     shot: u('uShot'), source: u('uSource'), blur: u('uBlur'), burn: u('uBurn'), flash: u('uFlash'),
   };
 
@@ -149,23 +160,13 @@ export function createIndieEdit(
     return t;
   };
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-  const photoTex = texture();
   const videoTex = texture();
-  let photoSize: [number, number] = [1, 1];
-  const img = new Image();
-  img.onload = () => {
-    gl.bindTexture(gl.TEXTURE_2D, photoTex);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
-    photoSize = [img.naturalWidth, img.naturalHeight];
-  };
-  img.src = photoUrl;
 
   // Footage: one muted, off-DOM video per cut, fetched a shot or two ahead of when it plays, never
-  // during first load. Visitors asking to save data get the photo and the night scene only.
-  const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+  // during first load.
   const videos: Partial<Record<Clip, HTMLVideoElement>> = {};
   const prime = (from: number) => {
-    if (!clipBase || saveData) return;
+    if (!clipBase) return;
     for (const k of [0, 1, 2]) {
       const c = shots[(from + k) % shots.length].clip;
       if (c && !videos[c])
@@ -177,7 +178,9 @@ export function createIndieEdit(
   let shown = -1;
   let playing: HTMLVideoElement | null = null;
   // Picks this frame's image and returns the shader source: 0 = image, 1 = generated night.
-  // A cut whose footage cannot play yet falls back to the night scene, so the edit never stalls.
+  // A cut whose footage cannot play yet holds the last frame (a freeze frame), or the night scene
+  // before any footage has arrived, so the edit never stalls.
+  let hasFrame = false;
   const bindSource = (f: Frame): number => {
     if (f.shot !== shown) {
       shown = f.shot;
@@ -190,15 +193,11 @@ export function createIndieEdit(
       }
     }
     if (f.source === 'night') return 1;
-    if (f.source === 'photo') {
-      gl.bindTexture(gl.TEXTURE_2D, photoTex);
-      gl.uniform2f(U.size, ...photoSize);
-      return 0;
-    }
-    if (!playing || playing.readyState < 2) return 1;
+    if (!playing || playing.readyState < 2) return hasFrame ? 0 : 1;
     playing.playbackRate = f.rate;
     gl.bindTexture(gl.TEXTURE_2D, videoTex);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, playing);
+    hasFrame = true;
     gl.uniform2f(U.size, playing.videoWidth, playing.videoHeight);
     return 0;
   };

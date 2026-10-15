@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { shots } from '../../src/lib/indie-edit';
 
 // Average brightness of the hero canvas (copied through a 2D canvas so WebGL pixels are readable).
 const sample = (page: Page) =>
@@ -105,14 +106,22 @@ test('missing footage falls back to the night scene and the edit keeps moving', 
   expect((await sample(page)).sig).not.toBe(a.sig);
 });
 
-test('the code panel follows the edit', async ({ page }) => {
+test('the burned-in slate follows the edit: code line, clock and cut track', async ({ page }) => {
   await allowSoftware(page);
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
-  const code = page.locator('[data-hero-code]');
-  await expect(code.locator('[data-shot]')).toHaveCount(8);
-  await expect(code.locator('.is-live')).toHaveCount(1, { timeout: 5000 });
-  const clock = code.locator('[data-read="clock"]');
+  const slate = page.locator('[data-hero-slate]');
+  await expect(slate).toBeVisible({ timeout: 5000 });
+  await expect(slate.locator('[data-shot]')).toHaveCount(shots.length);
+  await expect(slate.locator('.is-live')).toHaveCount(1);
+  await expect(slate.locator('[data-read="code"]')).toHaveText(/^shots\[\d\] = \['\w+'/);
+  const clock = slate.locator('[data-read="clock"]');
   const t = await clock.textContent();
   await expect(clock).not.toHaveText(t!, { timeout: 2000 });
+});
+
+test('the hero shows no portrait: the still is a frame of the footage', async ({ page }) => {
+  await page.goto('/');
+  const src = await page.locator('img[data-hero-still]').getAttribute('src');
+  expect(src).toMatch(/hero-still/);
 });

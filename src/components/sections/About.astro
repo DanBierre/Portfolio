@@ -69,14 +69,40 @@ const ring = brushRing({ r: 40, width: 9, seed: 2 });
   .about__figure { display: grid; gap: var(--space-s); justify-items: center; min-width: 0; }
   .portrait { position: relative; width: min(100%, 20rem); aspect-ratio: 1; }
   .portrait__pic { position: absolute; inset: 10%; border-radius: 50%; overflow: hidden; }
+  /* Face centred in the circle (the photo is portrait, the face sits at ~45% height), whole hat
+     and chin in frame. Graded like the hero: the torii orange calmed to the site's rust and gold. */
+  .portrait__pic :global(picture) { display: block; height: 100%; }
   .portrait__pic :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 50% 52%;
-    scale: 1.12;
+    object-position: 50% 30%;
+    filter: saturate(0.7) sepia(0.2) contrast(1.05) brightness(0.92);
+  }
+  /* Washi over the photo, as over the hero footage. */
+  .portrait__pic::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('/textures/washi.svg');
+    mix-blend-mode: soft-light;
+    opacity: 0.5;
   }
   .enso { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--rust); }
+
+  /* The ensō brushes itself round as it scrolls in, one stroke, clockwise from the top. */
+  @property --sweep { syntax: '<angle>'; inherits: false; initial-value: 360deg; }
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .enso {
+        mask: conic-gradient(from -20deg, #000 var(--sweep), transparent 0);
+        animation: brush linear both;
+        animation-timeline: view();
+        animation-range: entry 20% cover 45%;
+      }
+      @keyframes brush { from { --sweep: 0deg; } }
+    }
+  }
 
   @media (min-width: 48em) {
     .about__grid { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); column-gap: var(--space-xl); }

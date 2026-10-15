@@ -1,6 +1,6 @@
 // Indie edit timeline: a looping sequence of "shots" with speed ramps (time warp), film burns and
 // flash frames at the cuts. Pure, so the renderer and the tests agree on every frame.
-export type Source = 'photo' | 'night' | 'clip';
+export type Source = 'night' | 'clip';
 /** Graded 3 s cuts in public/media/japan, made by scripts/cut-japan-clips.sh. */
 export const CLIPS = ['street', 'neon', 'subway', 'lantern', 'crossing'] as const;
 export type Clip = (typeof CLIPS)[number];
@@ -14,17 +14,15 @@ export type Shot = {
   to: [x: number, y: number, zoom: number]; // camera end
 };
 
-// Mixkit Japan footage cut with Dan's Fushimi Inari photo and a generated neon stinger.
-// Rhythm: open on a hold, then tighten into fast ramps, breathe on the lantern, hit hard to the loop.
+// Mixkit Japan footage, seen through shoji paper, with a generated neon stinger before the loop.
+// Rhythm: open on the lantern and hold, drift through the street, two ramps for energy, breathe out.
 export const shots: Shot[] = [
-  { source: 'clip', clip: 'street', duration: 2.0, ramp: 0.35, from: [0.5, 0.5, 1.0], to: [0.54, 0.47, 1.15] },
-  { source: 'clip', clip: 'neon', duration: 1.0, ramp: 1.0, from: [0.42, 0.5, 1.3], to: [0.6, 0.5, 1.45] },
-  { source: 'photo', duration: 1.7, ramp: 0.6, from: [0.5, 0.5, 1.05], to: [0.5, 0.42, 1.35] },
-  { source: 'clip', clip: 'subway', duration: 1.3, ramp: 0.85, from: [0.3, 0.5, 1.35], to: [0.7, 0.5, 1.35] },
-  { source: 'clip', clip: 'lantern', duration: 2.2, ramp: 0.3, from: [0.45, 0.5, 1.0], to: [0.42, 0.5, 1.2] },
-  { source: 'clip', clip: 'crossing', duration: 1.2, ramp: 1.0, from: [0.5, 0.6, 1.5], to: [0.5, 0.45, 1.15] },
-  { source: 'night', duration: 0.7, ramp: 1.0, from: [0.2, 0.5, 1.4], to: [0.85, 0.5, 1.4] },
-  { source: 'photo', duration: 1.4, ramp: 0.9, from: [0.52, 0.4, 1.6], to: [0.5, 0.38, 2.1] },
+  { source: 'clip', clip: 'lantern', duration: 2.6, ramp: 0.3, from: [0.42, 0.5, 1.0], to: [0.39, 0.5, 1.18] },
+  { source: 'clip', clip: 'street', duration: 2.2, ramp: 0.4, from: [0.5, 0.5, 1.0], to: [0.55, 0.47, 1.12] },
+  { source: 'clip', clip: 'neon', duration: 1.8, ramp: 0.85, from: [0.3, 0.5, 1.3], to: [0.7, 0.5, 1.4] },
+  { source: 'clip', clip: 'subway', duration: 2.4, ramp: 0.5, from: [0.35, 0.5, 1.3], to: [0.65, 0.5, 1.3] },
+  { source: 'clip', clip: 'crossing', duration: 2.2, ramp: 0.9, from: [0.5, 0.6, 1.4], to: [0.5, 0.45, 1.1] },
+  { source: 'night', duration: 0.8, ramp: 0.6, from: [0.3, 0.5, 1.3], to: [0.7, 0.5, 1.3] },
 ];
 
 export const LOOP = shots.reduce((s, x) => s + x.duration, 0);
@@ -53,7 +51,7 @@ export type Frame = {
   dir: [number, number];
   /** Film burn 0..1: blooms at each cut, decays over ~0.6 s. */
   burn: number;
-  /** Flash frame 0..1: a white pop for the first ~3 frames after a cut. */
+  /** Flash frame 0..1: a soft warm lift for the first ~2 frames after a cut (never a white pop). */
   flash: number;
   /** Seconds since the cut, for per-shot noise seeds. */
   local: number;
@@ -85,7 +83,7 @@ export function frameAt(time: number): Frame {
     dir: [dx / len, dy / len],
     // Burn on the way out of a shot and into the next, so it masks the cut.
     burn: Math.max(Math.exp(-sinceCut / 0.18), Math.exp(-untilCut / 0.12) * 0.6),
-    flash: sinceCut < 0.06 ? 1 - sinceCut / 0.06 : 0,
+    flash: sinceCut < 0.08 ? 0.3 * (1 - sinceCut / 0.08) : 0,
     local: sinceCut,
   };
 }
