@@ -9,30 +9,11 @@ import { shots } from '../../lib/indie-edit';
 const lang = langOf(Astro.currentLocale);
 const t = ui[lang];
 
-// Kinetic intro: every word is its own cut. Beats tighten like the edit (0.1 s apart) with a held
-// beat before each gold word, and the last word lands on a speed ramp.
-type Word = { text: string; accent?: boolean; delay: number; last?: boolean };
-let beat = 0;
-const lines: (Word | string)[][] = t.hero.lines.map((line) =>
-  line.flatMap((seg) =>
-    (seg.accent || lang === 'ja' ? [seg.text] : seg.text.split(/(\s+)/)).map((text) => {
-      if (!text.trim()) return text;
-      if (seg.accent) beat += 0.1;
-      const w: Word = { text, accent: seg.accent, delay: +beat.toFixed(2) };
-      beat += 0.1;
-      return w;
-    }),
-  ),
-);
-const words = lines.flat().filter((w): w is Word => typeof w !== 'string');
-words[words.length - 1].last = true;
-const open = +(beat + 0.05).toFixed(2); // the footage opens once the headline has landed
-
 // The still is a frame of the edit itself (behind the paper), shown until the edit runs, and for
 // reduced motion, no WebGL, Save-Data and software-only graphics.
 ---
 
-<section id="hero" class="hero spined" aria-labelledby="hero-title" style={`--open: ${open}s`}>
+<section id="hero" class="hero spined" aria-labelledby="hero-title">
   <div class="hero__media" aria-hidden="true">
     <Picture
       src={still}
@@ -54,20 +35,12 @@ const open = +(beat + 0.05).toFixed(2); // the footage opens once the headline h
     <div class="hero__statement">
       <h1 id="hero-title" class="hero__title" aria-label={t.hero.title}>
         {
-          lines.map((line, i) => (
+          t.hero.lines.map((line, i) => (
             <>
               <span class:list={['line', { 'line--indent': i > 0 }]} aria-hidden="true">
-                {line.map((w) =>
-                  typeof w === 'string' ? (
-                    w
-                  ) : (
-                    <span class:list={['kw', { accent: w.accent, 'kw--ramp': w.last }]} style={`--d: ${w.delay}s`}>
-                      {w.text}
-                    </span>
-                  ),
-                )}
+                {line.map((seg) => (seg.accent ? <span class="accent">{seg.text}</span> : seg.text))}
               </span>
-              {i < lines.length - 1 && lang !== 'ja' && ' '}
+              {i < t.hero.lines.length - 1 && lang !== 'ja' && ' '}
             </>
           ))
         }
@@ -102,6 +75,8 @@ const open = +(beat + 0.05).toFixed(2); // the footage opens once the headline h
     hidden>
     <span class="when-playing" aria-hidden="true">pause</span><span class="when-paused" aria-hidden="true">play</span>
   </button>
+  <!-- Film grain over everything in the frame, type included: the headline is a title card in the film. -->
+  <span class="hero__grain" aria-hidden="true"></span>
 </section>
 
 <script>
@@ -122,13 +97,12 @@ const open = +(beat + 0.05).toFixed(2); // the footage opens once the headline h
     // Tests run in software-rendered Chromium; they opt in explicitly. Real visitors need a GPU.
     const allowSoftware = (window as any).__indieEditAllowSoftware === true;
     // The slate follows the edit: the line of code for this shot, its clock and rate, and the cut's
-    // track with the playing shot filling. On each cut the page answers: the gold words and the rust
-    // "now" diamond catch the light, so the headline and the footage read as one piece.
+    // track with the playing shot filling.
     const slate = document.querySelector<HTMLElement>('[data-hero-slate]');
     const segs = slate ? [...slate.querySelectorAll<HTMLElement>('[data-shot]')] : [];
     const read = (k: string) => slate?.querySelector<HTMLElement>(`[data-read="${k}"]`);
     const out = { code: read('code'), clock: read('clock'), rate: read('rate') };
-    const glow = [...document.querySelectorAll<HTMLElement>('.hero__title .accent, .hero__now')];
+    const hero = canvas.closest<HTMLElement>('#hero')!;
     const line = (i: number) => {
       const s = shots[i];
       return `shots[${i}] = ['${s.clip ?? s.source}', ${s.duration.toFixed(1)}, ${s.ramp.toFixed(2).replace(/^0/, '')}]`;
@@ -139,14 +113,10 @@ const open = +(beat + 0.05).toFixed(2); // the footage opens once the headline h
         segs[lit]?.classList.remove('is-live');
         segs[f.shot]?.classList.add('is-live');
         if (out.code) out.code.textContent = line(f.shot);
-        if (lit !== -1)
-          for (const el of glow)
-            el.animate(
-              [{ filter: 'brightness(1.6) drop-shadow(0 0 0.35em rgb(201 162 79 / 0.55))' }, { filter: 'none' }],
-              { duration: 700, easing: 'cubic-bezier(.2,.7,.2,1)' },
-            );
         lit = f.shot;
       }
+      // The film burn and flash at each cut light the title card too.
+      hero.style.setProperty('--burn', Math.max(f.burn, f.flash).toFixed(2));
       segs[f.shot]?.style.setProperty('--p', String(Math.min(1, f.local / shots[f.shot].duration)));
       if (out.clock) out.clock.textContent = (clock % LOOP).toFixed(2).padStart(5, '0');
       if (out.rate) out.rate.textContent = f.rate.toFixed(2);
@@ -172,9 +142,7 @@ const open = +(beat + 0.05).toFixed(2); // the footage opens once the headline h
       // Start once the page is idle (never competing with first load), and only run while on screen.
       const begin = () =>
         new IntersectionObserver(([e]) => (e.isIntersecting && !paused ? edit.start() : edit.stop())).observe(canvas);
-      // ...and not before the intro has opened the doors, so the first shot plays in full.
-      const opens = parseFloat(getComputedStyle(canvas.closest('section')!).getPropertyValue('--open')) * 1000 || 0;
-      setTimeout(() => ('requestIdleCallback' in window ? requestIdleCallback(begin, { timeout: 2000 }) : begin()), opens);
+      'requestIdleCallback' in window ? requestIdleCallback(begin, { timeout: 2000 }) : setTimeout(begin, 1200);
       toggle.hidden = false;
       sync();
     }
@@ -194,6 +162,7 @@ const open = +(beat + 0.05).toFixed(2); // the footage opens once the headline h
     --btn-text: #141414;
     --spine-line: rgb(236 235 231 / 0.45);
     --lattice: rgb(236 235 231 / 0.07);
+    --burn: 0;
     position: relative;
     isolation: isolate;
     overflow: hidden;
@@ -218,8 +187,8 @@ const open = +(beat + 0.05).toFixed(2); // the footage opens once the headline h
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(to top, rgb(20 20 20 / 0.9) 0%, rgb(20 20 20 / 0.5) 40%, transparent 70%, rgb(20 20 20 / 0.25)),
-      linear-gradient(to right, rgb(20 20 20 / 0.5), transparent 60%);
+      linear-gradient(to top, rgb(20 20 20 / 0.92) 0%, rgb(20 20 20 / 0.72) 35%, rgb(20 20 20 / 0.3) 60%, transparent 80%, rgb(20 20 20 / 0.25)),
+      linear-gradient(to right, rgb(20 20 20 / 0.55), transparent 70%);
   }
   .hero__kumiko { position: absolute; inset: 0; opacity: 0.8; }
 
@@ -246,11 +215,14 @@ const open = +(beat + 0.05).toFixed(2); // the footage opens once the headline h
     letter-spacing: -0.04em;
     font-weight: 430;
     text-wrap: initial;
-    text-shadow: 0 0.04em 0.4em rgb(20 20 20 / 0.45);
+    /* Halation, as on the footage: a warm bloom around the type that flares with each cut's burn. */
+    text-shadow:
+      0 0 0.35em rgb(255 186 110 / calc(0.12 + var(--burn) * 0.32)),
+      0 0.04em 0.4em rgb(20 20 20 / 0.45);
+    filter: brightness(calc(1 + var(--burn) * 0.15));
   }
   .hero__title .line { display: block; }
   .hero__title .line--indent { padding-left: 2.6em; }
-  .hero__title .kw { display: inline-block; }
   .hero__title:lang(ja) { letter-spacing: 0; line-height: 1.1; font-weight: 600; }
 
   /* The note sits in the gap the indent leaves, as in a Kolkhoze statement. */
@@ -290,6 +262,17 @@ const open = +(beat + 0.05).toFixed(2); // the footage opens once the headline h
     background: linear-gradient(90deg, #c9a24f calc(var(--p) * 100%), rgb(236 235 231 / 0.25) 0);
   }
   .hero__track li:not(.is-live) { --p: 0; }
+
+  /* Grain: generated noise, overlaid on footage and type alike; it flickers at film rate (motion.css). */
+  .hero__grain {
+    position: absolute;
+    inset: -50%;
+    z-index: 2;
+    pointer-events: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+    opacity: 0.16;
+  }
 
   .hero__toggle {
     position: absolute;

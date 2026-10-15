@@ -1,37 +1,44 @@
 import { test, expect, type Page } from '@playwright/test';
 
-// Kinetic intro: the headline cuts in word by word on the edit's beats, then the footage opens.
-const words = (page: Page) => page.locator('#hero h1 .kw');
-
-test('kinetic intro: words cut in one after another and all land', async ({ page }) => {
+// Title card: the headline sits in the film from the first frame, with the film's grain over it,
+// the gate weave moving it and each cut's burn lighting it.
+test('title card: the headline is there from the first frame, no word-by-word intro', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
-  const n = await words(page).count();
-  expect(n).toBeGreaterThanOrEqual(7);
-  const delays = await words(page).evaluateAll((els) => els.map((e) => parseFloat(getComputedStyle(e).animationDelay)));
-  for (let i = 1; i < delays.length; i++) expect(delays[i]).toBeGreaterThan(delays[i - 1]);
-  expect(delays.at(-1)!).toBeLessThan(1.6); // the headline is fully in well inside the LCP budget
-  await expect
-    .poll(() => words(page).evaluateAll((els) => els.every((e) => getComputedStyle(e).opacity === '1')), { timeout: 4000 })
-    .toBe(true);
+  await expect(page.locator('#hero h1 .kw')).toHaveCount(0);
+  expect(await page.locator('#hero h1').evaluate((e) => getComputedStyle(e).opacity)).toBe('1');
   await expect(page.locator('#hero h1')).toHaveAccessibleName(/I’m Dan/);
 });
 
-test('kinetic intro: the footage opens after the words', async ({ page }) => {
+test('title card: film grain runs over the type, decorative only', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
-  const media = page.locator('.hero__media');
-  const delay = await media.evaluate((e) => parseFloat(getComputedStyle(e).animationDelay));
-  const last = await words(page).last().evaluate((e) => parseFloat(getComputedStyle(e).animationDelay));
-  expect(delay).toBeGreaterThanOrEqual(last);
+  const grain = page.locator('#hero .hero__grain');
+  await expect(grain).toHaveAttribute('aria-hidden', 'true');
+  expect(await grain.evaluate((e) => getComputedStyle(e).pointerEvents)).toBe('none');
+  const z = (sel: string) => page.locator(sel).evaluate((e) => Number(getComputedStyle(e).zIndex) || 0);
+  expect(await z('#hero .hero__grain')).toBeGreaterThan(await z('#hero .hero__grid'));
+  expect(await grain.evaluate((e) => getComputedStyle(e).animationName)).not.toBe('none');
 });
 
-test('kinetic intro: skipped entirely under reduced motion', async ({ page }) => {
+test('title card: each cut’s film burn lights the headline', async ({ page }) => {
+  await page.addInitScript(() => ((window as any).__indieEditAllowSoftware = true));
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  await expect(page.locator('[data-hero-still]')).toBeHidden({ timeout: 8000 });
+  const burns = new Set<string>();
+  for (let i = 0; i < 12; i++) {
+    burns.add(await page.locator('#hero').evaluate((e) => (e as HTMLElement).style.getPropertyValue('--burn')));
+    await page.waitForTimeout(250);
+  }
+  expect(burns.size).toBeGreaterThan(2);
+});
+
+test('title card: still under reduced motion (no grain flicker, no weave)', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
-  const names = await words(page).evaluateAll((els) => els.map((e) => getComputedStyle(e).animationName));
-  expect(names.every((n) => n === 'none')).toBe(true);
-  expect(await page.locator('.hero__media').evaluate((e) => getComputedStyle(e).animationName)).toBe('none');
+  expect(await page.locator('#hero .hero__grain').evaluate((e) => getComputedStyle(e).animationName)).toBe('none');
+  expect(await page.locator('#hero .hero__statement').evaluate((e) => getComputedStyle(e).animationName)).toBe('none');
 });
 
 test('the footage is the hero background, behind the headline', async ({ page }) => {

@@ -19,12 +19,12 @@ test('reduced motion: work previews stay paused on hover', async ({ page }, info
   expect(await paused('#work article video')(page)).toBe(true);
 });
 
-test('motion allowed: the headline animates', async ({ page }) => {
+test('motion allowed: the headline moves with the film (gate weave)', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
   expect(
     await page.evaluate(() =>
-      document.getAnimations().some((a) => (a.effect as KeyframeEffect).target?.closest('h1')),
+      document.getAnimations().some((a) => (a.effect as KeyframeEffect).target?.querySelector?.('h1')),
     ),
   ).toBe(true);
 });

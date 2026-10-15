@@ -52,3 +52,20 @@ test('footer has mailto and LinkedIn', async ({ page }) => {
   await expect(footer.getByRole('link', { name: site.email })).toHaveAttribute('href', `mailto:${site.email}`);
   await expect(footer.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', site.linkedin);
 });
+
+test('footer closes the page as end credits: fin mark, credits list, ensō, contact row', async ({ page }) => {
+  await page.goto('/');
+  const footer = page.getByRole('contentinfo');
+  await expect(footer.locator('.credits__fin')).toHaveText('終');
+  const terms = await footer.locator('.credits__roll dt').allTextContents();
+  expect(terms).toEqual(['Design & code', 'Edit & grade', 'Footage', 'Made in']);
+  await expect(footer.locator('.credits__roll dd').nth(2)).toHaveText('Mixkit');
+  await expect(footer.locator('svg.credits__enso')).toBeVisible();
+  await expect(footer.getByRole('link', { name: /back to top/i })).toHaveAttribute('href', '#main');
+  await expect(footer.locator('.footer__mark')).toHaveCount(0); // the giant wordmark is gone
+});
+
+test('footer credits are translated on the Japanese page', async ({ page }) => {
+  await page.goto('/ja');
+  await expect(page.getByRole('contentinfo').locator('.credits__roll dt').first()).toHaveText('デザイン・コード');
+});

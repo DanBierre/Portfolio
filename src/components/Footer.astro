@@ -1,39 +1,86 @@
 ---
 import { site } from '../site.config';
 import CopyEmail from './CopyEmail.astro';
-import { langOf, homeOf } from '../i18n/ui';
+import { langOf } from '../i18n/ui';
+import { brushRing } from '../lib/enso';
 
 const year = new Date().getFullYear();
 const lang = langOf(Astro.currentLocale);
+
+// The page ends like the edit at its top: a short credit roll, the 終 card and an ensō.
+const credits =
+  lang === 'ja'
+    ? [
+        ['デザイン・コード', 'Dan Bierre'],
+        ['編集・グレーディング', 'Dan Bierre'],
+        ['映像素材', 'Mixkit'],
+        ['制作', 'オークランド → 日本'],
+      ]
+    : [
+        ['Design & code', 'Dan Bierre'],
+        ['Edit & grade', 'Dan Bierre'],
+        ['Footage', 'Mixkit'],
+        ['Made in', 'Auckland → Japan'],
+      ];
+const ring = brushRing({ r: 40, width: 7, seed: 5 });
 ---
 
 <footer class="site-footer">
-  <div class="wrap footer">
-    <a class="footer__mark" href={homeOf(lang)}>{site.name}</a>
-    <div class="footer__row">
-      <CopyEmail />
-      <a href={site.linkedin}>LinkedIn</a>
-      <a class="footer__top" href="#main">{lang === 'ja' ? 'トップへ' : 'Back to top'} <span aria-hidden="true">↑</span></a>
-      <p class="footer__legal">© {year}</p>
-    </div>
+  <div class="wrap credits">
+    <p class="credits__fin" lang="ja" aria-hidden="true">終</p>
+    <dl class="credits__roll">
+      {
+        credits.map(([term, name]) => (
+          <div>
+            <dt>{term}</dt>
+            <dd>{name}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    <svg class="credits__enso" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+      <path d={ring} fill="currentColor"></path>
+    </svg>
+  </div>
+  <div class="wrap footer__row">
+    <CopyEmail />
+    <a href={site.linkedin}>LinkedIn</a>
+    <a class="footer__top" href="#main">{lang === 'ja' ? 'トップへ' : 'Back to top'} <span aria-hidden="true">↑</span></a>
+    <p class="footer__legal">© {year}</p>
   </div>
 </footer>
 
 <style>
-  .site-footer { padding-block: var(--space-xl) var(--space-l); overflow: hidden; }
-  .footer { display: grid; gap: var(--space-l); container-type: inline-size; }
-  /* Kolkhoze-style closing wordmark: lowercase, edge to edge of the content column. */
-  .footer__mark {
-    font-size: 23.4cqi;
-    justify-self: start;
-    font-weight: 430;
-    letter-spacing: -0.04em;
-    line-height: 0.8;
-    text-transform: lowercase;
-    text-decoration: none;
-    white-space: nowrap;
+  .site-footer { padding-block: var(--space-2xl) var(--space-l); overflow: hidden; }
+
+  /* Credits: centred on a gutter, roles right-aligned to the left of it and names to the right,
+     as on a film's end roll. */
+  .credits { display: grid; justify-items: center; gap: var(--space-l); padding-bottom: var(--space-xl); }
+  .credits__fin {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+    margin: 0;
+    /* System Mincho: the web Mincho is a Latin subset without 終, so loading it here would only cost bytes. */
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif;
+    font-size: var(--step-3);
+    color: var(--text);
   }
-  /* One hairline row, like the credits' last card: contact left, way out right. */
+  .credits__fin::before,
+  .credits__fin::after { content: ''; width: 3rem; height: 1px; background: var(--border); }
+  .credits__roll { display: grid; gap: 0.7em; margin: 0; }
+  .credits__roll > div { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--space-m); }
+  .credits__roll dt {
+    text-align: right;
+    font-size: var(--step--1);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    align-self: center;
+  }
+  .credits__roll dd { margin: 0; font-size: var(--step-1); }
+  .credits__enso { width: 3.5rem; height: 3.5rem; color: var(--rust); }
+
   .footer__row {
     display: flex;
     flex-wrap: wrap;
@@ -50,5 +97,6 @@ const lang = langOf(Astro.currentLocale);
   /* Phones: contact on its own line, then LinkedIn, top and © on one line. */
   @media (max-width: 47.99em) {
     .footer__row > :first-child { flex-basis: 100%; }
+    .credits__roll dd { font-size: var(--step-0); }
   }
 </style>

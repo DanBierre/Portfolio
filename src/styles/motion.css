@@ -12,34 +12,26 @@
     }
   }
 
-  /* The authored moment, a kinetic intro cut like the edit behind it. Each word hard-cuts in with
-     a horizontal smear (motion blur) and settles; gold words flash like a burn; the last word
-     lands on a speed ramp; then the footage slides open like a shoji door. Delays come from Hero. */
-  @keyframes kin-cut {
-    0% { opacity: 0; translate: -0.3em 0; scale: 1.25 1; filter: blur(6px); }
-    0.1% { opacity: 1; }
-    45% { translate: 0.02em 0; scale: 0.99 1; filter: blur(0); }
-    100% { opacity: 1; translate: 0 0; scale: 1; filter: none; }
+  /* The authored moment: the headline is a title card in the film. The footage fades up from black,
+     grain flickers over footage and type at film rate, and the type weaves with the gate. The burn
+     at each cut lights the type from Hero's script. */
+  @keyframes film-in { from { opacity: 0; } }
+  #hero .hero__media { animation: film-in 1.4s ease-out both; }
+  @keyframes grain {
+    0% { translate: 0 0; }
+    20% { translate: -4% 3%; }
+    40% { translate: 3% -5%; }
+    60% { translate: -6% -2%; }
+    80% { translate: 5% 4%; }
   }
-  @keyframes kin-flash {
-    0% { color: #fff4da; text-shadow: 0 0 0.45em rgb(201 162 79 / 0.9); }
+  #hero .hero__grain { animation: grain 0.42s steps(1) infinite; }
+  @keyframes weave {
+    0% { translate: 0 0; }
+    25% { translate: 0.5px -0.4px; }
+    50% { translate: -0.4px 0.6px; }
+    75% { translate: 0.3px 0.2px; }
   }
-  @keyframes kin-ramp {
-    0% { letter-spacing: 0.5em; }
-    30% { letter-spacing: 0.06em; }
-    70% { letter-spacing: 0; }
-  }
-  #hero .kw { animation: kin-cut 560ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--d) both; }
-  #hero .kw.accent { animation: kin-cut 560ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--d) both, kin-flash 900ms ease-out var(--d) both; }
-  #hero .kw--ramp { animation: kin-cut 560ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--d) both, kin-ramp 900ms cubic-bezier(0.1, 0.9, 0.9, 0.1) var(--d) both; }
-  #hero .hero__note,
-  #hero .hero__actions,
-  #hero .hero__slate { animation: develop 0.9s var(--ease-out) var(--open) both; }
-
-  @keyframes screen-open {
-    from { clip-path: inset(0 50% 0 50%); }
-  }
-  #hero .hero__media { animation: screen-open 1.3s var(--ease-slide) var(--open) both; }
+  #hero .hero__statement { animation: weave 0.33s steps(1) infinite; }
 
   /* Page transitions: a hard cut with a flash frame, like the hero edit; the work thumbnail still
      morphs into the case study header. */
@@ -67,15 +59,13 @@
       animation-range: entry 0% cover 30%;
     }
 
-    /* End credits: the footer wordmark wipes on and pulls focus, the last frame of the page. */
-    @keyframes credits {
-      from { clip-path: inset(0 100% 0 0); filter: blur(12px); }
-      60% { filter: blur(0); }
-    }
-    .footer__mark {
-      animation: credits linear both;
+    /* End credits: each line rolls up into place as the page scrolls to its end. */
+    @keyframes credit-roll { from { opacity: 0; translate: 0 1.6em; } }
+    .credits > *,
+    .credits__roll > div {
+      animation: credit-roll linear both;
       animation-timeline: view();
-      animation-range: entry 10% cover 45%;
+      animation-range: entry 0% entry 90%;
     }
 
     /* Service lines drop in like clips onto a timeline. */
