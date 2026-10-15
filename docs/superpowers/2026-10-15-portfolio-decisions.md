@@ -66,3 +66,11 @@ Decisions made during the build (from the execution ledger), each with its cost 
 - Light theme uses the live site's palette; bands become dark screens without the washi texture. Dark remains the default for first-time visitors.
 - The live site's AKL/TYO clocks were not selected; the reviewer noted they would be a natural home for the serif numerals and the rust "now" marker if you want them later.
 - Shoji case study copy is drawn from the live site; please check the role line ("Design, build, Japanese localisation") and the results lines are accurate.
+
+## Lab
+
+- Six Lab ideas added: Ensō Generator (built, live at /lab/enso), Campaign Variant Machine, Kinetic Type from Voice, AI Rough Cut, Agent X-ray, Kanji Develops.
+- Every Lab entry carries a status: only built experiments say "live" (rust marker, "Try it" link); the other five say "in progress" so the site never implies unbuilt work is finished. Change `status` to `live` and add a `link` when you build one.
+- The five in-progress entries use [PLACEHOLDER] images; the Ensō cover is real (rendered from the generator code).
+- Shared button fix: `<button>`-based secondary buttons no longer show the browser's default grey background.
+- Homepage first-content time rose to 1.96 s (budget 2 s, was 1.73 s) with the new Lab imagery; worth watching once real images land.
