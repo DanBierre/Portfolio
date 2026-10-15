@@ -1,10 +1,12 @@
 ---
 import '@fontsource-variable/hanken-grotesk';
 import '@fontsource-variable/geist-mono';
+import '@fontsource/shippori-mincho/latin-500.css';
 import '../styles/tokens.css';
 import '../styles/global.css';
 import '../styles/motion.css';
 import { site } from '../site.config';
+import { langOf } from '../i18n/ui';
 import Nav from '../components/Nav.astro';
 import MobileCta from '../components/MobileCta.astro';
 import Footer from '../components/Footer.astro';
@@ -14,9 +16,12 @@ interface Props {
   description: string;
   ogImage?: string;
   noindex?: boolean;
+  /** Homepage only: link the English and Japanese versions to each other for search engines. */
+  alternates?: boolean;
 }
 
-const { title, description, ogImage = '/og-default.png', noindex = false } = Astro.props;
+const { title, description, ogImage = '/og-default.png', noindex = false, alternates = false } = Astro.props;
+const lang = langOf(Astro.currentLocale);
 const base = Astro.site ?? new URL(site.url);
 // build.format 'file' reports the homepage as /index.html; canonical URLs use clean paths.
 const canonical = new URL(Astro.url.pathname.replace(/(index)?\.html$/, ''), base).href;
@@ -24,14 +29,29 @@ const image = new URL(ogImage, base).href;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Apply the saved theme before first paint, so there is no flash. Dark is the default world. -->
+    <script is:inline>
+      try {
+        if (localStorage.getItem('theme') === 'light') document.documentElement.dataset.theme = 'light';
+      } catch {}
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description} />
     {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    {
+      alternates && (
+        <>
+          <link rel="alternate" hreflang="en" href={new URL('/', base).href} />
+          <link rel="alternate" hreflang="ja" href={new URL('/ja', base).href} />
+          <link rel="alternate" hreflang="x-default" href={new URL('/', base).href} />
+        </>
+      )
+    }
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
@@ -39,6 +59,7 @@ const image = new URL(ogImage, base).href;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={image} />
+    <meta property="og:locale" content={lang === 'ja' ? 'ja_JP' : 'en_GB'} />
     <meta name="twitter:card" content="summary_large_image" />
 
     {
@@ -49,7 +70,7 @@ const image = new URL(ogImage, base).href;
     <slot name="head" />
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to content</a>
+    <a class="skip-link" href="#main">{lang === 'ja' ? '本文へ移動' : 'Skip to content'}</a>
     <Nav />
     <main id="main"><slot /></main>
     <Footer />

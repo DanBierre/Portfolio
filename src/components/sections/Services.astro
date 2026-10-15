@@ -1,32 +1,18 @@
 ---
-const columns = [
-  {
-    name: 'Experiences',
-    intro: 'For your clients: AI they can see, touch and share.',
-    items: [
-      'Campaign sites with generative features built in',
-      'AI-powered installations and live event experiences',
-      "AI features inside your client's site or app",
-    ],
-  },
-  {
-    name: 'Pipelines',
-    intro: 'For your studio: generative production that runs on brand.',
-    items: [
-      'Image and video generation workflows tuned to a brand',
-      'Copy and asset variations at campaign scale',
-      'Tooling and training so your team runs it without me',
-    ],
-  },
-];
+import SpineMark from '../SpineMark.astro';
+import { ui, langOf } from '../../i18n/ui';
+
+const t = ui[langOf(Astro.currentLocale)];
 ---
 
-<section id="services" class="services band lattice-field" aria-labelledby="services-title">
+<section id="services" class="services band lattice-field spined" aria-labelledby="services-title">
+  <SpineMark section="services" />
   <div class="wrap">
-    <h2 id="services-title">What I do<br />for agencies</h2>
+    <h2 id="services-title">{t.services.title}</h2>
+    <p class="services__lede">{t.services.intro}</p>
     <div class="services__grid">
       {
-        columns.map((c) => (
+        t.services.columns.map((c) => (
           <section class="services__col" aria-label={c.name}>
             <h3>{c.name}</h3>
             <p class="services__intro">{c.intro}</p>
@@ -44,7 +30,8 @@ const columns = [
 
 <style>
   .services { margin-top: var(--space-2xl); padding-block: var(--space-2xl); }
-  h2 { margin-bottom: var(--space-xl); }
+  h2 { max-width: 14ch; }
+  .services__lede { margin-block: var(--space-l) var(--space-xl); font-size: var(--step-1); line-height: 1.4; max-width: 44ch; }
   .services__grid { display: grid; gap: var(--space-xl) var(--space-xl); }
   .services__col { display: grid; gap: var(--space-s); align-content: start; }
   h3 { font-size: var(--step-3); font-weight: 440; letter-spacing: -0.045em; }

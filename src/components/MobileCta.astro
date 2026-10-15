@@ -1,10 +1,12 @@
 ---
-import { site } from '../site.config';
 import BookCall from './BookCall.astro';
+import { ui, langOf } from '../i18n/ui';
+
+const t = ui[langOf(Astro.currentLocale)];
 ---
 
 <div class="mobile-cta" data-testid="mobile-cta">
-  <span class="mobile-cta__note">{site.availability}</span>
+  <span class="mobile-cta__note">{t.contact.availability}</span>
   <BookCall variant="primary" />
 </div>
 

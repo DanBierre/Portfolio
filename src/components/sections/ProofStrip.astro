@@ -1,6 +1,8 @@
 ---
 import { Image } from 'astro:assets';
-import { site } from '../../site.config';
+import { ui, langOf } from '../../i18n/ui';
+
+const t = ui[langOf(Astro.currentLocale)];
 
 // Drop client/agency logos (with permission) into src/assets/logos/ and they replace the result line.
 const logos = Object.entries(
@@ -8,9 +10,9 @@ const logos = Object.entries(
 ).map(([path, mod]) => ({ src: mod.default, name: path.split('/').pop()!.replace(/\.\w+$/, '') }));
 ---
 
-<section id="proof" class="proof" aria-label="Proof">
+<section id="proof" class="proof spined" aria-label={t.proof.label}>
   <div class="wrap proof__rule">
-    <span class="label" aria-hidden="true">proof</span>
+    <span class="label" aria-hidden="true">{t.proof.label}</span>
     {
       logos.length > 0 ? (
         <ul class="proof__logos" role="list">
@@ -21,10 +23,10 @@ const logos = Object.entries(
           ))}
         </ul>
       ) : (
-        <p class="proof__result">{site.proofResult}</p>
+        <p class="proof__result">{t.proof.result}</p>
       )
     }
-    <span class="label" aria-hidden="true">for agencies</span>
+    <span class="label" aria-hidden="true">{t.proof.end}</span>
   </div>
 </section>
 

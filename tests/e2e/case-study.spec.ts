@@ -30,7 +30,7 @@ test('interactive element sits between Process and Results', async ({ page }) =>
 
 test('last case study links back to the first', async ({ page }) => {
   await page.goto('/work/case-study-two');
-  await expect(page.getByRole('link', { name: /next case study/i })).toHaveAttribute('href', '/work/case-study-one');
+  await expect(page.getByRole('link', { name: /next case study/i })).toHaveAttribute('href', '/work/shoji');
 });
 
 test('before/after slider is keyboard operable and moves the split', async ({ page }) => {

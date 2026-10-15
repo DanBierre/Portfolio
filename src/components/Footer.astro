@@ -1,13 +1,14 @@
 ---
 import { site } from '../site.config';
 import CopyEmail from './CopyEmail.astro';
+import { langOf, homeOf } from '../i18n/ui';
 
 const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
   <div class="wrap footer">
-    <a class="footer__mark" href="/">{site.name}</a>
+    <a class="footer__mark" href={homeOf(langOf(Astro.currentLocale))}>{site.name}</a>
     <div class="footer__row">
       <CopyEmail />
       <a href={site.linkedin}>LinkedIn</a>

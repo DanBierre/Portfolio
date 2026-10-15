@@ -1,16 +1,20 @@
 ---
 import { Picture } from 'astro:assets';
 import { getCollection } from 'astro:content';
+import SpineMark from '../SpineMark.astro';
+import { ui, langOf } from '../../i18n/ui';
 
+const t = ui[langOf(Astro.currentLocale)];
 const all = (await getCollection('lab')).sort((a, b) => a.data.order - b.data.order);
 const items = all.slice(0, 3);
 ---
 
-<section id="lab" class="lab" aria-labelledby="lab-title">
+<section id="lab" class="lab spined" aria-labelledby="lab-title">
+  <SpineMark section="lab" />
   <div class="wrap">
     <div class="lab__head">
-      <h2 id="lab-title">From the Lab<span class="count" aria-hidden="true">{all.length}</span></h2>
-      <a class="label lab__all" href="/lab">See the Lab</a>
+      <h2 id="lab-title">{t.lab.title}<span class="count" aria-hidden="true">{all.length}</span></h2>
+      <a class="label lab__all" href="/lab">{t.lab.all}</a>
     </div>
     <div class="lab__grid">
       {
@@ -20,13 +24,13 @@ const items = all.slice(0, 3);
               src={item.data.image}
               formats={['avif', 'webp']}
               widths={[480, 800]}
-              sizes="(min-width: 48em) 30vw, 100vw"
+              sizes="(min-width: 48em) 18rem, 100vw"
               alt={item.data.imageAlt}
             />
             <div class="lab__caption">
               <h3>{item.data.title}</h3>
               <p class="label">
-                {String(i + 1).padStart(2, '0')} / {item.data.interactive ? 'interactive' : 'study'}
+                <span class="num">{String(i + 1).padStart(2, '0')}</span> / {item.data.interactive ? t.lab.interactive : t.lab.study}
               </p>
             </div>
             <p class="lab__summary">{item.data.summary}</p>

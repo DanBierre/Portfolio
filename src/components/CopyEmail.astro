@@ -1,10 +1,13 @@
 ---
 import { site } from '../site.config';
+import { ui, langOf } from '../i18n/ui';
+
+const t = ui[langOf(Astro.currentLocale)].copy;
 ---
 
 <span class="copy-email">
   <a href={`mailto:${site.email}`}>{site.email}</a>
-  <button type="button" class="copy-email__btn" data-copy={site.email} hidden>Copy email</button>
+  <button type="button" class="copy-email__btn" data-copy={site.email} data-done={t.done} data-failed={t.failed} hidden>{t.button}</button>
   <span class="copy-email__status" aria-live="polite"></span>
 </span>
 
@@ -15,9 +18,9 @@ import { site } from '../site.config';
       const status = btn.nextElementSibling as HTMLElement;
       try {
         await navigator.clipboard.writeText(btn.dataset.copy!);
-        status.textContent = 'Copied';
+        status.textContent = btn.dataset.done!;
       } catch {
-        status.textContent = 'Copy failed. Use the link instead.';
+        status.textContent = btn.dataset.failed!;
       }
       setTimeout(() => (status.textContent = ''), 2500);
     });

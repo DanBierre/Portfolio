@@ -1,15 +1,19 @@
 ---
 import { getCollection } from 'astro:content';
 import WorkCard from '../WorkCard.astro';
+import SpineMark from '../SpineMark.astro';
+import { ui, langOf } from '../../i18n/ui';
 
+const t = ui[langOf(Astro.currentLocale)];
 const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<section id="work" class="work" aria-labelledby="work-title">
+<section id="work" class="work spined" aria-labelledby="work-title">
+  <SpineMark section="work" />
   <div class="wrap">
     <div class="work__head">
-      <h2 id="work-title">Selected work<span class="count" aria-hidden="true">{work.length}</span></h2>
-      <p class="label">hover a piece to see how it was made</p>
+      <h2 id="work-title">{t.work.title}<span class="count" aria-hidden="true">{work.length}</span></h2>
+      <p class="label">{t.work.hint}</p>
     </div>
     <div class="work__index">
       {work.map((entry, i) => <WorkCard entry={entry} index={i} />)}

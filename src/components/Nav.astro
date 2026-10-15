@@ -1,50 +1,91 @@
 ---
 import { getCollection } from 'astro:content';
 import { site } from '../site.config';
+import { ui, langOf, homeOf } from '../i18n/ui';
 import BookCall from './BookCall.astro';
 
+const lang = langOf(Astro.currentLocale);
+const t = ui[lang];
+const home = homeOf(lang);
+const other = lang === 'ja' ? 'en' : 'ja';
+
 const [work, lab] = await Promise.all([getCollection('work'), getCollection('lab')]);
+const anchor = (id: string) => (lang === 'ja' ? `/ja#${id}` : `/#${id}`);
 const links = [
-  { href: '/#work', label: 'Work', count: work.length },
-  { href: '/#services', label: 'Services' },
-  { href: '/lab', label: 'Lab', count: lab.length },
-  { href: '/#about', label: 'About' },
+  { href: anchor('work'), label: t.nav.work, count: work.length },
+  { href: anchor('services'), label: t.nav.services },
+  { href: '/lab', label: t.nav.lab, count: lab.length },
+  { href: anchor('about'), label: t.nav.about },
 ];
 ---
 
 <header class="site-header">
-  <nav class="wrap nav" aria-label="Main">
-    <a class="nav__brand" href="/">{site.name}</a>
+  <nav class="wrap nav" aria-label={lang === 'ja' ? 'メイン' : 'Main'}>
+    <a class="nav__brand" href={home}>{site.name}</a>
     <ul class="nav__links" role="list">
       {
         links.map((l) => (
           <li>
             <a href={l.href}>
               {l.label}
-              {l.count !== undefined && <sup aria-hidden="true">[{l.count}]</sup>}
+              {l.count !== undefined && <sup class="num" aria-hidden="true">[{l.count}]</sup>}
             </a>
           </li>
         ))
       }
     </ul>
     <details class="nav__menu">
-      <summary>Menu</summary>
+      <summary>{t.nav.menu}</summary>
       <ul role="list">
         {
           links.map((l) => (
             <li>
               <a href={l.href}>
                 {l.label}
-                {l.count !== undefined && <sup aria-hidden="true">[{l.count}]</sup>}
+                {l.count !== undefined && <sup class="num" aria-hidden="true">[{l.count}]</sup>}
               </a>
             </li>
           ))
         }
       </ul>
     </details>
+    <div class="nav__switches">
+      <a class="nav__switch" href={homeOf(other)} hreflang={other} lang={other} aria-label={`${t.langLabel}: ${t.langSwitchName}`}
+        >{t.langLabel}</a
+      >
+      <button class="nav__switch" type="button" data-theme-toggle data-to-light={t.themeToLight} data-to-dark={t.themeToDark} hidden
+        ><span class="when-dark" aria-hidden="true">{lang === 'ja' ? 'ライト' : 'light'}</span><span
+          class="when-light"
+          aria-hidden="true">{lang === 'ja' ? 'ダーク' : 'dark'}</span
+        ></button
+      >
+    </div>
     <BookCall variant="nav" class="nav__cta" />
   </nav>
 </header>
+
+<script>
+  // Light/dark toggle. The saved choice is applied before paint by Base.astro; dark is the default.
+  const root = document.documentElement;
+  for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
+    const sync = () => {
+      const light = root.dataset.theme === 'light';
+      btn.setAttribute('aria-label', light ? btn.dataset.toDark! : btn.dataset.toLight!);
+      btn.setAttribute('aria-pressed', String(light));
+    };
+    btn.addEventListener('click', () => {
+      const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+      if (next === 'light') root.dataset.theme = 'light';
+      else delete root.dataset.theme;
+      try {
+        localStorage.setItem('theme', next);
+      } catch {}
+      sync();
+    });
+    btn.hidden = false;
+    sync();
+  }
+</script>
 
 <style>
   .site-header {
@@ -63,14 +104,31 @@ const links = [
   .nav__brand { font-weight: 500; letter-spacing: -0.02em; text-decoration: none; margin-right: auto; }
   .nav a:not(.btn) { text-decoration: none; }
   .nav__links { display: flex; gap: var(--space-l); padding: 0; list-style: none; }
-  .nav__links a { color: var(--text-muted); transition: color 0.2s; }
-  .nav__links a:hover { color: var(--text); }
+  .nav__links a, .nav__switch { color: var(--text-muted); transition: color 0.2s; }
+  .nav__links a:hover, .nav__switch:hover { color: var(--text); }
   sup { font-size: 0.7em; margin-left: 0.15em; }
   .nav__menu { display: none; }
 
+  .nav__switches { display: flex; gap: var(--space-s); align-items: center; }
+  .nav__switch {
+    padding: 0.2em 0.7em;
+    font-size: var(--step--1);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .nav__switch .when-light,
+  :global([data-theme='light']) .nav__switch .when-dark { display: none; }
+  :global([data-theme='light']) .nav__switch .when-light { display: inline; }
+
+  /* Below 64em the section links fold into the menu; the booking pill stays until the mobile bar takes over. */
   @media (max-width: 47.99em) {
-    .nav__links,
     .nav :global(.nav__cta) { display: none; }
+  }
+  @media (max-width: 63.99em) {
+    .nav { gap: var(--space-s); }
+    .nav__links { display: none; }
     .nav__menu { display: block; }
     .nav__menu summary {
       list-style: none;

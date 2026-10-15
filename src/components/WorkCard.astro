@@ -8,13 +8,13 @@ interface Props {
 }
 
 const { entry, index } = Astro.props;
-const { title, clientType, role, year, cover, coverAlt, preview, pipeline } = entry.data;
+const { title, clientType, role, year, cover, coverAlt, preview, made } = entry.data;
 const num = String(index + 1).padStart(2, '0');
 ---
 
 <article class="row">
   <a href={`/work/${entry.id}`} class="row__link">
-    <span class="row__num label tabular" aria-hidden="true">[{num}]</span>
+    <span class="row__num label num" aria-hidden="true">[{num}]</span>
     <Picture
       src={cover}
       formats={['avif', 'webp']}
@@ -26,7 +26,7 @@ const num = String(index + 1).padStart(2, '0');
     />
     <h3 class="row__title">{title}</h3>
     <span class="row__meta label">{clientType}<br />{role}</span>
-    <span class="row__year label tabular">{year}</span>
+    <span class="row__year label num">{year}</span>
   </a>
 
   <!-- Pipeline reveal: shoji screens slide apart to show the piece in colour and how it was made. -->
@@ -51,12 +51,14 @@ const num = String(index + 1).padStart(2, '0');
       <span class="screen__panel screen__panel--right band lattice" aria-hidden="true"></span>
     </div>
     {
-      pipeline && (
+      made && (
         <dl class="pipeline">
-          <div><dt>model</dt><dd>{pipeline.model}</dd></div>
-          <div><dt>steps</dt><dd>{pipeline.steps}</dd></div>
-          <div><dt>seed</dt><dd>{pipeline.seed}</dd></div>
-          <div><dt>render</dt><dd>{pipeline.render}</dd></div>
+          {made.map((m) => (
+            <div>
+              <dt>{m.label}</dt>
+              <dd>{m.value}</dd>
+            </div>
+          ))}
         </dl>
       )
     }

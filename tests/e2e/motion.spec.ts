@@ -35,7 +35,7 @@ test('work card preview plays on hover (desktop)', async ({ page }, info) => {
   test.skip(info.project.name !== 'desktop');
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
-  const card = page.locator('#work article').first();
+  const card = page.locator('#work article:has(video)').first();
   await card.hover();
   await expect.poll(() => card.locator('video').evaluate((v: HTMLVideoElement) => !v.paused)).toBe(true);
   await page.mouse.move(0, 0);
@@ -46,7 +46,7 @@ test('work card preview plays when scrolled into view (touch)', async ({ page },
   test.skip(info.project.name !== 'mobile');
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
-  const card = page.locator('#work article').first();
+  const card = page.locator('#work article:has(video)').first();
   await card.scrollIntoViewIfNeeded();
   await expect.poll(() => card.locator('video').evaluate((v: HTMLVideoElement) => !v.paused)).toBe(true);
 });

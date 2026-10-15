@@ -2,32 +2,45 @@
 import { site } from '../../site.config';
 import BookCall from '../BookCall.astro';
 import CopyEmail from '../CopyEmail.astro';
+import SpineMark from '../SpineMark.astro';
+import { ui, langOf } from '../../i18n/ui';
+
+const lang = langOf(Astro.currentLocale);
+const t = ui[lang];
 ---
 
-<section id="contact" class="contact band lattice-field" aria-labelledby="contact-title">
+<section id="contact" class="contact band lattice-field spined" aria-labelledby="contact-title">
+  <SpineMark section="contact" />
   <div class="wrap">
     <h2 id="contact-title">
-      <span class="line">Your pitch promised AI.</span>{' '}<span class="line line--indent">I make it real.</span>
+      {
+        t.contact.titleLines.map((line, i) => (
+          <>
+            <span class:list={['line', { 'line--indent': i > 0 }]}>{line}</span>
+            {i < t.contact.titleLines.length - 1 && lang !== 'ja' && ' '}
+          </>
+        ))
+      }
     </h2>
 
     <ul class="contact__trust" role="list">
-      <li>{site.availability}</li>
-      <li>{site.replyPromise}</li>
-      <li>{site.whiteLabel}</li>
+      <li><span class="contact__live" aria-hidden="true"></span>{t.contact.availability}</li>
+      <li>{t.contact.reply}</li>
+      <li>{t.contact.whiteLabel}</li>
     </ul>
 
     <div class="contact__paths">
       <div class="contact__path">
-        <h3>Ready to talk</h3>
-        <p>Twenty minutes, no prep needed.</p>
-        <BookCall variant="primary" />
+        <h3>{t.contact.talk}</h3>
+        <p>{t.contact.talkNote}</p>
+        <BookCall variant="primary" label={t.bookCall} />
       </div>
       <div class="contact__path contact__path--brief">
-        <h3>Have a brief</h3>
-        <slot name="form"><p>Send it to the email below.</p></slot>
+        <h3>{t.contact.brief}</h3>
+        <slot name="form"><p>{t.contact.briefFallback}</p></slot>
       </div>
       <div class="contact__path">
-        <h3>Just looking</h3>
+        <h3>{t.contact.looking}</h3>
         <CopyEmail />
         <a href={site.linkedin}>LinkedIn</a>
       </div>
@@ -50,7 +63,9 @@ import CopyEmail from '../CopyEmail.astro';
     color: var(--text-muted);
     font-size: var(--step--1);
   }
-  .contact__trust li:first-child { color: var(--text); }
+  .contact__trust li:first-child { color: var(--text); display: inline-flex; align-items: center; gap: 0.5em; }
+  /* Rust "live" diamond, as on Shoji's now line. */
+  .contact__live { width: 7px; height: 7px; rotate: 45deg; background: var(--rust); }
   .contact__paths { display: grid; gap: var(--space-xl) var(--space-l); }
   .contact__path {
     display: grid;

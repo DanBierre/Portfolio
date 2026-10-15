@@ -1,0 +1,16 @@
+---
+import { spine } from '../i18n/ui';
+
+interface Props {
+  section: keyof typeof spine;
+  now?: boolean;
+  /** Distance from the section top, to line the mark up with its heading. */
+  top?: string;
+}
+
+const { section, now = false, top } = Astro.props;
+---
+
+<span class:list={['spine-mark', { 'spine-mark--now': now }]} lang="ja" aria-hidden="true" style={top ? `--spine-top: ${top}` : undefined}
+  >{spine[section]}</span
+>

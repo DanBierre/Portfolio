@@ -1,23 +1,21 @@
 ---
 import BookCall from '../BookCall.astro';
+import SpineMark from '../SpineMark.astro';
+import { ui, langOf } from '../../i18n/ui';
 
-const steps = [
-  { title: 'Brief', text: 'A 20-minute call about your pitch or project, followed by a written scope.' },
-  { title: 'Prototype in 1 week', text: 'A working prototype you can show your client, so the idea is proven before the full budget is spent.' },
-  { title: 'Build', text: 'The production build, working inside your process and under your agency’s name if you prefer.' },
-  { title: 'Handover', text: 'Documented code and a walkthrough, so your team can own what we built.' },
-];
+const t = ui[langOf(Astro.currentLocale)];
 ---
 
-<section id="process" class="process" aria-labelledby="process-title">
+<section id="process" class="process spined" aria-labelledby="process-title">
+  <SpineMark section="process" />
   <div class="wrap">
-    <h2 id="process-title">How we work<br />together<span class="count" aria-hidden="true">4</span></h2>
+    <h2 id="process-title">{t.process.title}<span class="count" aria-hidden="true">{t.process.steps.length}</span></h2>
     <ol class="process__steps" role="list">
       {
-        steps.map((s, i) => (
+        t.process.steps.map((s, i) => (
           <li>
-            <span class="label tabular" aria-hidden="true">
-              [0{i + 1}]
+            <span class="num" aria-hidden="true">
+              {String(i + 1).padStart(2, '0')}
             </span>
             <h3>{s.title}</h3>
             <p>{s.text}</p>
@@ -26,14 +24,14 @@ const steps = [
       }
     </ol>
     <div class="process__cta">
-      <BookCall variant="primary" label="Book a call" />
+      <BookCall variant="primary" label={t.bookCall} />
     </div>
   </div>
 </section>
 
 <style>
   .process { padding-block: var(--space-2xl) 0; }
-  h2 { margin-bottom: var(--space-xl); }
+  h2 { margin-bottom: var(--space-xl); max-width: 12ch; }
   .process__steps { display: grid; gap: 0 var(--space-l); padding: 0; list-style: none; }
   li {
     display: grid;
@@ -42,6 +40,8 @@ const steps = [
     padding-block: var(--space-m) var(--space-l);
     border-top: 1px solid var(--border);
   }
+  /* Shoji-style serif figures. */
+  .num { font-size: var(--step-3); line-height: 1; color: var(--gold); }
   li p { color: var(--text-muted); }
   .process__cta { margin-top: var(--space-l); }
 

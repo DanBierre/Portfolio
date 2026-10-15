@@ -9,11 +9,11 @@ results:
   - "[PLACEHOLDER] Result two"
 order: 1
 year: "2026"
-pipeline:
-  model: "[PLACEHOLDER] SDXL + custom brand LoRA"
-  steps: "[PLACEHOLDER] 30"
-  seed: "[PLACEHOLDER] 4127"
-  render: "[PLACEHOLDER] 2.1 s per image"
+made:
+  - { label: model, value: "[PLACEHOLDER] SDXL + custom brand LoRA" }
+  - { label: steps, value: "[PLACEHOLDER] 30" }
+  - { label: seed, value: "[PLACEHOLDER] 4127" }
+  - { label: render, value: "[PLACEHOLDER] 2.1 s per image" }
 cover: ../../assets/work/case-study-one-cover.jpg
 coverAlt: "[PLACEHOLDER] Campaign hero visual"
 preview: /media/case-study-one-preview.webm

@@ -1,42 +1,85 @@
 ---
 import { Picture } from 'astro:assets';
-import { site } from '../../site.config';
+import SpineMark from '../SpineMark.astro';
 import portrait from '../../assets/portrait.jpg';
+import { brushRing } from '../../lib/enso';
+import { ui, langOf } from '../../i18n/ui';
+
+const t = ui[langOf(Astro.currentLocale)];
+const ring = brushRing({ r: 40, width: 9, seed: 2 });
 ---
 
-<section id="about" class="about" aria-labelledby="about-title">
+<section id="about" class="about spined" aria-labelledby="about-title">
+  <SpineMark section="about" />
   <div class="wrap about__grid">
     <div class="about__text">
-      <h2 id="about-title">About</h2>
-      <p class="about__bio">{site.bio}</p>
-      <p class="label about__tools">{site.tools}</p>
+      <h2 id="about-title">{t.about.title}</h2>
+      <dl class="about__rows">
+        {
+          t.about.rows.map((r) => (
+            <div>
+              <dt>{r.term}</dt>
+              <dd>{r.text}</dd>
+            </div>
+          ))
+        }
+      </dl>
     </div>
-    <Picture
-      src={portrait}
-      formats={['avif', 'webp']}
-      widths={[480, 800]}
-      sizes="(min-width: 48em) 25vw, 70vw"
-      alt={`Portrait of ${site.name}`}
-      class="about__photo"
-    />
+    <figure class="about__figure">
+      <!-- Photo in a circle inside the brush ensō, as on the live site and in Shoji. -->
+      <div class="portrait">
+        <div class="portrait__pic">
+          <Picture
+            src={portrait}
+            formats={['avif', 'webp']}
+            widths={[320, 640]}
+            sizes="(min-width: 48em) 20rem, 70vw"
+            alt={t.about.portraitAlt}
+          />
+        </div>
+        <svg class="enso" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+          <filter id="ink" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="0.45" result="b"></feGaussianBlur>
+            <feComponentTransfer in="b" result="bleed"><feFuncA type="linear" slope="0.5"></feFuncA></feComponentTransfer>
+            <feMerge><feMergeNode in="bleed"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge>
+          </filter>
+          <path d={ring} fill="currentColor" filter="url(#ink)"></path>
+        </svg>
+      </div>
+      <figcaption class="label">{t.about.caption}</figcaption>
+    </figure>
   </div>
 </section>
 
 <style>
   .about { padding-block: var(--space-2xl); }
-  .about__grid { display: grid; gap: var(--space-l); align-items: end; }
-  .about__grid :global(.about__photo) {
-    width: min(60%, 16rem);
-    justify-self: end;
-    aspect-ratio: 1 / 2;
-    object-fit: cover;
-    filter: grayscale(1);
+  .about__grid { display: grid; gap: var(--space-xl); align-items: start; }
+  .about__text { display: grid; gap: var(--space-l); }
+  h2 { font-size: var(--step-4); max-width: 16ch; }
+  .about__rows > div {
+    display: grid;
+    gap: var(--space-xs) var(--space-l);
+    padding-block: var(--space-m);
+    border-top: 1px solid var(--border);
   }
-  .about__text { display: grid; gap: var(--space-m); }
-  .about__bio { font-size: var(--step-2); line-height: 1.25; letter-spacing: -0.025em; text-indent: 3em; }
-  .about__tools { text-transform: none; }
+  .about__rows > div:last-child { border-bottom: 1px solid var(--border); }
+  dt { font-weight: 500; }
+  dd { margin: 0; color: var(--text-muted); max-width: 52ch; }
+
+  .about__figure { display: grid; gap: var(--space-s); justify-items: center; min-width: 0; }
+  .portrait { position: relative; width: min(100%, 20rem); aspect-ratio: 1; }
+  .portrait__pic { position: absolute; inset: 10%; border-radius: 50%; overflow: hidden; }
+  .portrait__pic :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 52%;
+    scale: 1.12;
+  }
+  .enso { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--rust); }
 
   @media (min-width: 48em) {
     .about__grid { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); column-gap: var(--space-xl); }
+    .about__rows > div { grid-template-columns: 10rem minmax(0, 1fr); }
   }
 </style>

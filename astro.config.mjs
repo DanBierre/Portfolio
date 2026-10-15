@@ -6,5 +6,10 @@ export default defineConfig({
   site: 'https://danbierre.dev',
   build: { format: 'file' },
   trailingSlash: 'never',
+  i18n: {
+    locales: ['en', 'ja'],
+    defaultLocale: 'en',
+    routing: { prefixDefaultLocale: false },
+  },
   integrations: [sitemap({ filter: (page) => !/\/(thanks|404)$/.test(page) })],
 });

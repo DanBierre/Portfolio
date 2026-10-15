@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { site } from '../../src/site.config';
 
-const PAGES = ['/', '/work/case-study-one', '/work/case-study-two', '/lab', '/thanks', '/nope'];
+const PAGES = ['/', '/ja', '/work/shoji', '/work/case-study-one', '/work/case-study-two', '/lab', '/thanks', '/nope'];
 
 // These checks render every page several times; run once, on the desktop project.
 test.beforeEach(({}, info) => test.skip(info.project.name !== 'desktop'));
@@ -50,3 +50,14 @@ test('no banned words in any page copy', async ({ page }) => {
     for (const word of ['revolutionary', 'cutting-edge', 'leverage', 'synergy']) expect(text, `${word} on ${path}`).not.toContain(word);
   }
 });
+
+for (const path of ['/', '/ja', '/work/shoji']) {
+  test(`a11y: ${path} has no axe violations in the light theme`, async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('theme', 'light'));
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto(path);
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+    const r = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+    expect(r.violations.map((v) => `${v.id} (${v.nodes.length})`)).toEqual([]);
+  });
+}

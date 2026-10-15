@@ -18,10 +18,17 @@
   /* Buttons invert the ground: light pill on dark, dark pill on washi. */
   --btn-bg: var(--ink-light);
   --btn-text: var(--ground);
+  /* Accents shared with Dan's live site and Shoji: gold for key words, rust for live/now markers.
+     Gold/ground 7.7, rust/ground 4.6. */
+  --gold: #c9a24f;
+  --rust: #c8613a;
+  --spine-line: rgb(236 235 231 / 0.22);
 
-  --font-display: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
-  --font-body: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Hanken Grotesk Variable', 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Hanken Grotesk Variable', 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', ui-sans-serif, system-ui, sans-serif;
   --font-data: 'Geist Mono Variable', ui-monospace, monospace;
+  /* Serif voice (as in Shoji and the live site): numerals, counts and the Japanese spine labels only. */
+  --font-serif: 'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', ui-serif, serif;
 
   /* Fluid type scale, 360px → 1440px. --step-6 is the statement size. */
   --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.84rem);
@@ -47,4 +54,23 @@
   --kumiko: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-slide: cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+/* Light theme, from the live site's palette. Picked with the theme toggle; dark stays the default world.
+   Contrast: ink 15.3, muted 4.8, gold 4.8, rust 6.8, error 6.5. */
+:root[data-theme='light'] {
+  color-scheme: light;
+  --ground: #f4f1ea;
+  --ink-light: #1b1b1a;
+  --surface: #ffffff;
+  --text-muted: #6f6a60;
+  --border: #d9d4c8;
+  --lattice: rgb(27 27 26 / 0.06);
+  --focus: #1b1b1a;
+  --error: #a3261b;
+  --btn-bg: #1b1b1a;
+  --btn-text: #f4f1ea;
+  --gold: #8a6316;
+  --rust: #8a3c21;
+  --spine-line: rgb(27 27 26 / 0.25);
 }

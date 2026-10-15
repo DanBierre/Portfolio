@@ -1,5 +1,6 @@
 ---
 import { site } from '../site.config';
+import { ui, langOf } from '../i18n/ui';
 
 interface Props {
   variant?: 'primary' | 'secondary' | 'nav';
@@ -7,7 +8,7 @@ interface Props {
   class?: string;
 }
 
-const { variant = 'primary', label = 'Book a call', class: className } = Astro.props;
+const { variant = 'primary', label = ui[langOf(Astro.currentLocale)].bookCall, class: className } = Astro.props;
 const calLink = new URL(site.calUrl).pathname.slice(1);
 ---
 

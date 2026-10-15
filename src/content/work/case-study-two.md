@@ -9,11 +9,11 @@ results:
   - "[PLACEHOLDER] Result two"
 order: 2
 year: "2026"
-pipeline:
-  model: "[PLACEHOLDER] Flux + ControlNet depth"
-  steps: "[PLACEHOLDER] 24"
-  seed: "[PLACEHOLDER] 90311"
-  render: "[PLACEHOLDER] 1.4 s per image"
+made:
+  - { label: model, value: "[PLACEHOLDER] Flux + ControlNet depth" }
+  - { label: steps, value: "[PLACEHOLDER] 24" }
+  - { label: seed, value: "[PLACEHOLDER] 90311" }
+  - { label: render, value: "[PLACEHOLDER] 1.4 s per image" }
 cover: ../../assets/work/case-study-two-cover.jpg
 coverAlt: "[PLACEHOLDER] Grid of generated product images"
 preview: /media/case-study-two-preview.webm

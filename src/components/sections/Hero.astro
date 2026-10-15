@@ -2,9 +2,15 @@
 import { Picture } from 'astro:assets';
 import BookCall from '../BookCall.astro';
 import poster from '../../assets/hero-poster.jpg';
+import SpineMark from '../SpineMark.astro';
+import { ui, langOf } from '../../i18n/ui';
+
+const lang = langOf(Astro.currentLocale);
+const t = ui[lang];
 ---
 
-<section id="hero" class="hero lattice-field" aria-labelledby="hero-title">
+<section id="hero" class="hero lattice-field spined" aria-labelledby="hero-title">
+  <SpineMark section="hero" now top="var(--space-l)" />
   <div class="wrap hero__grid">
     <figure class="hero__screen" aria-hidden="true">
       <div class="hero__media">
@@ -26,21 +32,33 @@ import poster from '../../assets/hero-poster.jpg';
     </figure>
 
     <div class="hero__statement">
-      <h1 id="hero-title" class="hero__title">
-        <span class="line">The AI half of</span>{' '}<span class="line line--indent">your creative team.</span>
+      <h1 id="hero-title" class="hero__title" aria-label={t.hero.title}>
+        {
+          t.hero.lines.map((line, i) => (
+            <>
+              <span class:list={['line', { 'line--indent': i > 0 }]} aria-hidden="true">
+                {line.map((seg) => (seg.accent ? <span class="accent">{seg.text}</span> : seg.text))}
+              </span>
+              {i < t.hero.lines.length - 1 && lang !== 'ja' && ' '}
+            </>
+          ))
+        }
       </h1>
-      <p class="hero__note">
-        Interactive AI experiences for your clients, and the generative pipelines that make your studio faster. Designed
-        and built end to end.
-      </p>
+      <p class="hero__note">{t.hero.offer}</p>
     </div>
 
     <div class="hero__actions">
-      <BookCall variant="primary" />
-      <a class="btn btn--secondary" href="#work">See the work</a>
+      <BookCall variant="primary" label={t.bookCall} />
+      <a class="btn btn--secondary" href="#work">{t.seeWork}</a>
     </div>
 
-    <button class="hero__toggle label" type="button" aria-label="Pause background video" hidden>
+    <button
+      class="hero__toggle label"
+      type="button"
+      aria-label={t.hero.pause}
+      data-pause={t.hero.pause}
+      data-play={t.hero.play}
+      hidden>
       <span class="when-playing" aria-hidden="true">pause</span><span class="when-paused" aria-hidden="true">play</span>
     </button>
   </div>
@@ -80,7 +98,7 @@ import poster from '../../assets/hero-poster.jpg';
   const toggle = document.querySelector<HTMLButtonElement>('.hero__toggle');
   if (video && toggle && !reduce) {
     const sync = () => {
-      toggle.setAttribute('aria-label', video.paused ? 'Play background video' : 'Pause background video');
+      toggle.setAttribute('aria-label', video.paused ? toggle.dataset.play! : toggle.dataset.pause!);
       toggle.dataset.state = video.paused ? 'paused' : 'playing';
     };
     video.addEventListener('playing', () => video.classList.add('is-playing'), { once: true });
@@ -170,7 +188,7 @@ import poster from '../../assets/hero-poster.jpg';
     margin: var(--space-xs);
     padding: 0.3em 0.8em;
     background: rgb(20 20 20 / 0.7);
-    color: var(--ink-light);
+    color: #ecebe7; /* always light: it sits on the footage */
     border: 1px solid rgb(236 235 231 / 0.3);
     border-radius: 999px;
     cursor: pointer;

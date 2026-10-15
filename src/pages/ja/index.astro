@@ -1,0 +1,12 @@
+---
+// Japanese homepage. Japanese text uses the system's Japanese fonts (see tokens.css) to stay fast.
+import Base from '../../layouts/Base.astro';
+import Home from '../../components/Home.astro';
+import { ui } from '../../i18n/ui';
+
+const t = ui.ja;
+---
+
+<Base title={t.meta.title} description={t.meta.description} alternates>
+  <Home />
+</Base>

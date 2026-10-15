@@ -1,29 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
-import { site } from '../site.config';
-import Hero from '../components/sections/Hero.astro';
-import ProofStrip from '../components/sections/ProofStrip.astro';
-import FeaturedWork from '../components/sections/FeaturedWork.astro';
-import Services from '../components/sections/Services.astro';
-import Process from '../components/sections/Process.astro';
-import LabTeaser from '../components/sections/LabTeaser.astro';
-import About from '../components/sections/About.astro';
-import Contact from '../components/sections/Contact.astro';
-import BriefForm from '../components/BriefForm.astro';
+import Home from '../components/Home.astro';
+import { ui } from '../i18n/ui';
+
+const t = ui.en;
 ---
 
-<Base
-  title={`${site.name} | AI creative technologist for agencies`}
-  description="Interactive AI experiences for your clients, and the generative pipelines that make your studio faster. Designed and built end to end."
->
-  <Hero />
-  <ProofStrip />
-  <FeaturedWork />
-  <Services />
-  <Process />
-  <LabTeaser />
-  <About />
-  <Contact>
-    <BriefForm slot="form" />
-  </Contact>
+<Base title={t.meta.title} description={t.meta.description} alternates>
+  <Home />
 </Base>

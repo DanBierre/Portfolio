@@ -1,39 +1,42 @@
 ---
 import { BUDGET_OPTIONS, site } from '../site.config';
+import { ui, langOf } from '../i18n/ui';
+
+const t = ui[langOf(Astro.currentLocale)];
 ---
 
-<form class="brief" method="post" action="/api/brief" data-brief-form data-email={site.email} data-cal={site.calUrl} novalidate>
+<form class="brief" method="post" action="/api/brief" data-brief-form data-email={site.email} data-cal={site.calUrl} data-t={JSON.stringify(t.form)} novalidate>
   <div class="brief__row">
     <div class="field">
-      <label for="brief-name">Name</label>
+      <label for="brief-name">{t.form.name}</label>
       <input id="brief-name" name="name" type="text" autocomplete="name" required maxlength="100" aria-describedby="brief-name-error" />
       <p class="field__error" id="brief-name-error" data-error-for="name"></p>
     </div>
     <div class="field">
-      <label for="brief-email">Email</label>
+      <label for="brief-email">{t.form.email}</label>
       <input id="brief-email" name="email" type="email" autocomplete="email" required maxlength="254" aria-describedby="brief-email-error" />
       <p class="field__error" id="brief-email-error" data-error-for="email"></p>
     </div>
   </div>
 
   <div class="field">
-    <label for="brief-project">What's the project?</label>
+    <label for="brief-project">{t.form.project}</label>
     <textarea id="brief-project" name="project" rows="4" required maxlength="5000" aria-describedby="brief-project-error"></textarea>
     <p class="field__error" id="brief-project-error" data-error-for="project"></p>
   </div>
 
   <div class="brief__row">
     <div class="field">
-      <label for="brief-timeline">Timeline <span class="field__optional">(optional)</span></label>
-      <input id="brief-timeline" name="timeline" type="text" maxlength="200" placeholder="e.g. Pitch on 12 March" aria-describedby="brief-timeline-error" />
+      <label for="brief-timeline">{t.form.timeline} <span class="field__optional">{t.form.optional}</span></label>
+      <input id="brief-timeline" name="timeline" type="text" maxlength="200" placeholder={t.form.timelineHint} aria-describedby="brief-timeline-error" />
       <p class="field__error" id="brief-timeline-error" data-error-for="timeline"></p>
     </div>
     <div class="field">
-      <label for="brief-budget">Budget range <span class="field__optional">(optional)</span></label>
+      <label for="brief-budget">{t.form.budget} <span class="field__optional">{t.form.optional}</span></label>
       <span class="select">
         <select id="brief-budget" name="budget" aria-describedby="brief-budget-error">
-        <option value="">Choose…</option>
-        {BUDGET_OPTIONS.map((b) => <option value={b}>{b}</option>)}
+        <option value="">{t.form.choose}</option>
+        {BUDGET_OPTIONS.map((b) => <option value={b}>{ui[langOf(Astro.currentLocale)].budget[b]}</option>)}
         </select>
       </span>
       <p class="field__error" id="brief-budget-error" data-error-for="budget"></p>
@@ -41,12 +44,12 @@ import { BUDGET_OPTIONS, site } from '../site.config';
   </div>
 
   <div class="brief__trap" aria-hidden="true">
-    <label for="brief-hp">Leave this field empty</label>
+    <label for="brief-hp">{t.form.trap}</label>
     <input id="brief-hp" name="hp_confirm" type="text" tabindex="-1" autocomplete="off" />
   </div>
 
   <div class="brief__submit">
-    <button class="btn btn--primary" type="submit">Send brief</button>
+    <button class="btn btn--primary" type="submit">{t.form.send}</button>
     <p class="brief__status" role="status" aria-live="polite"></p>
   </div>
 </form>
@@ -56,6 +59,7 @@ import { BUDGET_OPTIONS, site } from '../site.config';
     const status = form.querySelector<HTMLElement>('.brief__status')!;
     const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
     const { email, cal } = form.dataset;
+    const t = JSON.parse(form.dataset.t!) as Record<string, string>;
 
     const clearErrors = () => {
       for (const el of form.querySelectorAll<HTMLElement>('[data-error-for]')) el.textContent = '';
@@ -73,9 +77,9 @@ import { BUDGET_OPTIONS, site } from '../site.config';
     const fail = () => {
       status.dataset.state = 'error';
       status.replaceChildren(
-        'Your brief didn’t send. Your text is still here, so try again or email it to ',
+        t.failed,
         Object.assign(document.createElement('a'), { href: `mailto:${email}`, textContent: email }),
-        '.',
+        t.stop,
       );
     };
 
@@ -90,7 +94,7 @@ import { BUDGET_OPTIONS, site } from '../site.config';
         for (const el of form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[required], textarea[required], input[type="email"]')) {
           if (!el.validity.valid) {
             errors[el.name] =
-              el.name === 'email' ? 'Please add a valid email address.' : el.name === 'name' ? 'Please add your name.' : 'Tell me a little about the project.';
+              el.name === 'email' ? t.errEmail : el.name === 'name' ? t.errName : t.errProject;
           }
         }
         showErrors(errors);
@@ -98,7 +102,7 @@ import { BUDGET_OPTIONS, site } from '../site.config';
       }
 
       button.disabled = true;
-      button.textContent = 'Sending…';
+      button.textContent = t.sending;
       try {
         const res = await fetch(form.action, {
           method: 'POST',
@@ -110,9 +114,9 @@ import { BUDGET_OPTIONS, site } from '../site.config';
           form.reset();
           status.dataset.state = 'success';
           status.replaceChildren(
-            'Thanks, I’ll reply within 1 working day. Or ',
-            Object.assign(document.createElement('a'), { href: cal, textContent: 'book a call now' }),
-            '.',
+            t.thanks,
+            Object.assign(document.createElement('a'), { href: cal, textContent: t.bookNow }),
+            t.stop,
           );
           (window as any).umami?.track('brief_submitted');
         } else if (res.status === 400 && body.errors) {
@@ -124,7 +128,7 @@ import { BUDGET_OPTIONS, site } from '../site.config';
         fail();
       } finally {
         button.disabled = false;
-        button.textContent = 'Send brief';
+        button.textContent = t.send;
       }
     });
   }

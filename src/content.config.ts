@@ -17,8 +17,9 @@ const work = defineCollection({
       coverAlt: z.string(),
       preview: z.string().optional(),
       year: z.string(),
-      // "How it was made": shown in the pipeline reveal on the work index and on the case study.
-      pipeline: z.object({ model: z.string(), steps: z.string(), seed: z.string(), render: z.string() }).optional(),
+      // "How it was made": label/value pairs shown in the pipeline reveal and on the case study
+      // (model, steps, seed, render for generative work; stack, platform for products).
+      made: z.array(z.object({ label: z.string(), value: z.string() })).optional(),
       quote: z.object({ text: z.string(), who: z.string() }).optional(),
       beforeAfter: z
         .object({
