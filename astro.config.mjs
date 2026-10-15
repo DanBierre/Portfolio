@@ -11,5 +11,5 @@ export default defineConfig({
     defaultLocale: 'en',
     routing: { prefixDefaultLocale: false },
   },
-  integrations: [sitemap({ filter: (page) => !/\/(thanks|404)$/.test(page) })],
+  integrations: [sitemap({ filter: (page) => !/\/(thanks|404|concepts)$/.test(page) })],
 });
