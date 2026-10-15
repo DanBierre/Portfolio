@@ -1,0 +1,251 @@
+---
+import Base from '../../layouts/Base.astro';
+import BookCall from '../../components/BookCall.astro';
+import { runs, totals, formatSeconds, formatCost } from '../../data/lab/runs';
+import { site } from '../../site.config';
+
+const first = runs[0];
+const firstTotals = totals(first.steps);
+const kindLabel = { think: 'thinking', tool: 'tool call', result: 'result', backtrack: 'backtrack' } as const;
+---
+
+<Base
+  title={`Agent X-ray | ${site.name}`}
+  description="A live diagram of an AI agent at work: every step, tool call, second and cent, so clients can see what the AI is doing."
+>
+  <div class="wrap xray">
+    <header class="xray__head">
+      <a class="label" href="/lab">← Lab</a>
+      <h1>Agent X-ray</h1>
+      <p class="xray__intro">
+        Watch an AI agent work: what it thinks, which tools it calls, where it changes its mind, and what each step costs
+        in time and money. The kind of view that makes AI explainable to a client.
+      </p>
+      <p class="label xray__demo"><span class="xray__tag">demo run</span> Illustrative traces in the real format; recorded runs coming.</p>
+    </header>
+
+    <div class="xray__grid">
+      <form class="xray__controls" data-xray-form>
+        <fieldset class="xray__runs">
+          <legend>Pick a task</legend>
+          {
+            runs.map((r, i) => (
+              <label class="xray__run">
+                <input type="radio" name="run" value={r.id} checked={i === 0} />
+                <span>{r.question}</span>
+              </label>
+            ))
+          }
+        </fieldset>
+        <div class="xray__counters" aria-live="off">
+          <div><span class="label">elapsed</span><span class="num" data-elapsed>{formatSeconds(firstTotals.ms)}</span></div>
+          <div><span class="label">cost</span><span class="num" data-cost>{formatCost(firstTotals.cents)}</span></div>
+        </div>
+        <div class="xray__actions" data-xray-actions hidden>
+          <button class="btn btn--primary" type="button" data-run>Run</button>
+          <button class="btn btn--secondary" type="button" data-pause disabled>Pause</button>
+          <button class="btn btn--secondary" type="button" data-step>Step</button>
+        </div>
+        <noscript><p class="xray__nojs">The replay needs JavaScript. The full trace of the first task is shown.</p></noscript>
+      </form>
+
+      <ol class="xray__trace" data-trace aria-live="polite">
+        {
+          first.steps.map((s) => (
+            <li class:list={['step', `step--${s.kind}`]} data-kind={s.kind}>
+              <span class="step__kind label">{kindLabel[s.kind]}</span>
+              {s.tool && <code class="step__tool">{s.tool}</code>}
+              <span class="step__label">{s.label}</span>
+              <span class="step__meta num">{formatSeconds(s.ms)}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <aside class="xray__cta">
+      <p>Clients trust what they can see. I build agents with this kind of visibility built in.</p>
+      <BookCall variant="primary" />
+    </aside>
+  </div>
+</Base>
+
+<script>
+  import { runs, formatSeconds, formatCost } from '../../data/lab/runs';
+
+  const SPEED = 0.35; // replay at roughly a third of real time
+  const kindLabel = { think: 'thinking', tool: 'tool call', result: 'result', backtrack: 'backtrack' } as const;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const form = document.querySelector<HTMLFormElement>('[data-xray-form]')!;
+  const trace = document.querySelector<HTMLOListElement>('[data-trace]')!;
+  const elapsed = document.querySelector<HTMLElement>('[data-elapsed]')!;
+  const cost = document.querySelector<HTMLElement>('[data-cost]')!;
+  const runBtn = form.querySelector<HTMLButtonElement>('[data-run]')!;
+  const pauseBtn = form.querySelector<HTMLButtonElement>('[data-pause]')!;
+  const stepBtn = form.querySelector<HTMLButtonElement>('[data-step]')!;
+
+  let next = 0;
+  let ms = 0;
+  let cents = 0;
+  let timer = 0;
+  let playing = false;
+
+  const current = () => runs.find((r) => r.id === new FormData(form).get('run'))!;
+
+  const reset = () => {
+    clearTimeout(timer);
+    playing = false;
+    next = ms = cents = 0;
+    trace.replaceChildren();
+    elapsed.textContent = formatSeconds(0);
+    cost.textContent = formatCost(0);
+    pauseBtn.disabled = true;
+    pauseBtn.textContent = 'Pause';
+  };
+
+  const addStep = () => {
+    const steps = current().steps;
+    if (next >= steps.length) return false;
+    const s = steps[next++];
+    const li = document.createElement('li');
+    li.className = `step step--${s.kind}`;
+    li.dataset.kind = s.kind;
+    const kind = Object.assign(document.createElement('span'), { className: 'step__kind label', textContent: kindLabel[s.kind] });
+    const label = Object.assign(document.createElement('span'), { className: 'step__label', textContent: s.label });
+    const meta = Object.assign(document.createElement('span'), { className: 'step__meta num', textContent: formatSeconds(s.ms) });
+    li.append(kind);
+    if (s.tool) li.append(Object.assign(document.createElement('code'), { className: 'step__tool', textContent: s.tool }));
+    li.append(label, meta);
+    trace.append(li);
+    if (!reduce.matches) li.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 300, easing: 'ease-out' });
+    ms += s.ms;
+    cents += s.cents;
+    elapsed.textContent = formatSeconds(ms);
+    cost.textContent = formatCost(cents);
+    return next < steps.length;
+  };
+
+  const tick = () => {
+    if (!playing) return;
+    const more = addStep();
+    if (!more) {
+      playing = false;
+      pauseBtn.disabled = true;
+      return;
+    }
+    timer = window.setTimeout(tick, current().steps[next].ms * SPEED);
+  };
+
+  runBtn.addEventListener('click', () => {
+    reset();
+    if (reduce.matches) {
+      while (addStep());
+      return;
+    }
+    playing = true;
+    pauseBtn.disabled = false;
+    tick();
+  });
+  pauseBtn.addEventListener('click', () => {
+    if (playing) {
+      playing = false;
+      clearTimeout(timer);
+      pauseBtn.textContent = 'Resume';
+    } else {
+      playing = true;
+      pauseBtn.textContent = 'Pause';
+      tick();
+    }
+  });
+  stepBtn.addEventListener('click', () => {
+    playing = false;
+    clearTimeout(timer);
+    addStep();
+  });
+  form.addEventListener('change', reset);
+
+  reset();
+  form.querySelector<HTMLElement>('[data-xray-actions]')!.hidden = false;
+</script>
+
+<style>
+  .xray { padding-block: var(--space-xl) 0; }
+  .xray__head { display: grid; gap: var(--space-m); margin-bottom: var(--space-xl); }
+  .xray__head a { text-decoration: none; }
+  .xray__intro { font-size: var(--step-1); color: var(--text-muted); max-width: 48ch; }
+  .xray__demo { text-transform: none; display: flex; flex-wrap: wrap; gap: 0.6em; align-items: center; }
+  .xray__tag { padding: 0.1em 0.6em; border: 1px solid var(--border); border-radius: 999px; color: var(--text); }
+
+  .xray__grid { display: grid; gap: var(--space-xl); align-items: start; }
+  .xray__controls { display: grid; gap: var(--space-l); }
+  .xray__runs { border: 0; padding: 0; margin: 0; display: grid; gap: var(--space-s); }
+  .xray__runs legend { font-weight: 500; margin-bottom: var(--space-xs); }
+  .xray__run { display: flex; gap: 0.6em; align-items: baseline; cursor: pointer; }
+  .xray__run input { accent-color: var(--text); }
+  .xray__counters { display: flex; gap: var(--space-xl); padding-block: var(--space-m); border-block: 1px solid var(--border); }
+  .xray__counters > div { display: grid; gap: 2px; }
+  .xray__counters .num { font-size: var(--step-3); line-height: 1; color: var(--gold); font-variant-numeric: tabular-nums; }
+  .xray__actions { display: flex; flex-wrap: wrap; gap: var(--space-s); }
+  .xray__nojs { color: var(--text-muted); }
+
+  /* The trace: a vertical line of steps, like the site's spine. */
+  .xray__trace {
+    position: relative;
+    display: grid;
+    gap: var(--space-s);
+    min-height: 20rem;
+    margin: 0;
+    padding: 0 0 0 var(--space-l);
+    list-style: none;
+    border-left: 1px solid var(--spine-line);
+  }
+  .step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+    gap: 4px var(--space-s);
+    align-items: baseline;
+    padding: var(--space-s) var(--space-m);
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .step::before {
+    content: '';
+    position: absolute;
+    left: calc(-1 * var(--space-l) - 4px);
+    top: 1.1em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--text);
+  }
+  .step__tool { grid-column: 2; font-family: var(--font-data); font-size: var(--step--1); color: var(--gold); }
+  .step__label { grid-column: 2; }
+  .step__meta { grid-column: 3; grid-row: 1; color: var(--text-muted); font-size: var(--step--1); }
+  .step--think { border-style: dashed; }
+  .step--think .step__label { color: var(--text-muted); }
+  .step--backtrack { margin-left: var(--space-l); opacity: 0.6; border-style: dashed; }
+  .step--backtrack::before { border-radius: 0; rotate: 45deg; background: var(--rust); left: calc(-2 * var(--space-l) - 4px); }
+  .step--result:last-child { border-color: var(--gold); }
+
+  .xray__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-m);
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--border);
+  }
+  .xray__cta p { font-size: var(--step-1); max-width: 48ch; }
+
+  @media (min-width: 64em) {
+    .xray__grid { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); }
+  }
+  @media (max-width: 47.99em) {
+    .step { grid-template-columns: minmax(0, 1fr) auto; }
+    .step__kind { grid-column: 1 / -1; }
+    .step__tool, .step__label { grid-column: 1; }
+    .step__meta { grid-column: 2; grid-row: 2; }
+  }
+</style>

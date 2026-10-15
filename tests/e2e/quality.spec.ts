@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { site } from '../../src/site.config';
 
-const PAGES = ['/', '/ja', '/work/shoji', '/work/case-study-one', '/work/case-study-two', '/lab', '/lab/enso', '/lab/kanji', '/lab/kinetic', '/lab/variants', '/thanks', '/nope'];
+const PAGES = ['/', '/ja', '/work/shoji', '/work/case-study-one', '/work/case-study-two', '/lab', '/lab/enso', '/lab/kanji', '/lab/kinetic', '/lab/variants', '/lab/agent-x-ray', '/thanks', '/nope'];
 
 // These checks render every page several times; run once, on the desktop project.
 test.beforeEach(({}, info) => test.skip(info.project.name !== 'desktop'));
