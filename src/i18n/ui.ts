@@ -16,8 +16,9 @@ const en = {
   hero: {
     title: 'I’m Dan. I build with code and edit with intent.',
     lines: [
-      [{ text: 'I’m Dan. I build ' }, { text: 'with', accent: true }],
-      [{ text: 'code and edit ' }, { text: 'with', accent: true }, { text: ' intent.' }],
+      [{ text: 'I’m Dan. I build' }],
+      [{ text: 'with', accent: true }, { text: ' code and edit' }],
+      [{ text: 'with', accent: true }, { text: ' intent.' }],
     ] as Line[],
     offer: 'Websites · AI agent workflows · Video editing',
     pause: 'Pause background video',
@@ -133,8 +134,9 @@ const ja: Dict = {
   hero: {
     title: 'ダンです。コードでつくり、意図をもって編集します。',
     lines: [
-      [{ text: 'ダンです。' }, { text: 'コード', accent: true }, { text: 'で' }],
-      [{ text: 'つくり、' }, { text: '意図', accent: true }, { text: 'をもって編集します。' }],
+      [{ text: 'ダンです。' }],
+      [{ text: 'コード', accent: true }, { text: 'でつくり、' }],
+      [{ text: '意図', accent: true }, { text: 'をもって編集します。' }],
     ],
     offer: 'ウェブサイト · AIエージェントのワークフロー · 映像編集',
     pause: '背景の動画を一時停止',
