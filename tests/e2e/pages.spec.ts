@@ -10,7 +10,7 @@ test('lab lists all experiments with honest live/in-progress status', async ({ p
   for (const item of await items.all()) {
     const live = (await item.locator('.lab__badge').textContent())!.trim() === 'live';
     await expect(item.getByRole('link', { name: /try it/i })).toHaveCount(live ? 1 : 0);
-    if (live) await expect(item.getByRole('link', { name: /try it/i })).toHaveAttribute('href', /^/lab/[a-z-]+$/);
+    if (live) await expect(item.getByRole('link', { name: /try it/i })).toHaveAttribute('href', /^\/lab\/[a-z-]+$/);
   }
 });
 
