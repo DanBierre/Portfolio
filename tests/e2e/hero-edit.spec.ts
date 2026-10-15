@@ -81,3 +81,38 @@ test('software-only graphics: keeps the still frame (protects low-end devices)',
   await page.waitForTimeout(2500);
   await expect(page.locator('[data-hero-still]')).toBeVisible();
 });
+
+test('footage is fetched only once the edit starts', async ({ page }) => {
+  await allowSoftware(page);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  const early: string[] = [];
+  page.on('request', (r) => r.url().includes('/media/japan/') && early.push(r.url()));
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  expect(early).toEqual([]); // nothing competes with first load
+  await page.waitForRequest(/\/media\/japan\/\w+\.mp4/, { timeout: 8000 });
+});
+
+test('missing footage falls back to the night scene and the edit keeps moving', async ({ page }) => {
+  await allowSoftware(page);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.route('**/media/japan/**', (r) => r.fulfill({ status: 404 }));
+  await page.goto('/');
+  await expect(page.locator('[data-hero-still]')).toBeHidden({ timeout: 5000 });
+  await page.waitForTimeout(800);
+  const a = await sample(page);
+  expect(a.mean).toBeGreaterThan(4);
+  await page.waitForTimeout(700);
+  expect((await sample(page)).sig).not.toBe(a.sig);
+});
+
+test('the code panel follows the edit', async ({ page }) => {
+  await allowSoftware(page);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  const code = page.locator('[data-hero-code]');
+  await expect(code.locator('[data-shot]')).toHaveCount(8);
+  await expect(code.locator('.is-live')).toHaveCount(1, { timeout: 5000 });
+  const clock = code.locator('[data-read="clock"]');
+  const t = await clock.textContent();
+  await expect(clock).not.toHaveText(t!, { timeout: 2000 });
+});

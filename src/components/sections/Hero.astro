@@ -4,6 +4,7 @@ import BookCall from '../BookCall.astro';
 import portrait from '../../assets/portrait.jpg';
 import SpineMark from '../SpineMark.astro';
 import { ui, langOf } from '../../i18n/ui';
+import { shots } from '../../lib/indie-edit';
 
 const lang = langOf(Astro.currentLocale);
 const t = ui[lang];
@@ -11,6 +12,9 @@ const t = ui[lang];
 
 // Indie edit source: Dan's Fushimi Inari photo as a texture; the still frame is the same photo, graded.
 const texture = await getImage({ src: portrait, width: 800, format: 'jpg' });
+// The code panel prints the real shot list that drives the edit; the playing line lights up.
+const name = (s: (typeof shots)[number]) => s.clip ?? s.source;
+const pad = (n: number) => n.toFixed(2).replace(/^0/, '');
 ---
 
 <section id="hero" class="hero lattice-field spined" aria-labelledby="hero-title">
@@ -27,7 +31,20 @@ const texture = await getImage({ src: portrait, width: 800, format: 'jpg' });
         class="hero__still"
         data-hero-still
       />
-      <canvas class="hero__edit" data-hero-edit data-photo={texture.src} hidden></canvas>
+      <canvas class="hero__edit" data-hero-edit data-photo={texture.src} data-clips="/media/japan/" hidden></canvas>
+      <div class="hero__code" data-hero-code>
+        <p class="hero__file">indie-edit.ts</p>
+        <pre><code><span class="c">// [cut, secs, ramp]</span>
+<span class="k">const</span> shots = [
+{shots.map((s, i) => (
+  <span class="hero__shot" data-shot={i}>  [<span class="s">'{name(s)}'</span>,{' '.repeat(9 - name(s).length)}{s.duration.toFixed(1)}, {pad(s.ramp)}],</span>
+))}];
+
+<span class="f">frameAt</span>(<span data-read="clock">0.00</span>)
+  rate  ×<span data-read="rate">1.00</span>
+  blur  <span data-read="blur">.00</span>
+  burn  <span data-read="burn">▯▯▯▯▯▯▯▯</span></code></pre>
+      </div>
       <span class="hero__kumiko lattice"></span>
       <span class="hero__divide"></span>
     </figure>
@@ -77,6 +94,7 @@ const texture = await getImage({ src: portrait, width: 800, format: 'jpg' });
 
 <script>
   import { createIndieEdit } from '../../lib/indie-renderer';
+  import { shots, LOOP, type Frame } from '../../lib/indie-edit';
 
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -106,7 +124,29 @@ const texture = await getImage({ src: portrait, width: 800, format: 'jpg' });
     canvas.hidden = false;
     // Tests run in software-rendered Chromium; they opt in explicitly. Real visitors need a GPU.
     const allowSoftware = (window as any).__indieEditAllowSoftware === true;
-    const edit = createIndieEdit(canvas, canvas.dataset.photo!, () => (still.hidden = true), { allowSoftware });
+    // The code panel follows the edit: the playing shot's line fills as the cut runs, the readout ticks.
+    const code = document.querySelector<HTMLElement>('[data-hero-code]');
+    const lines = code ? [...code.querySelectorAll<HTMLElement>('[data-shot]')] : [];
+    const read = (k: string) => code?.querySelector<HTMLElement>(`[data-read="${k}"]`);
+    const out = { clock: read('clock'), rate: read('rate'), blur: read('blur'), burn: read('burn') };
+    let lit = -1;
+    const onFrame = (clock: number, f: Frame) => {
+      if (f.shot !== lit) {
+        lines[lit]?.classList.remove('is-live');
+        lines[f.shot]?.classList.add('is-live');
+        lit = f.shot;
+      }
+      lines[f.shot]?.style.setProperty('--p', String(f.local / shots[f.shot].duration));
+      if (out.clock) out.clock.textContent = (clock % LOOP).toFixed(2).padStart(5, '0');
+      if (out.rate) out.rate.textContent = f.rate.toFixed(2);
+      if (out.blur) out.blur.textContent = f.blur.toFixed(2).replace(/^0/, '');
+      if (out.burn) out.burn.textContent = '▮'.repeat(Math.round(f.burn * 8)).padEnd(8, '▯');
+    };
+    const edit = createIndieEdit(canvas, canvas.dataset.photo!, () => (still.hidden = true), {
+      allowSoftware,
+      clipBase: canvas.dataset.clips,
+      onFrame,
+    });
     if (!edit) {
       canvas.hidden = true;
     } else {
@@ -161,6 +201,38 @@ const texture = await getImage({ src: portrait, width: 800, format: 'jpg' });
   /* The still is graded like the edit: warm, crushed, a little faded. */
   .hero__screen :global(.hero__still) { filter: contrast(1.15) saturate(0.85) sepia(0.18) brightness(0.85); }
   .hero__edit { image-rendering: auto; }
+  /* Right shoji panel: frosted paper over the footage with the edit's own code written on it.
+     Fixed light-on-dark colours in both themes: it always sits on footage. */
+  .hero__code {
+    position: absolute;
+    inset: 0 0 0 50%;
+    padding: var(--space-s) var(--space-xs) var(--space-s) var(--space-s);
+    backdrop-filter: blur(12px) brightness(0.42) saturate(0.7);
+    -webkit-backdrop-filter: blur(12px) brightness(0.42) saturate(0.7);
+    background: rgb(27 27 26 / 0.25);
+    color: rgb(236 235 231 / 0.62);
+    font: 400 clamp(0.56rem, 0.42rem + 0.32vw, 0.72rem) / 1.55 var(--font-data);
+    overflow: hidden;
+  }
+  .hero__file { color: rgb(236 235 231 / 0.4); letter-spacing: 0.08em; margin-bottom: 0.9em; }
+  .hero__file::before { content: ''; display: inline-block; width: 6px; height: 6px; rotate: 45deg; background: #c8613a; margin-right: 0.7em; translate: 0 -1px; }
+  .hero__code pre { margin: 0; font: inherit; white-space: pre; }
+  .hero__code .c { color: rgb(236 235 231 / 0.38); }
+  .hero__code .k { color: #c8613a; }
+  .hero__code .f { color: #ecebe7; }
+  .hero__code .s { color: #c9a24f; }
+  .hero__code [data-read] { color: #ecebe7; font-variant-numeric: tabular-nums; }
+  /* The playing shot: a gold rule plus a fill that sweeps across the line as the cut runs. */
+  .hero__shot {
+    --p: 0;
+    display: block;
+    background: linear-gradient(90deg, rgb(201 162 79 / 0.2) calc(var(--p) * 100%), transparent 0);
+    box-shadow: inset 2px 0 0 transparent;
+    transition: color 120ms;
+  }
+  .hero__shot.is-live { color: #ecebe7; box-shadow: inset 2px 0 0 #c9a24f; }
+  .hero__shot:not(.is-live) { background: none; }
+
   .hero__kumiko {
     position: absolute;
     inset: 0;
@@ -226,6 +298,7 @@ const texture = await getImage({ src: portrait, width: 800, format: 'jpg' });
     .hero__grid { min-height: auto; padding-top: 0; }
     .hero__screen { position: relative; top: auto; right: auto; grid-column: 1 / -1; justify-self: end; height: auto; width: 62%; }
     .hero__toggle { right: 0; }
+    .hero__code { display: none; } /* too narrow for code on phones: the edit takes the whole screen */
     .hero__title .line--indent { padding-left: 0; }
     .hero__note { position: static; width: auto; margin-top: var(--space-m); font-size: var(--step-0); }
   }

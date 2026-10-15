@@ -1,7 +1,7 @@
 // Indie edit renderer: one WebGL fragment shader that cuts between shots with speed ramps,
 // motion blur and trails, night halation, film burns, flash frames, grain and gate weave.
 // Returns null when WebGL is unavailable so the caller can keep the still frame.
-import { frameAt } from './indie-edit';
+import { frameAt, CLIPS, type Clip, type Frame } from './indie-edit';
 
 const VERT = `attribute vec2 a; varying vec2 vUv; void main(){ vUv = a * .5 + .5; gl_Position = vec4(a, 0., 1.); }`;
 
@@ -21,7 +21,7 @@ float noise(vec2 p) {
 }
 float fbm(vec2 p) { float v = 0., a = .5; for (int i = 0; i < 5; i++) { v += a * noise(p); p *= 2.03; a *= .5; } return v; }
 
-// Dan's Fushimi Inari photo, cover-fitted and moved by the camera.
+// The current image (Dan's photo or a frame of footage), cover-fitted and moved by the camera.
 vec3 photo(vec2 uv) {
   float fa = uRes.x / uRes.y, pa = uPhotoSize.x / uPhotoSize.y;
   vec2 scale = fa > pa ? vec2(1., pa / fa) : vec2(fa / pa, 1.);
@@ -87,7 +87,11 @@ export function createIndieEdit(
   canvas: HTMLCanvasElement,
   photoUrl: string,
   onFirstFrame: () => void,
-  { allowSoftware = false } = {},
+  {
+    allowSoftware = false,
+    clipBase = '',
+    onFrame,
+  }: { allowSoftware?: boolean; clipBase?: string; onFrame?: (clock: number, f: Frame) => void } = {},
 ): IndieEdit | null {
   // Hardware graphics only: on software rendering (no GPU) the edit would hog the CPU, so keep the still.
   const gl = canvas.getContext('webgl', {
@@ -136,20 +140,62 @@ export function createIndieEdit(
     shot: u('uShot'), source: u('uSource'), blur: u('uBlur'), burn: u('uBurn'), flash: u('uFlash'),
   };
 
-  const tex = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, tex);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([20, 20, 20, 255]));
-  for (const [k, v] of [[gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR], [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]])
-    gl.texParameteri(gl.TEXTURE_2D, k, v);
-  gl.uniform2f(U.size, 1, 1);
+  const texture = () => {
+    const t = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, t);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([20, 20, 20, 255]));
+    for (const [k, v] of [[gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR], [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]])
+      gl.texParameteri(gl.TEXTURE_2D, k, v);
+    return t;
+  };
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+  const photoTex = texture();
+  const videoTex = texture();
+  let photoSize: [number, number] = [1, 1];
   const img = new Image();
   img.onload = () => {
-    gl.bindTexture(gl.TEXTURE_2D, tex);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.bindTexture(gl.TEXTURE_2D, photoTex);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
-    gl.uniform2f(U.size, img.naturalWidth, img.naturalHeight);
+    photoSize = [img.naturalWidth, img.naturalHeight];
   };
   img.src = photoUrl;
+
+  // Footage: one muted, off-DOM video per cut, fetched once the edit starts (never during first load).
+  const videos = {} as Record<Clip, HTMLVideoElement>;
+  const loadClips = () => {
+    if (!clipBase || videos.street) return;
+    for (const c of CLIPS)
+      videos[c] = Object.assign(document.createElement('video'), {
+        src: `${clipBase}${c}.mp4`, muted: true, playsInline: true, preload: 'auto',
+      });
+  };
+  let shown = -1;
+  let playing: HTMLVideoElement | null = null;
+  // Picks this frame's image and returns the shader source: 0 = image, 1 = generated night.
+  // A cut whose footage cannot play yet falls back to the night scene, so the edit never stalls.
+  const bindSource = (f: Frame): number => {
+    if (f.shot !== shown) {
+      shown = f.shot;
+      playing?.pause();
+      playing = f.clip ? (videos[f.clip] ?? null) : null;
+      if (playing) {
+        playing.currentTime = 0;
+        playing.play().catch(() => {});
+      }
+    }
+    if (f.source === 'night') return 1;
+    if (f.source === 'photo') {
+      gl.bindTexture(gl.TEXTURE_2D, photoTex);
+      gl.uniform2f(U.size, ...photoSize);
+      return 0;
+    }
+    if (!playing || playing.readyState < 2) return 1;
+    playing.playbackRate = f.rate;
+    gl.bindTexture(gl.TEXTURE_2D, videoTex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, playing);
+    gl.uniform2f(U.size, playing.videoWidth, playing.videoHeight);
+    return 0;
+  };
 
   // Render below device resolution: softer, more "film", and cheaper.
   const resize = () => {
@@ -177,13 +223,14 @@ export function createIndieEdit(
     gl.uniform1f(U.time, clock);
     gl.uniform1f(U.local, f.local);
     gl.uniform1f(U.shot, f.shot);
-    gl.uniform1f(U.source, f.source === 'photo' ? 0 : 1);
+    gl.uniform1f(U.source, bindSource(f));
     gl.uniform3f(U.cam, f.x, f.y, f.zoom);
     gl.uniform2f(U.dir, f.dir[0], f.dir[1]);
     gl.uniform1f(U.blur, f.blur);
     gl.uniform1f(U.burn, f.burn);
     gl.uniform1f(U.flash, f.flash);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    onFrame?.(clock, f);
     if (first) {
       first = false;
       onFirstFrame();
@@ -194,12 +241,15 @@ export function createIndieEdit(
   return {
     start() {
       if (raf) return;
+      loadClips();
+      shown = -1; // restart the current cut's footage
       last = 0;
       raf = requestAnimationFrame(draw);
     },
     stop() {
       cancelAnimationFrame(raf);
       raf = 0;
+      playing?.pause();
     },
     running: () => raf !== 0,
   };

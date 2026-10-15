@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest';
-import { shots, LOOP, frameAt, warp } from '../../src/lib/indie-edit';
+import { shots, LOOP, frameAt, warp, CLIPS, CUT_LENGTH } from '../../src/lib/indie-edit';
 
 test('the loop is the sum of the shots and wraps around', () => {
   expect(LOOP).toBeCloseTo(shots.reduce((s, x) => s + x.duration, 0));
@@ -42,4 +42,31 @@ test('fast sections blur more than slow ones', () => {
   const mid = frameAt(start + shots[fast].duration * 0.5).blur;
   const edge = frameAt(start + shots[fast].duration * 0.1).blur;
   expect(Math.max(mid, edge)).toBeGreaterThan(0.3);
+});
+
+test('the edit cuts real footage alongside the photo', () => {
+  const clips = new Set(shots.filter((s) => s.source === 'clip').map((s) => s.clip));
+  expect([...clips].sort()).toEqual([...CLIPS].sort());
+  expect(shots.some((s) => s.source === 'photo')).toBe(true);
+});
+
+test('clip playback rate follows the speed ramp within browser-safe bounds', () => {
+  let start = 0;
+  for (const s of shots) {
+    const rates = [0.05, 0.5, 0.95].map((p) => frameAt(start + s.duration * p).rate);
+    for (const r of rates) expect(r).toBeGreaterThanOrEqual(0.25), expect(r).toBeLessThanOrEqual(2.5);
+    if (s.ramp > 0.5) expect(rates[0]).toBeGreaterThan(rates[1]); // rush in, slow-mo hold
+    start += s.duration;
+  }
+});
+
+test('no shot plays past the end of its cut', () => {
+  // Footage consumed = integral of the playback rate over the shot; must fit in the 3 s cut.
+  let start = 0;
+  for (const s of shots) {
+    let used = 0;
+    for (let t = 0; t < s.duration; t += 0.01) used += frameAt(start + t).rate * 0.01;
+    if (s.source === 'clip') expect(used).toBeLessThan(CUT_LENGTH);
+    start += s.duration;
+  }
 });

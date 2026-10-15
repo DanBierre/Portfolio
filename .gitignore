@@ -16,3 +16,7 @@ test-results/
 yarn-debug.log*
 yarn-error.log*
 .impeccable/review/
+
+# Stock footage (too large for git)
+public/media/japan/
+media-src/

@@ -1,23 +1,30 @@
 // Indie edit timeline: a looping sequence of "shots" with speed ramps (time warp), film burns and
 // flash frames at the cuts. Pure, so the renderer and the tests agree on every frame.
-export type Source = 'photo' | 'night';
+export type Source = 'photo' | 'night' | 'clip';
+/** Graded 3 s cuts in public/media/japan, made by scripts/cut-japan-clips.sh. */
+export const CLIPS = ['street', 'neon', 'subway', 'lantern', 'crossing'] as const;
+export type Clip = (typeof CLIPS)[number];
+export const CUT_LENGTH = 3; // seconds per cut
 export type Shot = {
   source: Source;
+  clip?: Clip;
   duration: number; // seconds
   ramp: number; // 0 = steady, 1 = hard speed ramp (fast, slow-mo hold, fast)
   from: [x: number, y: number, zoom: number]; // camera start (centre in 0..1, zoom ≥ 1)
   to: [x: number, y: number, zoom: number]; // camera end
 };
 
-// Two sources for now: Dan's Fushimi Inari photo and a generated Tokyo-night light scene.
-// Real clips slot in later as more sources with the same treatment.
+// Mixkit Japan footage cut with Dan's Fushimi Inari photo and a generated neon stinger.
+// Rhythm: open on a hold, then tighten into fast ramps, breathe on the lantern, hit hard to the loop.
 export const shots: Shot[] = [
-  { source: 'night', duration: 2.4, ramp: 0.3, from: [0.45, 0.5, 1.0], to: [0.55, 0.48, 1.25] },
-  { source: 'photo', duration: 2.0, ramp: 0.5, from: [0.5, 0.5, 1.05], to: [0.5, 0.42, 1.35] },
-  { source: 'night', duration: 1.2, ramp: 1.0, from: [0.2, 0.5, 1.4], to: [0.85, 0.5, 1.4] },
-  { source: 'photo', duration: 1.8, ramp: 0.9, from: [0.52, 0.4, 1.6], to: [0.5, 0.38, 2.1] },
-  { source: 'night', duration: 2.0, ramp: 0.4, from: [0.6, 0.45, 1.3], to: [0.4, 0.55, 1.0] },
-  { source: 'photo', duration: 1.6, ramp: 0.8, from: [0.3, 0.6, 1.8], to: [0.65, 0.55, 1.5] },
+  { source: 'clip', clip: 'street', duration: 2.0, ramp: 0.35, from: [0.5, 0.5, 1.0], to: [0.54, 0.47, 1.15] },
+  { source: 'clip', clip: 'neon', duration: 1.0, ramp: 1.0, from: [0.42, 0.5, 1.3], to: [0.6, 0.5, 1.45] },
+  { source: 'photo', duration: 1.7, ramp: 0.6, from: [0.5, 0.5, 1.05], to: [0.5, 0.42, 1.35] },
+  { source: 'clip', clip: 'subway', duration: 1.3, ramp: 0.85, from: [0.3, 0.5, 1.35], to: [0.7, 0.5, 1.35] },
+  { source: 'clip', clip: 'lantern', duration: 2.2, ramp: 0.3, from: [0.45, 0.5, 1.0], to: [0.42, 0.5, 1.2] },
+  { source: 'clip', clip: 'crossing', duration: 1.2, ramp: 1.0, from: [0.5, 0.6, 1.5], to: [0.5, 0.45, 1.15] },
+  { source: 'night', duration: 0.7, ramp: 1.0, from: [0.2, 0.5, 1.4], to: [0.85, 0.5, 1.4] },
+  { source: 'photo', duration: 1.4, ramp: 0.9, from: [0.52, 0.4, 1.6], to: [0.5, 0.38, 2.1] },
 ];
 
 export const LOOP = shots.reduce((s, x) => s + x.duration, 0);
@@ -34,6 +41,9 @@ const speed = (p: number, ramp: number) => 1 + 0.95 * ramp * Math.cos(2 * Math.P
 export type Frame = {
   shot: number;
   source: Source;
+  clip?: Clip;
+  /** Footage playback rate: the speed ramp applied to time, clamped to what browsers play smoothly. */
+  rate: number;
   /** Camera centre and zoom after the speed ramp. */
   x: number;
   y: number;
@@ -66,6 +76,8 @@ export function frameAt(time: number): Frame {
   return {
     shot: i,
     source: s.source,
+    clip: s.clip,
+    rate: Math.min(2.5, Math.max(0.25, speed(p, s.ramp))),
     x: lerp(s.from[0], s.to[0]),
     y: lerp(s.from[1], s.to[1]),
     zoom: lerp(s.from[2], s.to[2]),
