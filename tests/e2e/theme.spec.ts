@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const BG = { light: 'rgb(244, 244, 241)', dark: 'rgb(15, 15, 14)' } as const;
+const BG = { light: 'rgb(242, 243, 244)', dark: 'rgb(18, 16, 13)' } as const;
 
 for (const scheme of ['light', 'dark'] as const) {
   test(`${scheme} theme applies tokens`, async ({ page }) => {

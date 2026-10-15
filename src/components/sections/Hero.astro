@@ -10,11 +10,10 @@ import poster from '../../assets/hero-poster.jpg';
       src={poster}
       formats={['avif', 'webp']}
       widths={[640, 960, 1280, 1600]}
-      sizes="(min-width: 48em) 55vw, 100vw"
+      sizes="100vw"
       alt=""
       loading="eager"
       fetchpriority="high"
-      class="hero__poster"
     />
     <video class="hero__video" muted loop playsinline preload="none" poster={poster.src}>
       <source src="/media/hero.webm" type="video/webm" />
@@ -34,13 +33,33 @@ import poster from '../../assets/hero-poster.jpg';
       <a class="btn btn--secondary" href="#work">See the work</a>
     </div>
   </div>
+
+  <button class="hero__toggle" type="button" aria-label="Pause background video" hidden>
+    <svg class="icon-pause" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+      <rect x="3" y="2" width="3.5" height="12" rx="1" fill="currentColor"></rect>
+      <rect x="9.5" y="2" width="3.5" height="12" rx="1" fill="currentColor"></rect>
+    </svg>
+    <svg class="icon-play" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+      <path d="M4 2.5v11a.8.8 0 0 0 1.2.7l9-5.5a.8.8 0 0 0 0-1.4l-9-5.5A.8.8 0 0 0 4 2.5Z" fill="currentColor"></path>
+    </svg>
+  </button>
 </section>
 
 <script>
+  // Background footage plays only when motion is welcome, and can always be paused (WCAG 2.2.2).
   const video = document.querySelector<HTMLVideoElement>('.hero__video');
-  if (video && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const toggle = document.querySelector<HTMLButtonElement>('.hero__toggle');
+  if (video && toggle && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const sync = () => {
+      toggle.setAttribute('aria-label', video.paused ? 'Play background video' : 'Pause background video');
+      toggle.dataset.state = video.paused ? 'paused' : 'playing';
+    };
     video.addEventListener('playing', () => video.classList.add('is-playing'), { once: true });
-    video.play().catch(() => {});
+    video.addEventListener('play', sync);
+    video.addEventListener('pause', sync);
+    toggle.addEventListener('click', () => (video.paused ? video.play() : video.pause()));
+    toggle.hidden = false;
+    video.play().catch(sync);
   }
 </script>
 
@@ -51,17 +70,15 @@ import poster from '../../assets/hero-poster.jpg';
     flex-direction: column;
     justify-content: flex-end;
     min-height: calc(100svh - 3.75rem);
-    padding-block: var(--space-xl) var(--space-xl);
+    padding-block: var(--space-2xl) var(--space-xl);
     overflow: hidden;
     isolation: isolate;
   }
 
   .hero__media {
     position: absolute;
-    inset: 0 0 auto auto;
+    inset: 0;
     z-index: -1;
-    width: min(55%, 56rem);
-    height: 78%;
   }
   .hero__media :global(img),
   .hero__video {
@@ -73,32 +90,47 @@ import poster from '../../assets/hero-poster.jpg';
   }
   .hero__video { opacity: 0; transition: opacity 1.2s var(--ease-out); }
   .hero__video.is-playing { opacity: 1; }
-  /* Scrim: the media dissolves into the page where it meets the headline. */
+  /* An even tint keeps the footage muted and the type at AA contrast over any frame. */
   .hero__media::after {
     content: '';
     position: absolute;
     inset: 0;
-    background:
-      linear-gradient(to right, var(--bg) 0%, transparent 35%),
-      linear-gradient(to top, var(--bg) 0%, transparent 45%);
+    background: color-mix(in srgb, var(--bg) 68%, transparent);
   }
 
   .hero__copy { display: grid; gap: var(--space-l); }
-  h1 { max-width: 14ch; }
+  h1 {
+    font-size: clamp(2.9rem, 1.2rem + 7.6vw, 9.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+  }
   h1 .line { display: block; }
-  .hero__sub { font-size: var(--step-1); color: var(--text-muted); max-width: 40ch; line-height: 1.45; }
+  .hero__sub { font-size: var(--step-1); color: var(--text); max-width: 40ch; line-height: 1.45; }
   .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-s); }
 
+  .hero__toggle {
+    position: absolute;
+    right: var(--gutter);
+    bottom: var(--space-l);
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    color: var(--text);
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .hero__toggle:hover { border-color: var(--text); }
+  .hero__toggle .icon-play,
+  .hero__toggle[data-state='paused'] .icon-pause { display: none; }
+  .hero__toggle[data-state='paused'] .icon-play { display: block; }
+
   @media (max-width: 47.99em) {
-    .hero { min-height: auto; padding-top: 0; }
-    .hero__media {
-      position: relative;
-      inset: auto;
-      width: 100%;
-      height: auto;
-      aspect-ratio: 4 / 3;
-      margin-bottom: calc(var(--space-xl) * -0.5);
-    }
-    .hero__media::after { background: linear-gradient(to top, var(--bg) 0%, transparent 40%); }
+    .hero { min-height: calc(88svh - 3.75rem); padding-bottom: var(--space-2xl); }
+    .hero__toggle { bottom: var(--space-s); }
   }
 </style>

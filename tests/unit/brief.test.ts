@@ -51,7 +51,7 @@ describe('handleBrief', () => {
 
   test('honeypot: success response, nothing sent', async () => {
     const e = env();
-    const res = await handleBrief(req({ ...good, company_website: 'spam.io' }), e);
+    const res = await handleBrief(req({ ...good, hp_confirm: 'spam.io' }), e);
     expect(res.status).toBe(200);
     expect(e.EMAIL.send).not.toHaveBeenCalled();
   });
@@ -88,7 +88,21 @@ describe('handleBrief', () => {
   });
 
   test('oversize body is 413', async () =>
-    expect((await handleBrief(req({ ...good, project: 'a'.repeat(20001) }), env())).status).toBe(413));
+    expect((await handleBrief(req({ ...good, project: 'a'.repeat(70000) }), env())).status).toBe(413));
 
   test('GET is 405', async () => expect((await handleBrief(new Request('https://x/api/brief'), env())).status).toBe(405));
+});
+
+describe('review fixes', () => {
+  test('autofill-prone field names are not treated as the honeypot', async () => {
+    const e = env();
+    await handleBrief(req({ ...good, company_website: 'studio.co' }), e);
+    expect(e.EMAIL.send).toHaveBeenCalledOnce();
+  });
+
+  test('a long non-Latin brief within the character limit is accepted', async () => {
+    const e = env();
+    const res = await handleBrief(req({ ...good, project: 'д'.repeat(4000) }), e);
+    expect(res.status).toBe(200);
+  });
 });

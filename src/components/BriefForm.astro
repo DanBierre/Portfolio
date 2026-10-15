@@ -30,17 +30,19 @@ import { BUDGET_OPTIONS, site } from '../site.config';
     </div>
     <div class="field">
       <label for="brief-budget">Budget range <span class="field__optional">(optional)</span></label>
-      <select id="brief-budget" name="budget" aria-describedby="brief-budget-error">
+      <span class="select">
+        <select id="brief-budget" name="budget" aria-describedby="brief-budget-error">
         <option value="">Choose…</option>
         {BUDGET_OPTIONS.map((b) => <option value={b}>{b}</option>)}
-      </select>
+        </select>
+      </span>
       <p class="field__error" id="brief-budget-error" data-error-for="budget"></p>
     </div>
   </div>
 
   <div class="brief__trap" aria-hidden="true">
-    <label for="brief-company-website">Leave this empty</label>
-    <input id="brief-company-website" name="company_website" type="text" tabindex="-1" autocomplete="off" />
+    <label for="brief-hp">Leave this field empty</label>
+    <input id="brief-hp" name="hp_confirm" type="text" tabindex="-1" autocomplete="off" />
   </div>
 
   <div class="brief__submit">
@@ -146,6 +148,21 @@ import { BUDGET_OPTIONS, site } from '../site.config';
     transition: border-color 0.2s;
   }
   textarea { resize: vertical; min-height: 7rem; }
+  .select { position: relative; display: block; }
+  .select select { appearance: none; padding-right: 2.5em; cursor: pointer; }
+  .select::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 1em;
+    width: 0.5em;
+    height: 0.5em;
+    border-right: 1.5px solid var(--text-muted);
+    border-bottom: 1.5px solid var(--text-muted);
+    translate: 0 -70%;
+    rotate: 45deg;
+    pointer-events: none;
+  }
   input:hover, textarea:hover, select:hover { border-color: var(--text-muted); }
   input:focus-visible, textarea:focus-visible, select:focus-visible { outline-offset: 1px; border-color: var(--text); }
   ::placeholder { color: var(--text-muted); opacity: 1; }

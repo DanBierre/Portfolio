@@ -8,9 +8,9 @@ const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.
 <section id="work" class="work" aria-labelledby="work-title">
   <div class="wrap">
     <h2 id="work-title">Selected work</h2>
-    <div class="work__list">
-      {work.map((entry) => <WorkCard entry={entry} />)}
-    </div>
+  </div>
+  <div class="work__list">
+    {work.map((entry) => <WorkCard entry={entry} />)}
   </div>
 </section>
 

@@ -52,7 +52,8 @@ const calLink = new URL(site.calUrl).pathname.slice(1);
     el.addEventListener('focus', load, { once: true });
     el.addEventListener('touchstart', load, { once: true, passive: true });
     el.addEventListener('click', (event) => {
-      if (!ready) return;
+      // Leave modifier and middle clicks to the browser (open in new tab, etc.).
+      if (!ready || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
       event.preventDefault();
       (window as any).Cal('modal', { calLink: el.dataset.bookCall, config: { layout: 'month_view' } });
     });

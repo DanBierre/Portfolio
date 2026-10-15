@@ -4,8 +4,10 @@ import type { Env } from './index';
 export type Brief = { name: string; email: string; project: string; timeline: string; budget: string };
 type Errors = Partial<Record<keyof Brief, string>>;
 
-const MAX_BODY_BYTES = 20_000;
-const HONEYPOT = 'company_website';
+// Per-field limits cap the text; this only stops oversized payloads (URL-encoded non-Latin text is ~6-9 bytes per char).
+const MAX_BODY_BYTES = 64_000;
+// Deliberately not an autofill-prone name, so browser extensions don't fill it for real visitors.
+const HONEYPOT = 'hp_confirm';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function validateBrief(
@@ -51,7 +53,10 @@ export async function handleBrief(request: Request, env: Env): Promise<Response>
     wantsJson ? Response.json({ ok: true }) : new Response(null, { status: 303, headers: { location: '/thanks' } });
 
   // Bots fill the hidden field; give them a normal-looking success and send nothing.
-  if (fields[HONEYPOT]) return success();
+  if (fields[HONEYPOT]) {
+    console.log('brief honeypot hit');
+    return success();
+  }
 
   const result = validateBrief(fields);
   if (!result.ok) {
@@ -93,7 +98,7 @@ const escape = (s: string) =>
 function fallbackPage(status: number, title: string, problems: string[], fields: Record<string, string>) {
   const contact = site.email;
   const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>${escape(title)}</title>
-<style>body{font:1.05rem/1.55 system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;background:#f4f4f1;color:#121211}pre{white-space:pre-wrap;background:#fff;padding:1rem;border:1px solid #d9d9d4}a{color:#3e4a26}</style></head>
+<style>body{font:1.05rem/1.55 system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;background:#f2f3f4;color:#121314}pre{white-space:pre-wrap;background:#fff;padding:1rem;border:1px solid #d6d9dc}a{color:#3e4a26}</style></head>
 <body><h1>${escape(title)}</h1><ul>${problems.map((p) => `<li>${escape(p)}</li>`).join('')}</ul>
 <p>Your message is below so you can copy it. Email it to <a href="mailto:${contact}">${contact}</a>, or <a href="javascript:history.back()">go back</a> to edit and resend.</p>
 <pre>${escape(fields.project ?? '')}</pre></body></html>`;
