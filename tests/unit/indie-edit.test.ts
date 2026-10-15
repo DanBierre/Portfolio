@@ -80,3 +80,8 @@ test('no shot plays past the end of its cut', () => {
     start += s.duration;
   }
 });
+
+test('no generated filler in the cut: every shot is real footage', () => {
+  expect(shots.every((s) => s.source === 'clip')).toBe(true);
+  expect(new Set(shots.map((s) => s.clip)).size).toBe(6);
+});

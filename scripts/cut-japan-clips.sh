@@ -12,19 +12,21 @@ SRC=media-src/japan
 OUT=public/media/japan
 LEN=3 # seconds per cut: a shot is at most 2.4 s, the rest is headroom for the speed ramp
 
-# Shared look: milky film blacks, rolled-off highlights, warm highlights over neutral-cool shadows,
-# saturation pulled back so the neon reads as colour accents, not wallpaper, slight lens softness.
-LOOK="curves=all='0/0.04 0.22/0.17 0.55/0.55 0.85/0.86 1/0.93',\
-colorbalance=rs=-0.02:bs=0.03:rm=0.02:bm=-0.02:rh=0.05:gh=0.02:bh=-0.05,\
-eq=contrast=1.06:saturation=0.8,vignette=angle=PI/6,gblur=sigma=0.7"
+# Shared look: dense film blacks with a hint of lift, a firm S-curve, highlights that roll off just
+# before clipping, warm highlights over neutral-cool shadows, colour kept rich (the site's warm
+# night), slight lens softness. Per-clip corrections first balance each source so they cut together.
+LOOK="curves=all='0/0.012 0.2/0.15 0.5/0.52 0.8/0.86 1/0.97',\
+colorbalance=rs=-0.02:bs=0.03:rm=0.02:bm=-0.02:rh=0.06:gh=0.02:bh=-0.05,\
+eq=contrast=1.08:saturation=1.0,vignette=angle=PI/5,gblur=sigma=0.5"
 
 # name | source id | in-point (s) | per-clip correction before the shared look
 CLIPS=(
-  "street|4451|0.4|eq=saturation=0.85:gamma=0.95"                                           # passer-by wipes frame
-  "neon|4447|1.0|eq=saturation=0.85"                                                        # sign cycles pink -> cyan
-  "subway|4449|1.8|colorbalance=gs=-0.06:gm=-0.07:rm=0.03,eq=brightness=-0.02:gamma=0.95:saturation=0.75" # fluorescent green out
-  "lantern|4109|12.0|eq=gamma=0.97"                                                         # passer-by wipes, lantern revealed
-  "crossing|4401|2.6|eq=brightness=-0.03:gamma=0.9:saturation=0.68,colorbalance=bs=0.04:bm=0.02" # day pushed to dusk
+  "street|4451|0.4|colorbalance=bm=0.03:gh=-0.02,eq=saturation=0.95:gamma=0.95"            # yellow signage tamed, night kept
+  "neon|4447|1.0|eq=saturation=0.88:contrast=1.04"                                          # red neon held back from clipping
+  "subway|4449|1.8|colorbalance=gs=-0.08:gm=-0.08:rm=0.04:rh=0.03,eq=contrast=1.1:gamma=0.98:saturation=0.9" # green fluorescent out, flat image given depth
+  "lantern|4109|13.6|eq=gamma=1.08:saturation=1.05"                                         # lantern held, mids lifted so it glows
+  "walker|4451|11.8|colorbalance=bm=0.03:gh=-0.02,eq=saturation=0.95:gamma=0.95"           # same street, same balance
+  "crossing|4401|2.6|eq=brightness=-0.04:gamma=0.86:contrast=1.15:saturation=0.85,colorbalance=bs=0.06:gs=0.02:rh=0.05:bh=-0.04" # overcast day pushed to dusk
 )
 
 if [[ "${1:-}" == preview ]]; then

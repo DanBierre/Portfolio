@@ -211,15 +211,15 @@ const open = +(beat + 0.05).toFixed(2); // the footage opens once the headline h
     inset: 0;
     background: url('/textures/washi.svg');
     mix-blend-mode: soft-light;
-    opacity: 0.5;
+    opacity: 0.28;
   }
   /* Scrim: the headline corner falls to charcoal so the type always reads; the top right stays open. */
   .hero__scrim {
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(to top, rgb(20 20 20 / 0.92) 0%, rgb(20 20 20 / 0.55) 45%, rgb(20 20 20 / 0.2) 75%, rgb(20 20 20 / 0.35)),
-      linear-gradient(to right, rgb(20 20 20 / 0.6), transparent 65%);
+      linear-gradient(to top, rgb(20 20 20 / 0.9) 0%, rgb(20 20 20 / 0.5) 40%, transparent 70%, rgb(20 20 20 / 0.25)),
+      linear-gradient(to right, rgb(20 20 20 / 0.5), transparent 60%);
   }
   .hero__kumiko { position: absolute; inset: 0; opacity: 0.8; }
 

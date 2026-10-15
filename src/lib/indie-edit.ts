@@ -2,7 +2,7 @@
 // flash frames at the cuts. Pure, so the renderer and the tests agree on every frame.
 export type Source = 'night' | 'clip';
 /** Graded 3 s cuts in public/media/japan, made by scripts/cut-japan-clips.sh. */
-export const CLIPS = ['street', 'neon', 'subway', 'lantern', 'crossing'] as const;
+export const CLIPS = ['street', 'neon', 'subway', 'lantern', 'walker', 'crossing'] as const;
 export type Clip = (typeof CLIPS)[number];
 export const CUT_LENGTH = 3; // seconds per cut
 export type Shot = {
@@ -14,15 +14,16 @@ export type Shot = {
   to: [x: number, y: number, zoom: number]; // camera end
 };
 
-// Mixkit Japan footage, seen through shoji paper, with a generated neon stinger before the loop.
-// Rhythm: open on the lantern and hold, drift through the street, two ramps for energy, breathe out.
+// Mixkit Japan footage, seen through shoji paper: six cuts, no generated filler (the night scene is
+// only a fallback for footage that has not arrived). Open on the lantern, two ramps for energy, and
+// a figure walking into frame to hand back to the lantern.
 export const shots: Shot[] = [
   { source: 'clip', clip: 'lantern', duration: 2.6, ramp: 0.3, from: [0.42, 0.5, 1.0], to: [0.39, 0.5, 1.18] },
   { source: 'clip', clip: 'street', duration: 2.2, ramp: 0.4, from: [0.5, 0.5, 1.0], to: [0.55, 0.47, 1.12] },
   { source: 'clip', clip: 'neon', duration: 1.8, ramp: 0.85, from: [0.3, 0.5, 1.3], to: [0.7, 0.5, 1.4] },
   { source: 'clip', clip: 'subway', duration: 2.4, ramp: 0.5, from: [0.35, 0.5, 1.3], to: [0.65, 0.5, 1.3] },
   { source: 'clip', clip: 'crossing', duration: 2.2, ramp: 0.9, from: [0.5, 0.6, 1.4], to: [0.5, 0.45, 1.1] },
-  { source: 'night', duration: 0.8, ramp: 0.6, from: [0.3, 0.5, 1.3], to: [0.7, 0.5, 1.3] },
+  { source: 'clip', clip: 'walker', duration: 2.2, ramp: 0.45, from: [0.45, 0.55, 1.05], to: [0.47, 0.5, 1.25] },
 ];
 
 export const LOOP = shots.reduce((s, x) => s + x.duration, 0);

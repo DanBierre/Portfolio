@@ -66,12 +66,13 @@ void main() {
   float lum = dot(col, vec3(.299, .587, .114));
   col += vec3(1., .5, .2) * smoothstep(.5, 1., lum) * .25;
 
-  // Behind shoji: split tone toward the site's charcoal (#1b1b1a) and gold (#c9a24f), most of the
-  // colour drained so neon reads as warm light through paper, blacks lifted to paper grey.
+  // House look over each clip's own grade: a light split tone toward the site's charcoal and gold,
+  // then an S-curve so blacks stay dense and highlights glow. Colour and contrast come from the clip.
   lum = dot(col, vec3(.299, .587, .114));
-  vec3 tone = mix(vec3(.106, .106, .102), vec3(.95, .79, .5), smoothstep(.02, .95, lum));
-  col = mix(col, tone, .62);
-  col = col * .88 + vec3(.035, .033, .03);
+  vec3 tone = mix(vec3(.08, .08, .085), vec3(1., .84, .58), smoothstep(.0, 1., lum));
+  col = mix(col, col * tone * 1.6, .22);
+  col = clamp(col, 0., 1.);
+  col = col * col * (3. - 2. * col) * .35 + col * .65;
 
   // Film burn: a light leak blooming from a corner at each cut.
   vec2 corner = vec2(step(.5, hash(vec2(uShot, 9.))), step(.5, hash(vec2(uShot, 4.))));
@@ -83,7 +84,7 @@ void main() {
 
   // Washi fibres: long horizontal strands and a fine tooth, as if the light comes through paper.
   float fibre = fbm(vec2(uv.x * 9., uv.y * 70.)) * .6 + noise(uv * uRes * .35) * .4;
-  col *= .9 + fibre * .16;
+  col *= .95 + fibre * .08;
   col += (hash(uv * uRes + fract(uTime) * 91.) - .5) * .05;            // grain
   col *= smoothstep(1.25, .35, length(uv - .5));                       // vignette
 
