@@ -218,10 +218,10 @@ a:hover { text-decoration-thickness: 2px; }
   .spine-mark--now::after { border-radius: 0; rotate: 45deg; width: 9px; height: 9px; left: calc(var(--spine-x) - var(--gutter) - 4px); background: var(--rust); }
 }
 
-/* Japanese typography: no negative tracking, taller lines, one weight up (system Japanese faces run light),
+/* Japanese typography: no negative tracking, taller lines, one weight up (system Japanese faces run light; Yu Gothic UI has no 500, so 600 = Semibold),
    and Japanese line-break rules. */
 :lang(ja) { line-break: strict; word-break: auto-phrase; }
-:lang(ja) :is(h1, h2, h3) { letter-spacing: 0; line-height: 1.2; font-weight: 500; }
+:lang(ja) :is(h1, h2, h3) { letter-spacing: 0; line-height: 1.2; font-weight: 600; }
 
 /* Inline lists joined by a middle dot. Items wrap freely; each dot sits in the gap before its item and is
    clipped whenever that item starts a line, so a dot never begins or dangles off a line (also in Japanese). */
