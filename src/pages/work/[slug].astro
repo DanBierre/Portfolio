@@ -124,6 +124,8 @@ const og = await getImage({ src: cover, width: 1200, height: 630, fit: 'cover', 
   .prose :global(h2:first-child) { margin-top: 0; }
   .prose :global(ul) { padding-left: 1.2em; display: grid; gap: var(--space-xs); }
   .prose :global(img) { border-radius: 4px; }
+  /* Phone-shaped app screens ship at 2x (880 px wide): show them at their real 440 px size. */
+  .prose :global(img[width="880"]) { width: min(100%, 440px); }
 
   .case__quote { border-top: 1px solid var(--text); padding-top: var(--space-m); max-width: 40ch; }
   .case__quote p { font-size: var(--step-2); letter-spacing: -0.025em; line-height: 1.3; }
