@@ -8,7 +8,7 @@ test('hero leads with Dan’s headline, gold accents and offer line', async ({ p
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(en.hero.title);
   await expect(page.locator('#hero h1 .accent')).toHaveText(['with', 'with']);
-  await expect(page.locator('#hero').getByText(en.hero.offer)).toBeVisible();
+  await expect(page.locator('#hero .hero__note .sep-item')).toHaveText(en.hero.offer.split(' · '));
 });
 
 test('agency line moves to services', async ({ page }) => {

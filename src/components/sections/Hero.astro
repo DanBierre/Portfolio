@@ -10,7 +10,7 @@ const t = ui[lang];
 ---
 
 <section id="hero" class="hero lattice-field spined" aria-labelledby="hero-title">
-  <SpineMark section="hero" now top="var(--space-l)" />
+  <SpineMark section="hero" top="var(--space-l)" />
   <div class="wrap hero__grid">
     <figure class="hero__screen" aria-hidden="true">
       <div class="hero__media">
@@ -44,12 +44,13 @@ const t = ui[lang];
           ))
         }
       </h1>
-      <p class="hero__note">{t.hero.offer}</p>
+      <p class="hero__note sep-list">{t.hero.offer.split(' · ').map((item) => <span class="sep-item">{item}</span>)}</p>
     </div>
 
     <div class="hero__actions">
       <BookCall variant="primary" label={t.bookCall} />
       <a class="btn btn--secondary" href="#work">{t.seeWork}</a>
+      <p class="hero__live label"><span class="hero__now" aria-hidden="true"></span>{t.contact.availability}</p>
     </div>
 
     <button
@@ -164,7 +165,7 @@ const t = ui[lang];
   .hero__title {
     font-size: var(--hero-size);
     line-height: 0.9;
-    letter-spacing: -0.055em;
+    letter-spacing: -0.04em;
     font-weight: 430;
     text-wrap: initial;
   }
@@ -185,7 +186,10 @@ const t = ui[lang];
     color: var(--text-muted);
   }
 
-  .hero__actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--space-s); }
+  .hero__actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-s); }
+  /* Rust means "now": the live diamond, as on Shoji's now line. */
+  .hero__live { display: inline-flex; align-items: center; gap: 0.6em; margin-left: var(--space-s); text-transform: none; }
+  .hero__now { width: 8px; height: 8px; rotate: 45deg; background: var(--rust); flex: none; }
 
   .hero__toggle {
     position: absolute;

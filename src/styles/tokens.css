@@ -22,7 +22,7 @@
      Gold/ground 7.7, rust/ground 4.6. */
   --gold: #c9a24f;
   --rust: #c8613a;
-  --spine-line: rgb(236 235 231 / 0.22);
+  --spine-line: rgb(236 235 231 / 0.45);
 
   --font-display: 'Hanken Grotesk Variable', 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', ui-sans-serif, system-ui, sans-serif;
   --font-body: 'Hanken Grotesk Variable', 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', ui-sans-serif, system-ui, sans-serif;
@@ -72,5 +72,5 @@
   --btn-text: #f4f1ea;
   --gold: #8a6316;
   --rust: #8a3c21;
-  --spine-line: rgb(27 27 26 / 0.25);
+  --spine-line: rgb(27 27 26 / 0.45);
 }

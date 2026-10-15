@@ -35,7 +35,7 @@ const og = await getImage({ src: cover, width: 1200, height: 630, fit: 'cover', 
         <div><dt>Timeline</dt><dd>{timeline}</dd></div>
         {
           made?.map((m) => (
-            <div><dt>{m.label}</dt><dd class="data">{m.value}</dd></div>
+            <div><dt>{m.label}</dt><dd class="data sep-list">{m.value.split(' · ').map((v) => <span class="sep-item">{v}</span>)}</dd></div>
           ))
         }
       </dl>
@@ -116,7 +116,7 @@ const og = await getImage({ src: cover, width: 1200, height: 630, fit: 'cover', 
   .case__meta .data { font-family: var(--font-data); font-size: 0.9em; }
   .case__meta dd { margin: 0; }
   .case__outcome { font-size: var(--step-2); letter-spacing: -0.025em; line-height: 1.25; max-width: 30ch; }
-  .wrap :global(.case__cover) { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 4px; }
+  .wrap :global(.case__cover) { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: 50% 0; border-radius: 4px; }
 
   .case__body { display: grid; gap: var(--space-xl); padding-block: var(--space-xl); }
   .prose { display: grid; gap: var(--space-m); max-width: var(--measure); }
