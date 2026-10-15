@@ -12,9 +12,14 @@ interface Props {
   title: string;
   description: string;
   ogImage?: string;
+  noindex?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, ogImage = '/og-default.png', noindex = false } = Astro.props;
+const base = Astro.site ?? new URL(site.url);
+// build.format 'file' reports the homepage as /index.html; canonical URLs use clean paths.
+const canonical = new URL(Astro.url.pathname.replace(/(index)?\.html$/, ''), base).href;
+const image = new URL(ogImage, base).href;
 ---
 
 <!doctype html>
@@ -25,12 +30,21 @@ const { title, description } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta name="twitter:card" content="summary_large_image" />
+
     {
       site.umamiWebsiteId && (
         <script is:inline defer src="https://cloud.umami.is/script.js" data-website-id={site.umamiWebsiteId} />
       )
     }
-
     <slot name="head" />
   </head>
   <body>

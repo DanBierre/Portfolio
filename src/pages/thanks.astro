@@ -4,8 +4,7 @@ import BookCall from '../components/BookCall.astro';
 import { site } from '../site.config';
 ---
 
-<Base title={`Brief sent | ${site.name}`} description="Your brief has been sent.">
-  <meta slot="head" name="robots" content="noindex" />
+<Base title={`Brief sent | ${site.name}`} description="Your brief has been sent." noindex>
   <div class="wrap thanks">
     <h1>Brief sent.</h1>
     <p>Thanks, I’ll reply within 1 working day. Or book a call now if it’s urgent.</p>
