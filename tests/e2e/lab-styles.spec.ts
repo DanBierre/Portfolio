@@ -46,3 +46,25 @@ test('kanji: the space-to-reveal hint only shows in quiz mode', async ({ page })
   await page.getByLabel('Quiz mode').check();
   await expect(page.getByText('Space to reveal')).toBeVisible();
 });
+
+test('rough cut: the end label sits at the right end of the track', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop');
+  await page.goto('/lab/rough-cut');
+  const right = (sel: string) => page.locator(sel).evaluate((el) => Math.round(el.getBoundingClientRect().right));
+  expect(Math.abs((await right('[data-track-end]')) - (await right('[data-track]')))).toBeLessThanOrEqual(2);
+});
+
+test('variants: no Japanese headline line is a lone full stop', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/lab/variants');
+  const lone = await page.locator('[data-tile][lang="ja"] .tile__headline').evaluateAll((els) =>
+    els.filter((el) => {
+      const r = document.createRange();
+      r.selectNodeContents(el);
+      const rects = [...r.getClientRects()];
+      // the last line box is narrower than one character pair → only 。 sits there
+      return rects.length > 1 && rects.at(-1)!.width < parseFloat(getComputedStyle(el).fontSize) * 1.2;
+    }).length,
+  );
+  expect(lone).toBe(0);
+});

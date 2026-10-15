@@ -227,7 +227,7 @@ const kindLabel = { think: 'thinking', tool: 'tool call', result: 'result', back
   .step--think, .step--result, .step--backtrack { border-color: transparent; border-width: 0; background: none; padding-block: 4px; }
   .step--think .step__label { color: var(--text-muted); }
   .step--result:last-child .step__label { color: var(--gold); }
-  /* A backtrack branches off the spine: a dashed elbow out to the right, labelled in rust. */
+  /* A backtrack branches off the spine: a dashed elbow out to the right. Rust stays on the small diamond only. */
   .step--backtrack { margin-left: var(--space-l); }
   .step--backtrack::after {
     content: '';
@@ -236,11 +236,11 @@ const kindLabel = { think: 'thinking', tool: 'tool call', result: 'result', back
     top: 0;
     width: calc(var(--space-l) * 2 - 6px);
     height: 1.2em;
-    border-left: 1px dashed var(--rust);
-    border-bottom: 1px dashed var(--rust);
+    border-left: 1px dashed var(--text-muted);
+    border-bottom: 1px dashed var(--text-muted);
   }
   .step--backtrack::before { border-radius: 0; rotate: 45deg; background: var(--rust); left: -10px; }
-  .step--backtrack .step__kind { color: var(--rust); }
+  .step--backtrack .step__label { color: var(--text-muted); }
 
   .xray__cta {
     display: flex;

@@ -187,7 +187,10 @@ const langName = { en: 'English', ja: 'Japanese' } as const;
   .tile:focus-visible { outline-offset: 2px; }
   .tile :global(.tile__shot) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; border-radius: 3px; }
   .tile__headline { font-size: 1.35em; line-height: 1.05; letter-spacing: -0.03em; font-weight: 500; max-width: none; }
-  .tile:lang(ja) .tile__headline { letter-spacing: 0; line-height: 1.25; font-weight: 600; word-break: keep-all; }
+  /* Japanese phrases must fit a tile line whole, so they set smaller than Latin; otherwise a long phrase is force-broken and leaves 。 alone. */
+  .tile:lang(ja) .tile__headline { letter-spacing: 0; line-height: 1.25; font-weight: 600; word-break: keep-all; overflow-wrap: normal; font-size: 1.1em; }
+  .tile--poster:lang(ja) .tile__headline { font-size: 1.25em; }
+  .tile--type:lang(ja) .tile__headline { font-size: 1.3em; max-width: 72%; }
   .tile__brand { font-size: 0.75em; color: var(--t-accent); font-weight: 600; }
 
   .tile--poster { grid-template-rows: auto minmax(0, 1fr) auto; gap: 6%; }

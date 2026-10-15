@@ -212,7 +212,7 @@ const firstWords = (t: string) => t.split(' ').slice(0, 3).join(' ') + '…';
     transform-origin: left;
   }
   .rc__clip:first-child { border-left: 0; }
-  .rc__ends { display: flex; justify-content: space-between; margin-top: 4px; }
+  .rc__ends { display: flex; justify-content: space-between; margin-top: 4px; max-width: none; }
   .rc__clip video { width: 100%; height: 100%; object-fit: cover; }
   .rc__log { margin: 0; padding-left: 1.2em; color: var(--text-muted); display: grid; gap: 4px; min-height: 2em; }
   .rc__cut { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
