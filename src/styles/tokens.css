@@ -30,7 +30,7 @@
   /* Serif voice (as in Shoji and the live site): numerals, counts and the Japanese spine labels only. */
   --font-serif: 'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', ui-serif, serif;
 
-  /* Fluid type scale, 360px → 1440px. --step-6 is the statement size. */
+  /* Fluid type scale, 360px → 1440px. (The hero statement sets its own --hero-size.) */
   --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.84rem);
   --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
   --step-1: clamp(1.2rem, 1.12rem + 0.4vw, 1.45rem);

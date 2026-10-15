@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-15T00:00:00Z",
+  "generatedAt": "2026-10-15T07:42:42.179Z",
   "title": "Design System: Dan Bierre",
   "extensions": {
     "colorMeta": {
@@ -184,12 +184,235 @@
           "oklch(95% 0.14 30)"
         ],
         "scope": ".band (redefines the same CSS custom property)"
+      },
+      "spine-line": {
+        "role": "neutral",
+        "displayName": "Spine Line",
+        "canonical": "rgb(236 235 231 / 0.45)"
+      },
+      "gold": {
+        "role": "secondary",
+        "displayName": "Kintsugi Gold",
+        "canonical": "#c9a24f",
+        "tonalRamp": [
+          "oklch(15% 0.1 85)",
+          "oklch(25% 0.1 85)",
+          "oklch(37% 0.1 85)",
+          "oklch(49% 0.1 85)",
+          "oklch(61% 0.1 85)",
+          "oklch(73% 0.1 85)",
+          "oklch(85% 0.1 85)",
+          "oklch(95% 0.1 85)"
+        ],
+        "purpose": "Key words only (hero \"with\"s, process numerals)."
+      },
+      "rust": {
+        "role": "tertiary",
+        "displayName": "Now Rust",
+        "canonical": "#c8613a",
+        "tonalRamp": [
+          "oklch(15% 0.14 42)",
+          "oklch(25% 0.14 42)",
+          "oklch(37% 0.14 42)",
+          "oklch(49% 0.14 42)",
+          "oklch(61% 0.14 42)",
+          "oklch(73% 0.14 42)",
+          "oklch(85% 0.14 42)",
+          "oklch(95% 0.14 42)"
+        ],
+        "purpose": "Live/now markers only (hero diamond, contact diamond, spine now-diamond, ensō)."
+      },
+      "washi-gold": {
+        "role": "secondary",
+        "displayName": "Deep Gold",
+        "canonical": "#6b4c0f",
+        "tonalRamp": [
+          "oklch(15% 0.1 80)",
+          "oklch(25% 0.1 80)",
+          "oklch(37% 0.1 80)",
+          "oklch(49% 0.1 80)",
+          "oklch(61% 0.1 80)",
+          "oklch(73% 0.1 80)",
+          "oklch(85% 0.1 80)",
+          "oklch(95% 0.1 80)"
+        ],
+        "scope": ".band"
+      },
+      "washi-rust": {
+        "role": "tertiary",
+        "displayName": "Fired Rust",
+        "canonical": "#8a3c21",
+        "tonalRamp": [
+          "oklch(15% 0.12 40)",
+          "oklch(25% 0.12 40)",
+          "oklch(37% 0.12 40)",
+          "oklch(49% 0.12 40)",
+          "oklch(61% 0.12 40)",
+          "oklch(73% 0.12 40)",
+          "oklch(85% 0.12 40)",
+          "oklch(95% 0.12 40)"
+        ],
+        "scope": ".band"
+      },
+      "light-ground": {
+        "role": "primary",
+        "displayName": "Live Paper",
+        "canonical": "#f4f1ea",
+        "tonalRamp": [
+          "oklch(15% 0.01 85)",
+          "oklch(25% 0.01 85)",
+          "oklch(37% 0.01 85)",
+          "oklch(49% 0.01 85)",
+          "oklch(61% 0.01 85)",
+          "oklch(73% 0.01 85)",
+          "oklch(85% 0.01 85)",
+          "oklch(95% 0.01 85)"
+        ],
+        "scope": "[data-theme='light'] (redefines the root token)"
+      },
+      "light-ink": {
+        "role": "primary",
+        "displayName": "Live Ink",
+        "canonical": "#1b1b1a",
+        "tonalRamp": [
+          "oklch(15% 0.002 100)",
+          "oklch(25% 0.002 100)",
+          "oklch(37% 0.002 100)",
+          "oklch(49% 0.002 100)",
+          "oklch(61% 0.002 100)",
+          "oklch(73% 0.002 100)",
+          "oklch(85% 0.002 100)",
+          "oklch(95% 0.002 100)"
+        ],
+        "scope": "[data-theme='light'] (redefines the root token)"
+      },
+      "light-surface": {
+        "role": "neutral",
+        "displayName": "White Surface",
+        "canonical": "#ffffff",
+        "scope": "[data-theme='light'] (redefines the root token)"
+      },
+      "light-muted": {
+        "role": "neutral",
+        "displayName": "Warm Ash",
+        "canonical": "#6f6a60",
+        "tonalRamp": [
+          "oklch(15% 0.012 80)",
+          "oklch(25% 0.012 80)",
+          "oklch(37% 0.012 80)",
+          "oklch(49% 0.012 80)",
+          "oklch(61% 0.012 80)",
+          "oklch(73% 0.012 80)",
+          "oklch(85% 0.012 80)",
+          "oklch(95% 0.012 80)"
+        ],
+        "scope": "[data-theme='light'] (redefines the root token)"
+      },
+      "light-border": {
+        "role": "neutral",
+        "displayName": "Paper Rule",
+        "canonical": "#d9d4c8",
+        "tonalRamp": [
+          "oklch(15% 0.015 85)",
+          "oklch(25% 0.015 85)",
+          "oklch(37% 0.015 85)",
+          "oklch(49% 0.015 85)",
+          "oklch(61% 0.015 85)",
+          "oklch(73% 0.015 85)",
+          "oklch(85% 0.015 85)",
+          "oklch(95% 0.015 85)"
+        ],
+        "scope": "[data-theme='light'] (redefines the root token)"
+      },
+      "light-lattice": {
+        "role": "neutral",
+        "displayName": "Ink Kumiko",
+        "canonical": "rgb(27 27 26 / 0.06)",
+        "scope": "[data-theme='light'] (redefines the root token)"
+      },
+      "light-error": {
+        "role": "error",
+        "displayName": "Brick",
+        "canonical": "#a3261b",
+        "tonalRamp": [
+          "oklch(15% 0.14 30)",
+          "oklch(25% 0.14 30)",
+          "oklch(37% 0.14 30)",
+          "oklch(49% 0.14 30)",
+          "oklch(61% 0.14 30)",
+          "oklch(73% 0.14 30)",
+          "oklch(85% 0.14 30)",
+          "oklch(95% 0.14 30)"
+        ],
+        "scope": "[data-theme='light'] (redefines the root token)"
+      },
+      "light-gold": {
+        "role": "secondary",
+        "displayName": "Ochre Ink",
+        "canonical": "#8a6316",
+        "tonalRamp": [
+          "oklch(15% 0.1 80)",
+          "oklch(25% 0.1 80)",
+          "oklch(37% 0.1 80)",
+          "oklch(49% 0.1 80)",
+          "oklch(61% 0.1 80)",
+          "oklch(73% 0.1 80)",
+          "oklch(85% 0.1 80)",
+          "oklch(95% 0.1 80)"
+        ],
+        "scope": "[data-theme='light'] (redefines the root token)"
+      },
+      "light-rust": {
+        "role": "tertiary",
+        "displayName": "Fired Rust",
+        "canonical": "#8a3c21",
+        "tonalRamp": [
+          "oklch(15% 0.12 40)",
+          "oklch(25% 0.12 40)",
+          "oklch(37% 0.12 40)",
+          "oklch(49% 0.12 40)",
+          "oklch(61% 0.12 40)",
+          "oklch(73% 0.12 40)",
+          "oklch(85% 0.12 40)",
+          "oklch(95% 0.12 40)"
+        ],
+        "scope": "[data-theme='light'] (redefines the root token)"
+      },
+      "light-band": {
+        "role": "neutral",
+        "displayName": "Dark Screen",
+        "canonical": "#1b1b1a",
+        "scope": "[data-theme='light'] .band"
+      },
+      "light-band-ink": {
+        "role": "neutral",
+        "displayName": "Screen Ink",
+        "canonical": "#efece4",
+        "scope": "[data-theme='light'] .band"
+      },
+      "light-band-surface": {
+        "role": "neutral",
+        "displayName": "Screen Surface",
+        "canonical": "#262624",
+        "scope": "[data-theme='light'] .band"
+      },
+      "light-band-muted": {
+        "role": "neutral",
+        "displayName": "Screen Muted",
+        "canonical": "#a8a59d",
+        "scope": "[data-theme='light'] .band"
+      },
+      "light-band-border": {
+        "role": "neutral",
+        "displayName": "Screen Rule",
+        "canonical": "#3a3935",
+        "scope": "[data-theme='light'] .band"
       }
     },
     "typographyMeta": {
       "statement": {
         "displayName": "Statement",
-        "purpose": "Hero sentence only, ragged indented lines."
+        "purpose": "Hero sentence only, ragged indented lines; Japanese hero clamp(2.2rem, 0.8rem + 5vw, 5.5rem), line-height 1.1, weight 600, tracking 0."
       },
       "display": {
         "displayName": "Display",
@@ -209,11 +432,19 @@
       },
       "label": {
         "displayName": "Label",
-        "purpose": "Lowercase muted second voice: metadata, end labels, nav, captions. Never below 12px."
+        "purpose": "Lowercase muted second voice: metadata, end labels, nav links and switches, captions. Never below 12px."
       },
       "data": {
         "displayName": "Data",
         "purpose": "Geist Mono, pipeline values only."
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Shippori Mincho (latin 500): process numerals, lab indices, bracket counts."
+      },
+      "spine": {
+        "displayName": "Spine",
+        "purpose": "Vertical Japanese section labels in the Mincho (system Mincho fallback), vertical-rl, muted."
       }
     },
     "shadows": [
@@ -271,6 +502,10 @@
         "value": "47.99em"
       },
       {
+        "name": "spine",
+        "value": "64em"
+      },
+      {
         "name": "index-row",
         "value": "80em, with (hover: hover)"
       }
@@ -295,11 +530,38 @@
       },
       {
         "where": "Hero kumiko and toggle",
-        "value": "rgb(236 235 231 / 0.22), rgb(20 20 20 / 0.7), rgb(236 235 231 / 0.3)",
-        "purpose": "Lattice and pause control legible over footage."
+        "value": "rgb(236 235 231 / 0.22), rgb(20 20 20 / 0.7), rgb(236 235 231 / 0.3), #ecebe7",
+        "purpose": "Lattice and pause control legible over footage; toggle text is always light in both themes."
       }
     ],
-    "provenance": "Rasters in src/assets/** and public/og-default.png carry embedded provenance (sharp placeholders; the OG card is a Playwright render). public/media/*.webm are Playwright-recorded placeholder loops."
+    "provenance": "Rasters in src/assets/** carry embedded provenance. src/assets/work/shoji/ holds real Shoji screenshots and the portrait is real. public/og-default.png is a Playwright render; public/media/*.webm are Playwright-recorded loops.",
+    "themes": [
+      {
+        "name": "dark",
+        "selector": ":root",
+        "purpose": "Default world."
+      },
+      {
+        "name": "light",
+        "selector": ":root[data-theme='light']",
+        "purpose": "Live-site palette; bands invert to dark screens without washi texture. Toggle in Nav, persisted in localStorage('theme')."
+      }
+    ],
+    "i18n": {
+      "copy": "src/i18n/ui.ts",
+      "routes": [
+        "/",
+        "/ja"
+      ],
+      "ja": "line-break strict; word-break auto-phrase; headings letter-spacing 0, line-height 1.2 (hero 1.1), weight 600; system faces Hiragino Sans / Yu Gothic UI / Meiryo"
+    },
+    "generated": [
+      {
+        "name": "enso",
+        "source": "src/lib/enso.ts",
+        "purpose": "Build-time brush ring SVG around the About portrait, stroked in --rust; ported from Shoji."
+      }
+    ]
   },
   "components": [
     {
@@ -338,9 +600,9 @@
       "name": "Index Nav",
       "kind": "nav",
       "refersTo": "button-nav",
-      "description": "Lowercase index with bracket counts and a solid nav pill.",
-      "html": "<nav class=\"ds-nav\"><a class=\"ds-brand\" href=\"#\">dan bierre</a><a href=\"#\">work<sup>[2]</sup></a><a href=\"#\">services</a><a href=\"#\">lab<sup>[3]</sup></a><a class=\"ds-navpill\" href=\"#\">book a call</a></nav>",
-      "css": ".ds-nav{display:flex;align-items:center;gap:2rem;background:#141414;padding:16px 24px;font-family:var(--font-body)}.ds-nav a{color:#9d9b95;text-decoration:none;transition:color .2s}.ds-nav a:hover{color:#ecebe7}.ds-nav a:focus-visible{outline:2px solid #ecebe7;outline-offset:3px}.ds-nav sup{font-size:.6em}.ds-nav .ds-brand{color:#ecebe7;font-weight:500;letter-spacing:-.02em;margin-right:auto}.ds-nav .ds-navpill{background:#ecebe7;color:#141414;border:1px solid transparent;border-radius:999px;padding:.35em 1em;font-size:.8rem;font-weight:500}.ds-nav .ds-navpill:hover{background:transparent;color:#ecebe7;border-color:#ecebe7}"
+      "description": "Lowercase index with Mincho bracket counts, language and theme switches, and a solid nav pill.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-brand\" href=\"#\">dan bierre</a><a href=\"#\">work<sup class=\"ds-num\">[3]</sup></a><a href=\"#\">services</a><a href=\"#\">lab<sup class=\"ds-num\">[3]</sup></a><button class=\"ds-sw\" type=\"button\">日本語</button><button class=\"ds-sw\" type=\"button\">light</button><a class=\"ds-navpill\" href=\"#\">book a call</a></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;gap:2rem;background:#141414;padding:16px 24px;font-family:var(--font-body)}.ds-nav a{color:#9d9b95;text-decoration:none;transition:color .2s}.ds-nav a:hover{color:#ecebe7}.ds-nav a:focus-visible{outline:2px solid #ecebe7;outline-offset:3px}.ds-nav sup{font-size:.6em}.ds-num{font-family:'Shippori Mincho','Hiragino Mincho ProN','Yu Mincho',ui-serif,serif;font-weight:500;letter-spacing:0}.ds-sw{background:none;border:0;padding:0;font:inherit;font-size:.8rem;color:#9d9b95;cursor:pointer;transition:color .2s}.ds-sw:hover{color:#ecebe7}.ds-sw:focus-visible{outline:2px solid #ecebe7;outline-offset:3px}.ds-nav .ds-brand{color:#ecebe7;font-weight:500;letter-spacing:-.02em;margin-right:auto}.ds-nav .ds-navpill{background:#ecebe7;color:#141414;border:1px solid transparent;border-radius:999px;padding:.35em 1em;font-size:.8rem;font-weight:500}.ds-nav .ds-navpill:hover{background:transparent;color:#ecebe7;border-color:#ecebe7}"
     },
     {
       "name": "Hairline With End Labels",
@@ -354,9 +616,9 @@
       "name": "Work Row With Shoji Reveal",
       "kind": "card",
       "refersTo": "work-row-reveal",
-      "description": "Index row; on hover or focus two 1:2 panels slide apart over the piece, beside its pipeline readout.",
-      "html": "<a class=\"ds-row\" href=\"#\"><span class=\"ds-n\">[01]</span><span class=\"ds-t\">Generative campaign</span><span class=\"ds-scr\"><i class=\"ds-p ds-pl\"></i><i class=\"ds-p ds-pr\"></i></span><dl class=\"ds-pipe\"><dt>model</dt><dd>sdxl</dd><dt>seed</dt><dd>882904</dd></dl></a>",
-      "css": ".ds-row{display:grid;grid-template-columns:3rem 1fr 8rem 8rem;align-items:center;gap:1.25rem;padding:1.25rem 24px;border-block:1px solid #2e2e2c;background:#141414;color:#ecebe7;text-decoration:none;font-family:var(--font-body)}.ds-row:focus-visible{outline:2px solid #ecebe7;outline-offset:3px}.ds-n{font-size:.8rem;color:#9d9b95}.ds-t{font-size:2.2rem;font-weight:440;letter-spacing:-.05em;line-height:.95}.ds-scr{position:relative;aspect-ratio:1/1;overflow:hidden;background:linear-gradient(135deg,#6a7a8a,#c08a5a)}.ds-p{position:absolute;top:0;bottom:0;width:50%;background:#1e1e1d;transition:transform .9s cubic-bezier(.7,0,.2,1) .15s}.ds-pl{left:0;border-right:1px solid #2e2e2c}.ds-pr{right:0}.ds-row:hover .ds-pl,.ds-row:focus-visible .ds-pl{transform:translateX(-101%)}.ds-row:hover .ds-pr,.ds-row:focus-visible .ds-pr{transform:translateX(101%)}.ds-pipe{display:grid;grid-template-columns:1fr 1fr;gap:.25rem .75rem;font-size:.8rem;margin:0}.ds-pipe dt{color:#9d9b95;text-transform:lowercase}.ds-pipe dd{margin:0;font-family:'Geist Mono Variable',ui-monospace,monospace}"
+      "description": "Index row; on hover or focus two 1:2 panels slide apart over the piece, beside its label/value \"made\" readout.",
+      "html": "<a class=\"ds-row\" href=\"#\"><span class=\"ds-n\">[01]</span><span class=\"ds-t\">Shoji</span><span class=\"ds-scr\"><i class=\"ds-p ds-pl\"></i><i class=\"ds-p ds-pr\"></i></span><dl class=\"ds-pipe\"><dt>stack</dt><dd>swift · swiftui</dd><dt>platform</dt><dd>ios</dd></dl></a>",
+      "css": ".ds-row{display:grid;grid-template-columns:3rem 1fr 8rem 8rem;align-items:center;gap:1.25rem;padding:1.25rem 24px;border-block:1px solid #2e2e2c;background:#141414;color:#ecebe7;text-decoration:none;font-family:var(--font-body)}.ds-row:focus-visible{outline:2px solid #ecebe7;outline-offset:3px}.ds-n{font-size:.8rem;color:#9d9b95}.ds-t{font-size:2.2rem;font-weight:440;letter-spacing:-.04em;line-height:.95}.ds-scr{position:relative;aspect-ratio:1/1;overflow:hidden;background:linear-gradient(135deg,#6a7a8a,#c08a5a)}.ds-p{position:absolute;top:0;bottom:0;width:50%;background:#1e1e1d;transition:transform .9s cubic-bezier(.7,0,.2,1) .15s}.ds-pl{left:0;border-right:1px solid #2e2e2c}.ds-pr{right:0}.ds-row:hover .ds-pl,.ds-row:focus-visible .ds-pl{transform:translateX(-101%)}.ds-row:hover .ds-pr,.ds-row:focus-visible .ds-pr{transform:translateX(101%)}.ds-pipe{display:grid;grid-template-columns:1fr 1fr;gap:.25rem .75rem;font-size:.8rem;margin:0}.ds-pipe dt{color:#9d9b95;text-transform:lowercase}.ds-pipe dd{margin:0;font-family:'Geist Mono Variable',ui-monospace,monospace}"
     },
     {
       "name": "Washi Band With Lattice",
@@ -364,38 +626,65 @@
       "refersTo": "washi",
       "description": "Backlit paper section with kumiko hairlines; tokens flip inside.",
       "html": "<section class=\"ds-band\"><h2>What I do<span class=\"ds-count\">2</span></h2></section>",
-      "css": ".ds-band{position:relative;padding:48px 24px;color:#141414;background-color:#d8d7d2;background-image:linear-gradient(to right,rgb(20 20 20/.07) 1px,transparent 1px),linear-gradient(to bottom,rgb(20 20 20/.07) 1px,transparent 1px),radial-gradient(ellipse 70% 60% at 50% 45%,rgb(255 255 255/.16),transparent 70%);background-size:96px 192px,96px 192px,auto;font-family:var(--font-body)}.ds-band h2{font-size:3rem;font-weight:440;letter-spacing:-.045em;line-height:.95;margin:0}.ds-count{font-size:.32em;font-weight:450;vertical-align:super;margin-left:.15em}.ds-count::before{content:'['}.ds-count::after{content:']'}"
+      "css": ".ds-band{position:relative;padding:48px 24px;color:#141414;background-color:#d8d7d2;background-image:linear-gradient(to right,rgb(20 20 20/.07) 1px,transparent 1px),linear-gradient(to bottom,rgb(20 20 20/.07) 1px,transparent 1px),radial-gradient(ellipse 70% 60% at 50% 45%,rgb(255 255 255/.16),transparent 70%);background-size:96px 192px,96px 192px,auto;font-family:var(--font-body)}.ds-band h2{font-size:3rem;font-weight:440;letter-spacing:-.045em;line-height:.95;margin:0}.ds-count{font-family:'Shippori Mincho','Hiragino Mincho ProN','Yu Mincho',ui-serif,serif;letter-spacing:0;font-size:.32em;font-weight:450;vertical-align:super;margin-left:.15em}.ds-count::before{content:'['}.ds-count::after{content:']'}"
+    },
+    {
+      "name": "Spine Mark",
+      "kind": "custom",
+      "refersTo": "spine-mark",
+      "description": "Vertical Japanese section label on the spine line with a dot; the hero variant is the rust now-diamond. Desktop 64em and up.",
+      "html": "<div class=\"ds-spined\"><span class=\"ds-mark\" lang=\"ja\">制作</span><span class=\"ds-mark ds-now\" lang=\"ja\">ダン</span></div>",
+      "css": ".ds-spined{position:relative;height:220px;background:#141414;padding:24px}.ds-spined::after{content:'';position:absolute;top:0;bottom:0;left:60px;width:1px;background:rgb(236 235 231/.45)}.ds-mark{position:absolute;top:24px;left:24px;font-family:'Shippori Mincho','Hiragino Mincho ProN','Yu Mincho',ui-serif,serif;font-size:.8rem;line-height:1.3;letter-spacing:.2em;color:#9d9b95;writing-mode:vertical-rl}.ds-mark::after{content:'';position:absolute;top:.15em;left:33px;width:7px;height:7px;border-radius:50%;background:#ecebe7}.ds-now{top:120px}.ds-now::after{border-radius:0;rotate:45deg;width:9px;height:9px;left:32px;background:#c8613a}"
+    },
+    {
+      "name": "Accents In Use",
+      "kind": "custom",
+      "refersTo": "process-numeral",
+      "description": "Gold for key words and the Mincho process numerals; rust only for the live diamond.",
+      "html": "<div class=\"ds-acc\"><p class=\"ds-st\">I build <span class=\"ds-gold\">with</span> code</p><span class=\"ds-n\">01</span><p class=\"ds-live\"><i></i>available now</p></div>",
+      "css": ".ds-acc{background:#141414;color:#ecebe7;padding:24px;display:grid;gap:16px;font-family:var(--font-body)}.ds-st{font-size:2.6rem;font-weight:430;letter-spacing:-.04em;line-height:.9;margin:0}.ds-gold{color:#c9a24f}.ds-n{font-family:'Shippori Mincho','Hiragino Mincho ProN','Yu Mincho',ui-serif,serif;font-weight:500;font-size:2rem;line-height:1;color:#c9a24f}.ds-live{display:inline-flex;align-items:center;gap:.6em;font-size:.8rem;color:#ecebe7;margin:0}.ds-live i{width:8px;height:8px;rotate:45deg;background:#c8613a}"
     }
   ],
   "narrative": {
     "northStar": "The Screened Gallery Index",
-    "overview": "A collectible-design catalogue for generative work, read through shoji. The ground is near-black and constant for every visitor (the site is dark regardless of device theme). Flat light-grey bands interrupt it as backlit washi: paper with fibre texture and a soft light behind it. Over everything runs a kumiko lattice of faint hairlines at a fixed module, so the page's structure is visible as the grid of a screen.\n\nType does the composing. One neo-grotesk, Hanken Grotesk, runs from a giant ragged statement at the top of the page down to 12-13px lowercase labels, with almost nothing in between: the contrast in scale is the hierarchy. Counts sit in superscript brackets, hairlines carry a label at each end, buttons are pills, and Geist Mono appears only where the pipeline data is printed. There is no accent colour. Colour comes only from the work, which stays monochrome until hovered or focused.\n\nMotion is about revealing things. The hero headline develops out of displacement noise as if seen through paper, the hero footage slides open like a shoji door, and each work row opens a two-panel screen showing the piece and how it was made. Everything is visible by default, and every motion is skipped under reduced motion.",
+    "overview": "A collectible-design catalogue for generative work, read through shoji. The default ground is near-black; flat light-grey bands interrupt it as backlit washi: paper with fibre texture and a soft light behind it. Over everything runs a kumiko lattice of faint hairlines at a fixed module, and down the left edge of each section runs a spine: a continuous vertical line carrying a vertical Japanese label and a dot, as on Dan's live site. A light theme (the live site's warm paper and ink) is available from the nav; there the bands invert into dark screens between light rooms. Dark stays the default.\n\nType does the composing. One neo-grotesk, Hanken Grotesk, runs from a giant ragged statement at the top of the page down to 12-13px lowercase labels, with almost nothing in between: the contrast in scale is the hierarchy. A second, quieter voice, Shippori Mincho, sets only numerals and counts, as in Dan's app Shoji. Hairlines carry a label at each end, buttons are pills, and Geist Mono appears only where pipeline data is printed. Two accents come from Dan's own world and each has exactly one job: gold marks key words, rust marks what is live now. Everything else is two inks, and the work's colour stays withheld until hover or focus.\n\nMotion is about revealing things. The hero headline develops out of displacement noise as if seen through paper, the hero footage slides open like a shoji door, and each work row opens a two-panel screen showing the piece and how it was made. Everything is visible by default, and every motion is skipped under reduced motion. The whole page exists in English and Japanese (`/ja`), and Japanese is set by its own rules rather than by the Latin ones.",
     "keyCharacteristics": [
-      "Near-black ground (#141414) with washi bands (#d8d7d2); ink is only light or dark, no accent.",
-      "One family at extreme scale contrast: a 9.5rem statement against 12-13px lowercase labels.",
-      "Kumiko lattice hairlines at the `--kumiko` module (1:2 cells) as visible page structure.",
+      "Near-black ground (#141414) with washi bands (#d8d7d2); a light theme (#f4f1ea / #1b1b1a) with inverted dark bands.",
+      "Two inks plus two single-purpose accents: gold for key words, rust for live/now.",
+      "One grotesk at extreme scale contrast, a Mincho for numerals, mono only for data.",
+      "Kumiko lattice at the `--kumiko` module and a section spine with Japanese labels (desktop).",
       "Pills for actions, hairlines for structure, 1:1 frames made of two 1:2 shoji panels for media.",
       "Work is grayscale at rest and turns to colour on hover or focus."
     ],
     "rules": [
       {
+        "name": "The Two Accents Rule",
+        "body": "Gold marks key words; rust marks what is live now. Neither is ever a fill, a button, a link colour, or decoration, and no third hue joins them. If a gold or rust element does not point at a key word or a live state, it is wrong.",
+        "section": "colors"
+      },
+      {
         "name": "The Colour Comes From the Work Rule",
-        "body": "The interface has no accent hue. Thumbnails and footage are grayscale at rest (`filter: grayscale(1)`) and turn to colour on hover or focus; colour on screen is always the work itself.",
+        "body": "Beyond the two accents the interface is two inks. Thumbnails and footage are grayscale at rest (`filter: grayscale(1)`) and turn to colour on hover or focus.",
         "section": "colors"
       },
       {
         "name": "The Scoped Inversion Rule",
-        "body": "Washi bands invert by redefining tokens (`--bg`, `--text`, `--btn-bg`, ...) on `.band`, never by adding per-component overrides. Buttons always invert against their ground: a light pill on night, a dark pill on paper.",
+        "body": "Bands and themes invert by redefining tokens (`--bg`, `--text`, `--btn-bg`, `--gold`, `--rust`, `--spine-line`, ...) on `.band` and `:root[data-theme='light']`, never by per-component overrides. Buttons always invert against their ground.",
         "section": "colors"
       },
       {
         "name": "The Documented Overlay Exception",
-        "body": "Three literal colours are sanctioned, each for legibility over imagery, not as palette: the before/after slider's handle and labels (`#fff` with `rgb(0 0 0 / 0.25)` and `rgb(0 0 0 / 0.55)`), and the hero screen's centre divide (`rgb(20 20 20 / 0.85)`). The hero's kumiko overlay locally raises `--lattice` to `rgb(236 235 231 / 0.22)` with a matching 1px inset frame, and the pause toggle sits on `rgb(20 20 20 / 0.7)`. These are sanctioned exceptions, not drift.",
+        "body": "These literal colours are sanctioned, each for legibility over imagery, not as palette: the before/after slider's handle and labels (`#fff` with `rgb(0 0 0 / 0.25)` and `rgb(0 0 0 / 0.55)`), and the hero screen's centre divide (`rgb(20 20 20 / 0.85)`). The hero's kumiko overlay locally raises `--lattice` to `rgb(236 235 231 / 0.22)` with a matching 1px inset frame, and the pause toggle sits on `rgb(20 20 20 / 0.7)` with a `rgb(236 235 231 / 0.3)` stroke and `#ecebe7` text, always light in both themes because it sits on the footage. These are sanctioned exceptions, not drift.",
         "section": "colors"
       },
       {
         "name": "The Two Voices Rule",
-        "body": "Text is either very large or label-sized. Avoid filling the middle of the scale; when in doubt, go bigger or drop to a label.",
+        "body": "Text is either very large or label-sized. Avoid the middle of the scale; when in doubt, go bigger or drop to a label.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tracking Floor Rule",
+        "body": "Display tracking never goes tighter than -0.04em, at any size, including the statement and footer mark. Japanese is never negatively tracked.",
         "section": "typography"
       },
       {
@@ -404,13 +693,23 @@
         "section": "typography"
       },
       {
+        "name": "The Serif Is Numerals Rule",
+        "body": "Shippori Mincho sets numerals, counts, and the spine's Japanese labels, nothing else. Only the latin 500 subset is loaded.",
+        "section": "typography"
+      },
+      {
         "name": "The Bracket Count Rule",
-        "body": "Counts appear as superscript brackets after a heading or nav link (`.count`, 0.32em, `[n]`). They count real things (case studies, experiments, process steps).",
+        "body": "Counts appear as superscript brackets after a heading or nav link (`.count`, 0.32em, `[n]`, in the Mincho). They count real things.",
         "section": "typography"
       },
       {
         "name": "The Mono Is Data Rule",
-        "body": "Geist Mono is reserved for machine values in the pipeline readout. Headings, labels, and UI chrome never use it.",
+        "body": "Geist Mono is reserved for machine values in the pipeline readout and case-study specs.",
+        "section": "typography"
+      },
+      {
+        "name": "The Clean Separator Rule",
+        "body": "Inline lists join with a middle dot that sits in the gap before each item and is clipped whenever that item starts a line, so a dot never leads or trails a line in either language. Never type \" · \" into wrapping copy.",
         "section": "typography"
       },
       {
@@ -420,20 +719,26 @@
       }
     ],
     "dos": [
-      "Do take every colour from tokens; inside a washi band, rely on the `.band` scope to flip them.",
+      "Do take every colour from tokens; inside a band or the light theme, rely on the scopes to flip them.",
+      "Do use gold only on key words and rust only on live/now markers.",
       "Do keep work imagery grayscale at rest and in colour on hover or focus.",
       "Do set labels lowercase at `--step--1` or larger, in `--text-muted`.",
-      "Do use bracketed superscript counts only for real counts.",
+      "Do set numerals and bracket counts in the Mincho, and use counts only for real counts.",
+      "Do give every new homepage section `.spined` and one spine mark with a Japanese label.",
+      "Do put all copy in `src/i18n/ui.ts` and check it in Japanese at `/ja`.",
+      "Do build inline lists with the middle-dot separator list.",
       "Do size media frames on the shoji module: 1:1 frames made of two 1:2 panels, with the lattice at `--kumiko`.",
       "Do gate every animation behind `prefers-reduced-motion: no-preference`, with content visible by default.",
       "Do give any autoplaying footage a visible pause control."
     ],
     "donts": [
-      "Don't introduce an accent hue; colour belongs to the work.",
+      "Don't add a third accent, or use gold or rust as a fill, link colour, or decoration.",
+      "Don't track display type tighter than -0.04em, or track Japanese negatively.",
       "Don't add drop shadows; depth comes from backlight and sliding panels.",
-      "Don't use Geist Mono outside pipeline data.",
-      "Don't fill the middle of the type scale with mid-size headings that weaken the contrast in scale.",
+      "Don't use Geist Mono outside pipeline and spec data, or the Mincho outside numerals and spine labels.",
+      "Don't fill the middle of the type scale with mid-size headings.",
       "Don't let a reveal cover titles or meta; it opens in the empty track.",
+      "Don't put washi texture on light-theme bands.",
       "Don't use colour literals outside the documented overlay exception."
     ]
   }
