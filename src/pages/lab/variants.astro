@@ -2,7 +2,7 @@
 import { Picture } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import BookCall from '../../components/BookCall.astro';
-import { variants, headlines, type Shot } from '../../data/lab/variants';
+import { variants, headlines, phrases, type Shot } from '../../data/lab/variants';
 import { site } from '../../site.config';
 import todayLight from '../../assets/work/shoji/today-light.png';
 import todayDark from '../../assets/work/shoji/today-dark.png';
@@ -74,7 +74,9 @@ const langName = { en: 'English', ja: 'Japanese' } as const;
               alt=""
               class="tile__shot"
             />
-            <p class="tile__headline">{v.headline}</p>
+            <p class="tile__headline">
+              {v.lang === 'ja' ? phrases[v.headline].map((p, i) => (i ? <><wbr />{p}</> : p)) : v.headline}
+            </p>
             <p class="tile__brand">Shoji</p>
             <dl class="recipe" lang="en">
               <div><dt>layout</dt><dd>{v.layout}</dd></div>
@@ -185,7 +187,7 @@ const langName = { en: 'English', ja: 'Japanese' } as const;
   .tile:focus-visible { outline-offset: 2px; }
   .tile :global(.tile__shot) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; border-radius: 3px; }
   .tile__headline { font-size: 1.35em; line-height: 1.05; letter-spacing: -0.03em; font-weight: 500; max-width: none; }
-  .tile:lang(ja) .tile__headline { letter-spacing: 0; line-height: 1.25; font-weight: 600; }
+  .tile:lang(ja) .tile__headline { letter-spacing: 0; line-height: 1.25; font-weight: 600; word-break: keep-all; }
   .tile__brand { font-size: 0.75em; color: var(--t-accent); font-weight: 600; }
 
   .tile--poster { grid-template-rows: auto minmax(0, 1fr) auto; gap: 6%; }
@@ -194,10 +196,12 @@ const langName = { en: 'English', ja: 'Japanese' } as const;
   .tile--split :global(.tile__shot) { grid-row: 1 / -1; }
   .tile--crop { padding: 0; }
   .tile--crop :global(.tile__shot) { position: absolute; inset: 0; border-radius: 0; }
+  /* One solid panel from the headline to the bottom edge, so no strip of screenshot shows beneath it. */
+  .tile--crop { grid-template-rows: 1fr auto auto; }
   .tile--crop .tile__headline,
-  .tile--crop .tile__brand { position: relative; z-index: 1; margin-inline: 6%; padding: 4% 6%; background: var(--t-bg); }
-  .tile--crop .tile__headline { align-self: end; margin-bottom: 0; }
-  .tile--crop .tile__brand { margin-bottom: 6%; }
+  .tile--crop .tile__brand { position: relative; z-index: 1; margin: 0; padding: 4% 8%; background: var(--t-bg); }
+  .tile--crop .tile__headline { align-self: end; padding-top: 6%; }
+  .tile--crop .tile__brand { padding-bottom: 8%; }
   .tile--type { grid-template-rows: 1fr auto; }
   .tile--type .tile__headline { font-size: 1.85em; align-self: center; max-width: 68%; } /* clears the corner shot */
   .tile--type :global(.tile__shot) { position: absolute; right: 8%; bottom: 8%; width: 28%; height: auto; aspect-ratio: 1; }

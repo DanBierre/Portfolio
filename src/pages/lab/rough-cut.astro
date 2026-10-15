@@ -10,6 +10,7 @@ const total = runtime(segments, done.order);
 const stateOf = (id: string) => (done.dropped.has(id) ? 'dropped' : done.order.includes(id) ? 'selected' : 'idle');
 const byId = Object.fromEntries(segments.map((s) => [s.id, s]));
 const fmt = (n: number) => `${n.toFixed(1)} s`;
+const firstWords = (t: string) => t.split(' ').slice(0, 3).join(' ') + '…';
 ---
 
 <Base
@@ -52,14 +53,17 @@ const fmt = (n: number) => `${n.toFixed(1)} s`;
 
       <section class="rc__side" aria-labelledby="rc-timeline">
         <h2 id="rc-timeline" class="rc__h">Timeline</h2>
+        <div class="rc__trackwrap">
         <div class="rc__track" data-track>
           {
             done.order.map((id) => (
               <span class="rc__clip" style={`flex-grow: ${byId[id].end - byId[id].start}`} data-id={id}>
-                {byId[id].src ? <video src={byId[id].src} muted playsinline preload="metadata" /> : id}
+                {byId[id].src ? <video src={byId[id].src} muted playsinline preload="metadata" /> : firstWords(byId[id].text)}
               </span>
             ))
           }
+        </div>
+        <p class="rc__ends label"><span class="num" data-track-start>0.0 s</span><span class="num" data-track-end>{fmt(total)}</span></p>
         </div>
 
         <h2 class="rc__h">Agent notes</h2>
@@ -88,6 +92,7 @@ const fmt = (n: number) => `${n.toFixed(1)} s`;
   const cut = document.querySelector<HTMLElement>('[data-cut]')!;
   const runtimeEl = document.querySelector<HTMLElement>('[data-runtime]')!;
   const progress = document.querySelector<HTMLElement>('[data-progress]')!;
+  const trackEnd = document.querySelector<HTMLElement>('[data-track-end]')!;
   const playBtn = document.querySelector<HTMLButtonElement>('[data-play]')!;
   let applied = 0;
   let timer = 0;
@@ -104,13 +109,14 @@ const fmt = (n: number) => `${n.toFixed(1)} s`;
         clip.className = 'rc__clip';
         clip.dataset.id = id;
         clip.style.flexGrow = String(byId[id].end - byId[id].start);
-        clip.textContent = id;
+        clip.textContent = byId[id].text.split(' ').slice(0, 3).join(' ') + '…';
         return clip;
       }),
     );
     log.replaceChildren(...s.notes.map((n) => Object.assign(document.createElement('li'), { textContent: n })));
     cut.replaceChildren(...s.order.map((id) => Object.assign(document.createElement('li'), { textContent: byId[id].text })));
     runtimeEl.textContent = `${runtime(segments, s.order).toFixed(1)} s`;
+    trackEnd.textContent = runtimeEl.textContent;
     progress.textContent = `${applied} / ${actions.length}`;
     if (animateLast && !reduce.matches) {
       const last = actions[applied - 1];
@@ -183,27 +189,30 @@ const fmt = (n: number) => `${n.toFixed(1)} s`;
     grid-template-columns: 4rem minmax(0, 1fr);
     gap: var(--space-s);
     padding: var(--space-xs) var(--space-s);
-    border-left: 2px solid transparent;
     transition: color 0.3s, border-color 0.3s, opacity 0.3s;
   }
   .rc__tc { color: var(--text-muted); font-size: var(--step--1); }
-  .rc__transcript li[data-state='selected'] { border-left-color: var(--gold); }
+  .rc__transcript li[data-state='selected'] .rc__tc { color: var(--gold); }
   .rc__transcript li[data-state='selected'] .rc__line { color: var(--gold); }
   .rc__transcript li[data-state='dropped'] { opacity: 0.5; }
   .rc__transcript li[data-state='dropped'] .rc__line { text-decoration: line-through; }
 
-  .rc__track { display: flex; gap: 2px; min-height: 3.5rem; padding: 4px; border: 1px solid var(--border); background: var(--surface); }
+  /* Hairline track with a time label at each end; segments sized by duration, named by their first words. */
+  .rc__track { display: flex; min-height: 3.5rem; border-block: 1px solid var(--text); }
   .rc__clip {
     display: grid;
-    place-items: center;
+    align-content: center;
     min-width: 0;
     overflow: hidden;
-    background: var(--border);
-    color: var(--text);
-    font-family: var(--font-data);
+    padding: 6px 8px;
+    border-left: 1px solid var(--border);
+    color: var(--text-muted);
     font-size: var(--step--1);
+    line-height: 1.25;
     transform-origin: left;
   }
+  .rc__clip:first-child { border-left: 0; }
+  .rc__ends { display: flex; justify-content: space-between; margin-top: 4px; }
   .rc__clip video { width: 100%; height: 100%; object-fit: cover; }
   .rc__log { margin: 0; padding-left: 1.2em; color: var(--text-muted); display: grid; gap: 4px; min-height: 2em; }
   .rc__cut { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }

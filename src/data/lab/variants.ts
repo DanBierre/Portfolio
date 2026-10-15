@@ -16,6 +16,14 @@ export const headlines: Record<Lang, string[]> = {
   ja: ['一日をブロックで計画。', '集中して、きちんと止める。', '気が散るものを遠ざける。', '一週間をリングで振り返る。'],
 };
 
+/** Japanese headlines split into phrases (文節), so lines only break between them. */
+export const phrases: Record<string, string[]> = {
+  '一日をブロックで計画。': ['一日を', 'ブロックで', '計画。'],
+  '集中して、きちんと止める。': ['集中して、', 'きちんと', '止める。'],
+  '気が散るものを遠ざける。': ['気が散るものを', '遠ざける。'],
+  '一週間をリングで振り返る。': ['一週間を', 'リングで', '振り返る。'],
+};
+
 /** Every shot × layout × colourway once; languages alternate and headlines rotate, so the grid stays varied. */
 export function variants(): Variant[] {
   const out: Variant[] = [];

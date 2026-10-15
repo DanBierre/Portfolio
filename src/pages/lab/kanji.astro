@@ -37,7 +37,7 @@ const join = (xs: string[]) => (xs.length ? xs.join('、') : '—');
         <button class="btn btn--secondary" type="button" data-reveal hidden>Reveal</button>
         <button class="btn btn--secondary" type="button" data-shuffle>Shuffle</button>
         <label class="kanji-page__quiz"><input type="checkbox" data-quiz /> Quiz mode</label>
-        <p class="label kanji-page__keys">← → to move · Space to reveal</p>
+        <p class="label kanji-page__keys">← → to move<span data-quiz-hint hidden> · Space to reveal</span></p>
       </div>
 
       <svg class="kanji-page__filters" width="0" height="0" aria-hidden="true" focusable="false">
@@ -106,7 +106,9 @@ const join = (xs: string[]) => (xs.length ? xs.join('、') : '—');
     frame = requestAnimationFrame(step);
   };
 
+  const hint = app.querySelector<HTMLElement>('[data-quiz-hint]')!;
   const setRevealed = (shown: boolean) => {
+    hint.hidden = !quiz.checked;
     meta.hidden = !shown;
     revealBtn.hidden = !quiz.checked || shown;
   };

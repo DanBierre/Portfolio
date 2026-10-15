@@ -223,11 +223,24 @@ const kindLabel = { think: 'thinking', tool: 'tool call', result: 'result', back
   .step__tool { grid-column: 2; font-family: var(--font-data); font-size: var(--step--1); color: var(--gold); }
   .step__label { grid-column: 2; }
   .step__meta { grid-column: 3; grid-row: 1; color: var(--text-muted); font-size: var(--step--1); }
-  .step--think { border-style: dashed; }
+  /* Only tool calls are boxes; thinking and results are plain lines on the spine. */
+  .step--think, .step--result, .step--backtrack { border-color: transparent; border-width: 0; background: none; padding-block: 4px; }
   .step--think .step__label { color: var(--text-muted); }
-  .step--backtrack { margin-left: var(--space-l); opacity: 0.6; border-style: dashed; }
-  .step--backtrack::before { border-radius: 0; rotate: 45deg; background: var(--rust); left: calc(-2 * var(--space-l) - 4px); }
-  .step--result:last-child { border-color: var(--gold); }
+  .step--result:last-child .step__label { color: var(--gold); }
+  /* A backtrack branches off the spine: a dashed elbow out to the right, labelled in rust. */
+  .step--backtrack { margin-left: var(--space-l); }
+  .step--backtrack::after {
+    content: '';
+    position: absolute;
+    left: calc(-2 * var(--space-l));
+    top: 0;
+    width: calc(var(--space-l) * 2 - 6px);
+    height: 1.2em;
+    border-left: 1px dashed var(--rust);
+    border-bottom: 1px dashed var(--rust);
+  }
+  .step--backtrack::before { border-radius: 0; rotate: 45deg; background: var(--rust); left: -10px; }
+  .step--backtrack .step__kind { color: var(--rust); }
 
   .xray__cta {
     display: flex;
