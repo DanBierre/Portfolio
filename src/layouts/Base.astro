@@ -38,7 +38,33 @@ const image = new URL(ogImage, base).href;
     <script is:inline>
       try {
         if (localStorage.getItem('theme') === 'light') document.documentElement.dataset.theme = 'light';
+        // Arriving from the language switch: start fully burnt (motion.css), with no page-cut view
+        // transition on top. It burns in once the page has settled, below.
+        if (sessionStorage.getItem('burn')) {
+          sessionStorage.removeItem('burn');
+          document.documentElement.classList.add('burn-hold');
+          addEventListener('pagereveal', (e) => e.viewTransition && e.viewTransition.skipTransition());
+        }
       } catch {}
+      // Every load plays the same: the hero intro (and an arriving burn) waits until the page has
+      // settled (loaded, fonts in, the hero's idle setup done), so load work never stutters it.
+      // Capped, so a slow connection never waits long.
+      (() => {
+        const root = document.documentElement;
+        root.classList.add('loading');
+        let done = false;
+        const go = () => {
+          if (done) return;
+          done = true;
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            root.classList.remove('loading');
+            root.classList.replace('burn-hold', 'burn-down');
+          }));
+        };
+        const idle = (f) => ('requestIdleCallback' in window ? requestIdleCallback(f, { timeout: 500 }) : setTimeout(f, 50));
+        addEventListener('load', () => (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => idle(go)));
+        setTimeout(go, 1500);
+      })();
     </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>

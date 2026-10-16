@@ -1,0 +1,38 @@
+---
+// Film-edge print: the line of key codes exposed along real film stock, used as each section's slate.
+// Scene number, section, a timecode and the stock. Decorative; the section's heading carries the meaning.
+interface Props {
+  scene: number;
+  label: string;
+  meta?: string;
+}
+
+const { scene, label, meta } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
+const frames = scene * 1153; // a stable timecode per scene, at 24 fps
+const tc = `00:${pad(Math.floor(frames / 1440) % 60)}:${pad(Math.floor(frames / 24) % 60)}:${pad(frames % 24)}`;
+---
+
+<p class="wrap edge-print" aria-hidden="true">
+  <span class="edge-print__sc">▸ SC.{pad(scene)}</span>
+  <span>{label}</span>
+  <span>TC {tc}</span>
+  <span>KODAK 5219 · 500T</span>
+  {meta && <span>{meta}</span>}
+</p>
+
+<style>
+  .edge-print {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 1.6rem;
+    margin-bottom: var(--space-l);
+    padding-block: 0.65rem;
+    border-block: 1px solid var(--border);
+    font: 400 0.66rem / 1.2 var(--font-data);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--code, var(--text-muted));
+  }
+  .edge-print__sc { color: var(--gold); }
+</style>

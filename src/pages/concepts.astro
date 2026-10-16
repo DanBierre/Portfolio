@@ -1,322 +1,289 @@
 ---
-// Review page (not linked, not indexed): ten ways to set the hero headline into the footage.
-// The real graded cuts loop behind; pick a concept with the buttons or keys 1–0.
+// Review page (not linked, not indexed): the rest of the site in the 16mm language, with real content.
+// Film for the light and texture; code for the structure and the data. Body copy stays crisp.
 import Base from '../layouts/Base.astro';
-import { shots } from '../lib/indie-edit';
+import { Picture } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import portrait from '../assets/portrait.jpg';
+import { ui } from '../i18n/ui';
 
-const clips = shots.map((s) => s.clip).filter(Boolean);
-const concepts = [
-  ['Still title card', 'No movement at all. Grain over footage and type, a warm halation round the letters. The calmest option.'],
-  ['Light through the letters', 'The footage only shows through the headline; the rest of the frame is dark paper. Bold, very integrated.'],
-  ['Exposure blend', 'The type inverts whatever is behind it (difference blend), so it changes colour with every shot.'],
-  ['Shoji panel', 'The headline sits on a frosted washi panel; the footage glows around and through it like light behind a screen.'],
-  ['Subtitles', 'The headline plays as film subtitles, one line per cut, centred low. Reads like dialogue in the edit.'],
-  ['Letterbox', 'Cinemascope bars: footage in the middle, the headline set in the lower bar, a scene slate in the upper bar.'],
-  ['Toned corner', 'Behind the headline the footage drops to a charcoal-and-gold duotone; the rest stays in full colour.'],
-  ['Tategaki', 'A large vertical Japanese line in Mincho, blended into the footage on the right; English headline on the left.'],
-  ['Code burn-in', 'The headline types itself in mono like a terminal burned into the footage, gold words highlighted like syntax.'],
-  ['Light leak on cut', 'Type stays still; at every cut a warm light leak sweeps across the letters, then fades.'],
+const t = ui.en;
+const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+const lab = (await getCollection('lab')).sort((a, b) => a.data.order - b.data.order).slice(0, 4);
+// The process as an edit decision list: record timecodes start at 01:00:00:00 as in a real EDL; the
+// duration column says what the copy promises (only the brief and the prototype have fixed lengths).
+const edl = [
+  { reel: 'BRIEF', in: '01:00:00:00', out: '01:00:20:00', dur: '20 min call', output: 'Written scope' },
+  { reel: 'PROTO', in: '01:00:20:00', out: '01:07:20:00', dur: '1 week', output: 'Working prototype' },
+  { reel: 'BUILD', in: '01:07:20:00', out: '01:28:20:00', dur: 'Your timeline', output: 'Production build' },
+  { reel: 'HANDOFF', in: '01:28:20:00', out: '01:29:00:00', dur: 'Walkthrough', output: 'Docs and code' },
 ];
-const lines = [
-  [{ t: 'I’m Dan. I build' }],
-  [{ t: 'with', a: true }, { t: ' code and edit' }],
-  [{ t: 'with', a: true }, { t: ' intent.' }],
+const events = t.process.steps.map((s, i) => ({ n: String(i + 1).padStart(3, '0'), ...edl[i], title: s.title, text: s.text }));
+const swatches = [
+  ['Warm black', '#12100e', 'ground'],
+  ['Cream', '#ece4d4', 'type'],
+  ['Amber', '#c9a24f', 'accent, light'],
+  ['Ember', '#c8613a', 'now, halation'],
+  ['Cyan-steel', '#7fa3a8', 'code, data'],
 ];
 ---
 
-<Base title="Hero concepts | Dan Bierre" description="Hero headline concepts for review." noindex>
-  <section class="stage" data-stage data-concept="1" aria-label="Hero concept preview">
-    <video class="clip is-on" data-clip muted playsinline preload="auto"></video>
-    <video class="clip" data-clip muted playsinline preload="auto"></video>
-    <span class="tone" aria-hidden="true"></span>
-    <span class="scrim" aria-hidden="true"></span>
-    <span class="paper" aria-hidden="true"></span>
-    <i class="bar bar--top" aria-hidden="true"><span>SCENE 01 · TOKYO · NIGHT · 24 FPS</span></i>
-    <i class="bar bar--bottom" aria-hidden="true"></i>
+<Base title="Page concepts | Dan Bierre" description="Concepts for the rest of the page in the 16mm language." noindex>
+  <div class="page">
+    <header class="intro wrap">
+      <p class="edge">▸ CONCEPTS · REST OF PAGE · 16MM × CODE · NOT LIVE</p>
+      <h1>The rest of the site, in the same light as the reel.</h1>
+      <p class="lede">Film for light and texture. Code for structure and data. Body copy, forms and buttons stay crisp.</p>
+    </header>
 
-    <div class="copy">
-      <h1 class="title">
-        {lines.map((l, i) => (
-          <span class:list={['line', { indent: i > 0 }]}>
-            {l.map((s) => (s.a ? <span class="accent">{s.t}</span> : s.t))}
-          </span>
+    <!-- A · palette -->
+    <section class="wrap block">
+      <p class="tag">A · Palette and two voices</p>
+      <div class="swatches">
+        {swatches.map(([name, hex, use]) => (
+          <div class="swatch" style={`--c:${hex}`}>
+            <span class="chip"></span>
+            <b>{name}</b>
+            <code>{hex}</code>
+            <small>{use}</small>
+          </div>
         ))}
-      </h1>
+      </div>
+      <div class="voices">
+        <p class="voice-display">Editor's voice: a grotesque set tight, cream on warm black.</p>
+        <p class="voice-code"><span class="k">const</span> codeVoice = <span class="s">'mono, cyan-steel, for data and metadata only'</span>;</p>
+      </div>
+    </section>
+
+    <!-- B · film-edge divider + scene heading -->
+    <div class="edge-print wrap" aria-hidden="true">
+      <span>▸ SC.02</span><span>SERVICES</span><span>TC 00:00:41:12</span><span>KODAK 7219 500T</span><span>DB‑24</span>
     </div>
-    <p class="tate" lang="ja" aria-hidden="true">意図をもって、編集する。</p>
+    <section class="wrap block">
+      <p class="tag">B · Film-edge dividers and scene headings</p>
+      <h2 class="scene"><span class="scene__no">SC.02</span>{t.services.title}</h2>
+      <p class="body">Every section opens on a line of edge print, like the codes exposed along real film stock, then a scene-numbered heading that develops in 12 fps steps as it scrolls in.</p>
+    </section>
 
-    <div class="knock" aria-hidden="true">
-      <p class="knock__title">{lines.map((l) => <span class="line">{l.map((s) => s.t).join('')}</span>)}</p>
+    <!-- C · contact sheet -->
+    <div class="edge-print wrap" aria-hidden="true">
+      <span>▸ SC.03</span><span>WORK</span><span>TC 00:01:12:08</span><span>CONTACT SHEET</span><span>3 SELECTS</span>
     </div>
+    <section class="wrap block">
+      <p class="tag">C · Work as a contact sheet</p>
+      <div class="sheet">
+        {work.map((w, i) => (
+          <a class="frame" href={`/work/${w.id}`}>
+            <span class="sprockets" aria-hidden="true"></span>
+            <Picture src={w.data.cover} formats={['avif', 'webp']} widths={[480, 720]} sizes="(min-width: 48em) 30vw, 90vw" alt={w.data.coverAlt} class="frame__img" />
+            <span class="leak" aria-hidden="true"></span>
+            <span class="frame__no" aria-hidden="true">{`${12 + i * 3}A`} ▸</span>
+            <span class="frame__meta"><b>{w.data.title}</b><code>{w.data.year} · {w.data.clientType}</code></span>
+          </a>
+        ))}
+      </div>
+      <p class="body">Sprocket edges and frame numbers; hover throws a light leak across the frame with a projector flicker. Screenshots get a little grain, not enough to hide the work.</p>
+    </section>
 
-    <p class="subs" aria-hidden="true">
-      {lines.map((l, i) => (
-        <span data-line={i}>{l.map((s) => (s.a ? <em>{s.t}</em> : s.t))}</span>
-      ))}
-    </p>
-
-    <pre class="typed" aria-hidden="true"><span style="--n:16;--d:0s">I’m Dan. I build</span><span style="--n:18;--d:1.1s"><em>with</em> code and edit</span><span class="last" style="--n:12;--d:2.3s"><em>with</em> intent.</span></pre>
-
-    <span class="leak" aria-hidden="true"></span>
-    <span class="grain" aria-hidden="true"></span>
-  </section>
-
-  <div class="picker wrap">
-    <div class="picker__buttons" role="group" aria-label="Concepts">
-      {concepts.map(([name], i) => (
-        <button type="button" data-pick={i + 1} aria-pressed={i === 0 ? 'true' : 'false'}>
-          <span class="num">{(i + 1) % 10}</span> {name}
-        </button>
-      ))}
+    <!-- D · process as an EDL -->
+    <div class="edge-print wrap" aria-hidden="true">
+      <span>▸ SC.04</span><span>PROCESS</span><span>EDL · CMX 3600</span><span>4 EVENTS</span>
     </div>
-    <p class="picker__about" data-about aria-live="polite">{concepts[0][1]}</p>
-    <p class="picker__hint label">Keys 1–0 switch concepts. Footage: the six graded cuts from the hero, looping.</p>
+    <section class="wrap block">
+      <p class="tag">D · How we work, as an edit decision list</p>
+      <div class="edl" role="table" aria-label={t.process.title}>
+        <div class="edl__head" role="row">
+          <span role="columnheader">#</span><span role="columnheader">Reel</span><span role="columnheader">Rec in</span><span role="columnheader">Rec out</span><span role="columnheader">Step</span><span role="columnheader">Duration · output</span>
+        </div>
+        {events.map((e) => (
+          <div class="edl__row" role="row">
+            <span role="cell" class="n">{e.n}</span>
+            <span role="cell" class="evt-reel">{e.reel}</span>
+            <span role="cell" class="tc">{e.in}</span>
+            <span role="cell" class="tc">{e.out}</span>
+            <span role="cell" class="step"><b>{e.title}</b><small>{e.text}</small></span>
+            <span role="cell" class="out">{e.dur}<br /><small>{e.output}</small></span>
+          </div>
+        ))}
+      </div>
+      <p class="body">An editor's export and a developer's table at once: it shows the process is real, timed and handed over.</p>
+    </section>
+
+    <!-- E · about photo in the grade -->
+    <div class="edge-print wrap" aria-hidden="true">
+      <span>▸ SC.05</span><span>ABOUT</span><span>AUCKLAND → JAPAN</span><span>FRAME 01</span>
+    </div>
+    <section class="wrap block about">
+      <p class="tag">E · About, graded like the reel</p>
+      <figure class="still">
+        <div class="still__gate">
+          <Picture src={portrait} formats={['avif', 'webp']} widths={[400, 640]} sizes="(min-width: 48em) 24rem, 80vw" alt={t.about.portraitAlt} class="still__img" />
+          <span class="still__tone" aria-hidden="true"></span>
+          <span class="still__grain" aria-hidden="true"></span>
+        </div>
+        <figcaption><code>// fushimi inari, kyoto · 16mm · 1/48</code></figcaption>
+      </figure>
+      <div class="about__text">
+        <h2 class="scene"><span class="scene__no">SC.05</span>{t.about.title}</h2>
+        <p class="body">The portrait gets the same split tone as the footage (cyan shadows, amber highlights), a rounded 16mm gate and grain, so it reads as a frame from the reel rather than a selfie.</p>
+      </div>
+    </section>
+
+    <!-- F · lab reels -->
+    <div class="edge-print wrap" aria-hidden="true">
+      <span>▸ SC.06</span><span>LAB</span><span>REELS 01–{String(lab.length).padStart(2, '0')}</span>
+    </div>
+    <section class="wrap block">
+      <p class="tag">F · Lab pieces as labelled reels</p>
+      <div class="reels">
+        {lab.map((l, i) => (
+          <a class="reel" href={l.data.link ?? '/lab'}>
+            <span class="reel__can" aria-hidden="true"></span>
+            <span class="reel__tape"><code>REEL {String(i + 1).padStart(2, '0')}</code><b>{l.data.title}</b></span>
+            <small>{l.data.summary}</small>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- G · rules -->
+    <section class="wrap block rules">
+      <p class="tag">G · Guardrails for professionalism</p>
+      <ul>
+        <li><b>Grain and halation</b> on imagery and headings only; running text, forms and buttons stay sharp.</li>
+        <li><b>Mono and cyan-steel</b> only for data, code and metadata, never for prose.</li>
+        <li><b>Contrast</b> stays at WCAG AA on cream and warm black; every motion respects reduced motion.</li>
+      </ul>
+    </section>
   </div>
 </Base>
 
-<script define:vars={{ clips, concepts }}>
-  const stage = document.querySelector('[data-stage]');
-  const about = document.querySelector('[data-about]');
-  const buttons = [...document.querySelectorAll('[data-pick]')];
-  const pick = (n) => {
-    stage.dataset.concept = String(n);
-    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.pick === String(n))));
-    about.textContent = concepts[n - 1][1];
-    // Restart the typed burn-in when it is picked.
-    const typed = stage.querySelector('.typed');
-    typed.replaceWith(typed.cloneNode(true));
-  };
-  buttons.forEach((b) => b.addEventListener('click', () => pick(Number(b.dataset.pick))));
-  addEventListener('keydown', (e) => {
-    if (/^[0-9]$/.test(e.key)) pick(e.key === '0' ? 10 : Number(e.key));
-  });
-
-  // Two videos take turns so each cut is clean: one plays while the other loads the next clip.
-  const [a, b] = document.querySelectorAll('[data-clip]');
-  let i = 0;
-  let cut = 0;
-  const src = (k) => `/media/japan/${clips[k % clips.length]}.mp4`;
-  a.src = src(0);
-  b.src = src(1);
-  a.play().catch(() => {});
-  const next = (from, to) => {
-    from.classList.remove('is-on');
-    to.classList.add('is-on');
-    to.currentTime = 0;
-    to.play().catch(() => {});
-    i += 1;
-    cut += 1;
-    stage.dataset.cut = String(cut % 3);
-    stage.classList.remove('is-cut');
-    void stage.offsetWidth;
-    stage.classList.add('is-cut');
-    from.src = src(i + 1);
-  };
-  a.addEventListener('ended', () => next(a, b));
-  b.addEventListener('ended', () => next(b, a));
-</script>
-
 <style>
-  .stage {
-    --text: #ecebe7;
-    --gold: #c9a24f;
-    position: relative;
-    isolation: isolate;
-    height: calc(100svh - 3.75rem);
-    min-height: 32rem;
-    overflow: hidden;
-    background: #141414;
-    color: var(--text);
+  .page {
+    --ground: #12100e;
+    --cream: #ece4d4;
+    --amber: #c9a24f;
+    --ember: #c8613a;
+    --steel: #7fa3a8;
+    --muted: #a39b8c;
+    --line: rgb(236 228 212 / 0.14);
+    background: var(--ground);
+    color: var(--cream);
+    padding-bottom: var(--space-2xl);
   }
-  .clip { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
-  .clip.is-on { opacity: 1; }
-  .scrim {
+  .intro { padding-block: var(--space-2xl) var(--space-xl); display: grid; gap: var(--space-m); }
+  .intro h1 { font-size: clamp(2.4rem, 1rem + 4.6vw, 5.6rem); line-height: 0.95; letter-spacing: -0.05em; font-weight: 430; max-width: 18ch; text-shadow: 0 0 0.4em rgb(255 186 110 / 0.14); }
+  .lede { font-size: var(--step-1); color: var(--muted); max-width: 52ch; margin: 0; }
+  .edge, .tag, .edge-print { font-family: var(--font-data); letter-spacing: 0.14em; text-transform: uppercase; }
+  .edge { color: var(--steel); font-size: 0.72rem; margin: 0; }
+  .tag { color: var(--amber); font-size: 0.72rem; margin: 0 0 var(--space-m); }
+  .block { padding-block: var(--space-xl); }
+  .body { color: var(--muted); max-width: 60ch; margin-top: var(--space-m); }
+  code { font-family: var(--font-data); }
+
+  /* A */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: var(--space-s); }
+  .swatch { display: grid; gap: 0.2rem; font-size: var(--step--1); }
+  .swatch .chip { height: 4.5rem; background: var(--c); border: 1px solid var(--line); border-radius: 4px; }
+  .swatch code, .swatch small { color: var(--muted); }
+  .voices { display: grid; gap: var(--space-s); margin-top: var(--space-l); }
+  .voice-display { font-size: var(--step-3); letter-spacing: -0.04em; line-height: 1; margin: 0; }
+  .voice-code { font: 400 var(--step-0) var(--font-data); color: var(--steel); margin: 0; }
+  .voice-code .k { color: var(--ember); }
+  .voice-code .s { color: var(--amber); }
+
+  /* B: edge print, like exposed key codes along the film's edge */
+  .edge-print {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.6rem;
+    padding-block: 0.7rem;
+    border-block: 1px solid var(--line);
+    color: var(--steel);
+    font-size: 0.66rem;
+    opacity: 0.85;
+  }
+  .edge-print span:first-child { color: var(--amber); }
+  .scene { font-size: clamp(2rem, 1rem + 3vw, 3.6rem); letter-spacing: -0.045em; line-height: 1; font-weight: 430; margin: 0; max-width: 20ch; text-shadow: 0 0 0.35em rgb(255 186 110 / 0.12); }
+  .scene__no { display: block; font: 400 0.72rem var(--font-data); letter-spacing: 0.14em; color: var(--amber); margin-bottom: 0.8rem; }
+  @keyframes develop-step { from { filter: blur(14px); opacity: 0.2; } }
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .scene { animation: develop-step steps(10, end) both; animation-range: entry 10% entry 80%; }
+    }
+  }
+
+  /* C: contact sheet */
+  .sheet { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--space-m); }
+  .frame { position: relative; display: block; padding: 1.4rem 0.6rem; background: #0a0908; color: inherit; text-decoration: none; border-radius: 2px; overflow: hidden; }
+  .sprockets {
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(to top, rgb(20 20 20 / 0.85), rgb(20 20 20 / 0.55) 35%, transparent 70%),
-      linear-gradient(to right, rgb(20 20 20 / 0.5), transparent 65%);
-  }
-  .paper { position: absolute; inset: 0; background: url('/textures/washi.svg'); mix-blend-mode: soft-light; opacity: 0.25; }
-  .grain {
-    position: absolute;
-    inset: -50%;
+      radial-gradient(circle at center, var(--ground) 0 0) top / 100% 0,
+      repeating-linear-gradient(90deg, transparent 0 10px, rgb(236 228 212 / 0.85) 10px 18px, transparent 18px 28px) top 0.45rem left 0 / 100% 0.45rem no-repeat,
+      repeating-linear-gradient(90deg, transparent 0 10px, rgb(236 228 212 / 0.85) 10px 18px, transparent 18px 28px) bottom 0.45rem left 0 / 100% 0.45rem no-repeat;
+    opacity: 0.18;
     pointer-events: none;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    mix-blend-mode: overlay;
-    opacity: 0.14;
-    animation: grain 0.42s steps(1) infinite;
   }
-  @keyframes grain { 20% { translate: -4% 3%; } 40% { translate: 3% -5%; } 60% { translate: -6% -2%; } 80% { translate: 5% 4%; } }
-
-  .copy { position: absolute; inset: auto var(--gutter) var(--space-xl); }
-  .title { font-size: clamp(2.6rem, 0.9rem + 6vw, 7rem); line-height: 0.92; letter-spacing: -0.04em; font-weight: 430; margin: 0; }
-  .title .line { display: block; }
-  .title .indent { padding-left: 2.6em; }
-  .accent { color: var(--gold); }
-
-  /* Hidden until their concept is picked. */
-  .knock, .subs, .typed, .tate, .bar, .tone, .leak { display: none; }
-
-  /* 1 Still title card */
-  [data-concept='1'] .title { text-shadow: 0 0 0.35em rgb(255 186 110 / 0.18), 0 0.04em 0.4em rgb(20 20 20 / 0.45); }
-
-  /* 2 Light through the letters: white type multiplied over the footage, dark everywhere else. */
-  [data-concept='2'] .copy, [data-concept='2'] .scrim { display: none; }
-  [data-concept='2'] .knock {
-    display: grid;
-    align-content: end;
-    position: absolute;
-    inset: 0;
-    padding: 0 var(--gutter) var(--space-xl);
-    background: #141414;
-    color: #fff;
-    mix-blend-mode: multiply;
-  }
-  .knock__title { margin: 0; font-size: clamp(3.4rem, 1rem + 9vw, 11rem); line-height: 0.86; letter-spacing: -0.05em; font-weight: 800; }
-  .knock__title .line { display: block; }
-
-  /* 3 Exposure blend: the type inverts the footage behind it. */
-  [data-concept='3'] .scrim { background: linear-gradient(to top, rgb(20 20 20 / 0.3), transparent 50%); }
-  [data-concept='3'] .copy { z-index: auto; }
-  [data-concept='3'] .title { color: #fff; mix-blend-mode: difference; font-weight: 600; }
-  [data-concept='3'] .accent { color: #fff; }
-
-  /* 4 Shoji panel */
-  [data-concept='4'] .scrim { display: none; }
-  [data-concept='4'] .copy {
-    inset: var(--space-l) auto var(--space-l) var(--gutter);
-    width: min(46rem, 60%);
-    display: grid;
-    align-content: end;
-    padding: var(--space-l);
-    background: url('/textures/washi.svg'), rgb(30 28 26 / 0.42);
-    backdrop-filter: blur(16px) brightness(0.62) saturate(0.8);
-    box-shadow: inset 0 0 0 1px rgb(236 235 231 / 0.18);
-  }
-  [data-concept='4'] .title { font-size: clamp(2.2rem, 0.8rem + 4.6vw, 5.6rem); }
-
-  /* 5 Subtitles: one line per cut. */
-  [data-concept='5'] .copy { display: none; }
-  [data-concept='5'] .scrim { background: linear-gradient(to top, rgb(20 20 20 / 0.6), transparent 35%); }
-  [data-concept='5'] .subs {
-    display: block;
-    position: absolute;
-    inset: auto 0 var(--space-xl);
-    margin: 0;
-    text-align: center;
-    font-size: clamp(1.3rem, 0.9rem + 1.4vw, 2.2rem);
-    font-weight: 500;
-    text-shadow: 0 0 0.25em rgb(0 0 0 / 0.9), 0 2px 2px rgb(0 0 0 / 0.8);
-  }
-  .subs span { display: none; }
-  .subs em { font-style: normal; color: var(--gold); }
-  [data-concept='5']:not([data-cut]) .subs [data-line='0'],
-  [data-concept='5'][data-cut='0'] .subs [data-line='0'],
-  [data-concept='5'][data-cut='1'] .subs [data-line='1'],
-  [data-concept='5'][data-cut='2'] .subs [data-line='2'] { display: inline; }
-
-  /* 6 Letterbox */
-  [data-concept='6'] .bar { display: flex; position: absolute; left: 0; right: 0; height: 18%; background: #0e0e0e; z-index: 1; align-items: center; padding-inline: var(--gutter); }
-  .bar--top { top: 0; }
-  .bar--bottom { bottom: 0; }
-  .bar span { font: 400 0.72rem var(--font-data); letter-spacing: 0.14em; color: rgb(236 235 231 / 0.55); font-style: normal; }
-  [data-concept='6'] .scrim { display: none; }
-  [data-concept='6'] .copy { z-index: 2; inset: auto var(--gutter) 3%; }
-  [data-concept='6'] .title { font-size: clamp(1.6rem, 0.8rem + 2.6vw, 3.4rem); line-height: 1; }
-  [data-concept='6'] .title .line { display: inline; }
-  [data-concept='6'] .title .indent { padding-left: 0.3em; }
-
-  /* 7 Toned corner: duotone footage behind the headline, colour elsewhere. */
-  /* Duotone corner: the scrim drains the colour (saturation blend), then the tone layer above it lays
-     the gold hue back over the footage's own light and dark (colour blend). */
-  [data-concept='7'] .scrim {
-    background: radial-gradient(130% 100% at 0% 100%, #777 40%, transparent 72%);
-    mix-blend-mode: saturation;
-  }
-  [data-concept='7'] .tone {
-    display: block;
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: radial-gradient(130% 100% at 0% 100%, #b0884a 38%, transparent 70%);
-    mix-blend-mode: color;
-  }
-  [data-concept='7'] .copy { z-index: 2; }
-  [data-concept='7'] .accent { color: #f6dfa6; }
-
-  /* 8 Tategaki */
-  [data-concept='8'] .tate {
-    display: block;
-    position: absolute;
-    top: var(--space-xl);
-    right: var(--gutter);
-    max-height: calc(100% - var(--space-xl) * 2);
-    margin: 0;
-    writing-mode: vertical-rl;
-    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif;
-    font-size: clamp(2rem, 0.8rem + 3.4vw, 4.4rem);
-    line-height: 1.2;
-    color: rgb(236 235 231 / 0.88);
-    text-shadow: 0 0 0.5em rgb(20 20 20 / 0.7), 0 0 0.2em rgb(20 20 20 / 0.6);
-  }
-  [data-concept='8'] .copy { inset: auto auto var(--space-xl) var(--gutter); }
-  [data-concept='8'] .title { font-size: clamp(2.2rem, 0.8rem + 4.6vw, 5.6rem); }
-
-  /* 9 Code burn-in */
-  [data-concept='9'] .copy { display: none; }
-  [data-concept='9'] .typed {
-    display: grid;
-    position: absolute;
-    inset: auto var(--gutter) var(--space-xl);
-    margin: 0;
-    font: 400 clamp(1.6rem, 0.6rem + 3.6vw, 4.6rem) / 1.15 var(--font-data);
-    letter-spacing: -0.02em;
-    color: #ecebe7;
-    text-shadow: 0 0 0.3em rgb(255 186 110 / 0.25);
-  }
-  .typed span { display: block; width: 0; overflow: hidden; white-space: nowrap; animation: type calc(var(--n) * 55ms) steps(var(--n)) var(--d) forwards; }
-  .typed span.last { border-right: 0.08em solid var(--gold); animation: type calc(var(--n) * 55ms) steps(var(--n)) var(--d) forwards, caret 0.8s steps(1) infinite; }
-  .typed em { font-style: normal; color: var(--gold); }
-  @keyframes type { to { width: calc(var(--n) * 1ch); } }
-  @keyframes caret { 50% { border-color: transparent; } }
-
-  /* 10 Light leak on cut */
-  [data-concept='10'] .leak {
-    display: block;
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    mix-blend-mode: screen;
-    background: radial-gradient(40% 70% at 0% 70%, rgb(255 150 60 / 0.9), rgb(255 210 140 / 0.35) 40%, transparent 70%);
-    opacity: 0;
-  }
-  [data-concept='10'].is-cut .leak { animation: leak 1.1s ease-out; }
-  @keyframes leak {
-    0% { opacity: 0; translate: -30% 0; }
-    15% { opacity: 1; }
-    100% { opacity: 0; translate: 90% 0; }
+  .frame :global(.frame__img) { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; filter: sepia(0.15) saturate(0.9) contrast(0.95); }
+  .frame__no { position: absolute; top: 0.2rem; right: 0.6rem; font: 400 0.6rem var(--font-data); color: var(--amber); letter-spacing: 0.1em; }
+  .frame__meta { display: flex; justify-content: space-between; gap: 1rem; padding-top: 0.6rem; font-size: var(--step--1); }
+  .frame__meta code { color: var(--steel); font-size: 0.7rem; }
+  .leak { position: absolute; inset: 0; background: radial-gradient(45% 70% at 0% 50%, rgb(255 150 60 / 0.75), rgb(255 210 140 / 0.25) 45%, transparent 70%); mix-blend-mode: screen; opacity: 0; pointer-events: none; }
+  @keyframes leak-sweep { 0% { opacity: 0; translate: -30% 0; } 25% { opacity: 1; } 100% { opacity: 0; translate: 80% 0; } }
+  @keyframes flicker { 0%, 100% { filter: brightness(1); } 30% { filter: brightness(1.12); } 60% { filter: brightness(0.96); } }
+  @media (prefers-reduced-motion: no-preference) {
+    .frame:hover .leak, .frame:focus-visible .leak { animation: leak-sweep 1s ease-out; }
+    .frame:hover, .frame:focus-visible { animation: flicker 0.3s steps(3) 2; }
   }
 
-  .picker { display: grid; gap: var(--space-s); padding-block: var(--space-m) var(--space-xl); }
-  .picker__buttons { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .picker button {
-    padding: 0.5em 1em;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: none;
-    color: var(--text);
-    font: inherit;
-    font-size: var(--step--1);
-    cursor: pointer;
+  /* D: EDL */
+  .edl { font-family: var(--font-data); font-size: 0.78rem; border-top: 1px solid var(--line); }
+  .edl__head, .edl__row { display: grid; grid-template-columns: 3rem 6rem 8.5rem 8.5rem minmax(0, 1fr) 11rem; gap: 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--line); align-items: start; }
+  .edl__head { color: var(--muted); font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .edl .n { color: var(--amber); }
+  .edl .evt-reel { color: var(--ember); }
+  .edl .tc { color: var(--steel); font-variant-numeric: tabular-nums; }
+  .edl .step { font-family: var(--font-body); display: grid; gap: 0.2rem; }
+  .edl .step b { font-weight: 500; font-size: var(--step-0); }
+  .edl .step small { color: var(--muted); font-size: var(--step--1); }
+  .edl .out { color: var(--cream); }
+  .edl .out small { color: var(--muted); }
+  @media (max-width: 60em) {
+    .edl__head { display: none; }
+    .edl__row { grid-template-columns: 3rem 1fr; }
+    .edl__row .tc, .edl__row .out { grid-column: 2; }
   }
-  .picker button[aria-pressed='true'] { border-color: var(--gold); color: var(--gold); }
-  .picker .num { font-family: var(--font-data); opacity: 0.6; margin-right: 0.3em; }
-  .picker__about { font-size: var(--step-1); max-width: 60ch; margin: 0; }
-  .picker__hint { color: var(--text-muted); margin: 0; }
 
-  @media (prefers-reduced-motion: reduce) {
-    .grain, .leak, .typed span { animation: none !important; }
-    .typed span { width: auto; }
+  /* E: portrait in the grade */
+  .about { display: grid; gap: var(--space-l); grid-template-columns: minmax(0, 24rem) minmax(0, 1fr); align-items: center; }
+  .about .tag { grid-column: 1 / -1; }
+  .still { margin: 0; display: grid; gap: 0.6rem; }
+  .still__gate { position: relative; aspect-ratio: 4 / 5; border-radius: 14px; overflow: hidden; box-shadow: inset 0 0 0 6px #0a0908, 0 0 0 1px var(--line); }
+  .still__gate :global(.still__img) { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 32%; filter: saturate(0.8) contrast(0.9) brightness(1.04) sepia(0.12); }
+  .still__tone { position: absolute; inset: 0; background: linear-gradient(to top, rgb(40 90 110 / 0.35), transparent 55%), radial-gradient(70% 60% at 50% 30%, rgb(255 190 110 / 0.22), transparent 70%); mix-blend-mode: soft-light; }
+  .still__grain { position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); mix-blend-mode: overlay; opacity: 0.18; }
+  .still figcaption { color: var(--steel); font-size: 0.72rem; }
+  @media (max-width: 47.99em) { .about { grid-template-columns: 1fr; } }
+
+  /* F: lab reels */
+  .reels { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: var(--space-m); }
+  .reel { display: grid; gap: 0.8rem; padding: var(--space-m); border: 1px solid var(--line); border-radius: 6px; color: inherit; text-decoration: none; transition: border-color 0.4s, box-shadow 0.4s; }
+  .reel:hover, .reel:focus-visible { border-color: rgb(255 170 90 / 0.6); box-shadow: 0 0 1.4rem rgb(200 97 58 / 0.25); }
+  .reel__can { width: 3.6rem; height: 3.6rem; border-radius: 50%; background: radial-gradient(circle, #0a0908 0 18%, #3a342c 19% 22%, #22201c 23% 60%, #3a342c 61% 64%, #1a1815 65%); box-shadow: inset 0 0 0 1px var(--line); }
+  .reel__tape { display: grid; gap: 0.2rem; padding: 0.5rem 0.7rem; background: var(--cream); color: var(--ground); border-radius: 2px; transform: rotate(-1.2deg); width: fit-content; }
+  .reel__tape code { font-size: 0.62rem; letter-spacing: 0.12em; }
+  .reel__tape b { font-weight: 500; }
+  .reel small { color: var(--muted); font-size: var(--step--1); }
+
+  /* G */
+  .rules ul { display: grid; gap: var(--space-s); padding-left: 1.2em; color: var(--muted); max-width: 70ch; }
+  .rules b { color: var(--cream); font-weight: 500; }
+
+  /* Timelines live in their own @supports block: CSS minifiers fold animation-timeline into the
+     animation shorthand, which browsers reject, so it must not share a rule with the shorthand. */
+  @supports (animation-range: entry 0%) {
+    .scene { animation-timeline: view(); }
   }
 </style>

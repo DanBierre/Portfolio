@@ -14,7 +14,7 @@ const num = String(index + 1).padStart(2, '0');
 
 <article class="row">
   <a href={`/work/${entry.id}`} class="row__link">
-    <span class="row__num label num" aria-hidden="true">[{num}]</span>
+    <span class="row__num label" aria-hidden="true"><span class="frame-no">{num}A</span> ▸</span>
     <Picture
       src={cover}
       formats={['avif', 'webp']}
@@ -47,6 +47,10 @@ const num = String(index + 1).padStart(2, '0');
           </video>
         )
       }
+      <!-- Contact sheet: grain on the frame, sprocket edges, and a light leak that sweeps it on hover. -->
+      <span class="screen__grain" aria-hidden="true"></span>
+      <span class="sprockets" aria-hidden="true"></span>
+      <span class="leak" aria-hidden="true"></span>
       <span class="screen__panel screen__panel--left band lattice" aria-hidden="true"></span>
       <span class="screen__panel screen__panel--right band lattice" aria-hidden="true"></span>
     </div>
@@ -125,6 +129,42 @@ const num = String(index + 1).padStart(2, '0');
   .screen__video { opacity: 0; transition: opacity 0.4s var(--ease-out); }
   .screen__video.is-playing { opacity: 1; }
   .screen__panel { position: absolute; top: 0; bottom: 0; width: 50%; display: none; }
+
+  /* Contact sheet. */
+  .row__num { font-family: var(--font-data); color: var(--gold); letter-spacing: 0.08em; }
+  .screen :global(.screen__img) { filter: sepia(0.18) saturate(0.88) contrast(0.96); }
+  .screen__grain {
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+  .sprockets {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      repeating-linear-gradient(90deg, transparent 0 9px, rgb(236 228 212 / 0.55) 9px 16px, transparent 16px 26px) left 0 top 4px / 100% 6px no-repeat,
+      repeating-linear-gradient(90deg, transparent 0 9px, rgb(236 228 212 / 0.55) 9px 16px, transparent 16px 26px) left 0 bottom 4px / 100% 6px no-repeat,
+      linear-gradient(#0a0908, #0a0908) top / 100% 14px no-repeat,
+      linear-gradient(#0a0908, #0a0908) bottom / 100% 14px no-repeat;
+  }
+  .leak {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(45% 70% at 0% 50%, rgb(255 150 60 / 0.75), rgb(255 210 140 / 0.25) 45%, transparent 70%);
+    mix-blend-mode: screen;
+    opacity: 0;
+  }
+  @keyframes leak-sweep { 0% { opacity: 0; translate: -30% 0; } 25% { opacity: 1; } 100% { opacity: 0; translate: 80% 0; } }
+  @keyframes flicker { 0%, 100% { filter: sepia(0.18) saturate(0.88) contrast(0.96) brightness(1); } 30% { filter: sepia(0.18) saturate(0.88) contrast(0.96) brightness(1.12); } 60% { filter: sepia(0.18) saturate(0.88) contrast(0.96) brightness(0.95); } }
+  @media (prefers-reduced-motion: no-preference) {
+    .row:hover .leak, .row:focus-within .leak { animation: leak-sweep 1.1s ease-out 0.35s both; }
+    .row:hover .screen :global(.screen__img), .row:focus-within .screen :global(.screen__img) { animation: flicker 0.3s steps(3) 0.35s 2; }
+  }
   .screen__panel--left { left: 0; border-right: 1px solid var(--border); }
   .screen__panel--right { right: 0; }
 

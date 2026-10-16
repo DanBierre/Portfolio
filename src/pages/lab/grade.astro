@@ -6,21 +6,24 @@ import { site } from '../../site.config';
 
 // What each clip needed before the shared look (mirrors scripts/cut-japan-clips.sh).
 const notes: Record<(typeof CLIPS)[number], string> = {
-  street: 'Saturation down 15% and a touch darker, so the signage glows instead of shouting.',
-  walker: 'Same street, same correction: the red cardigan stays the one warm accent in frame.',
-  neon: 'Neon pulled back 15% so the white kanji leads the frame.',
-  subway: 'Fluorescent green taken out of the mids and shadows, then pushed a little darker.',
-  lantern: 'Left almost alone: a paper lantern already lives in this palette.',
-  crossing: 'Daytime pushed to dusk: down in exposure, flatter, cooler shadows under warm highlights.',
+  garden: 'Grey mist in a Kyoto garden warmed a touch; the green held back so the stone lantern leads.',
+  market: 'An overcast Asakusa afternoon pulled down a stop; the crowd stays a long-exposure blur.',
+  kimono: 'A Kyoto lane balanced warm, the lantern above her left to glow.',
+  shrine: 'Overcast daylight at the gate pushed to warm dusk; the crowd stays a long-exposure blur.',
+  gate: "Inside Sensō-ji's gate, warmed to match the shrine so the two cut as one evening.",
+  pagoda: 'The pagoda at night kept warm against a cool sky; shot vertical, so the camera tilts down it.',
+  lantern: 'Mids lifted so the paper glows; the shadows lifted and cooled, never black.',
+  building: 'A near-black wet building lifted a stop and a half; the lit windows carry it.',
+  redlight: 'Grey rain on glass warmed to tungsten; the red light left to burn.',
 };
 const steps = [
-  ['Milky blacks', 'Curves lift the floor to 4%, so shadows read as film stock, not digital black.'],
-  ['Soft highlights', 'Whites roll off at 93%: neon blooms instead of clipping.'],
-  ['Warm over cool', "Gold in the highlights, a cool cast in the shadows: the site's palette, in light."],
-  ['Colour as accent', 'Saturation to 80% everywhere, so colour lands where the eye should go.'],
-  ['Lens', 'A 0.7 px blur and a light vignette take the digital edge off.'],
-];
-const first = 'subway'; // a clear change (fluorescent green out) with light posters for a fast first paint
+  ['Brown-black', 'Curves lift the floor to 3–5%, warmer in red than blue: shadows read as 500T film, never digital black.'],
+  ['Cream highlights', 'Whites stop at about 96% red, 88% blue: neon blooms instead of clipping.'],
+  ['Warm mids', 'The mid curve bends toward amber, so skin and paper sit in the same light.'],
+  ['85% colour', 'Saturation pulled back across the board; colour lands where the light is.'],
+  ['16mm lens', 'A 0.6 px blur and a soft vignette take the digital edge off.'],
+]
+const first = 'shrine'; // the biggest change (overcast day to warm dusk)
 ---
 
 <Base

@@ -45,23 +45,23 @@ test('about uses Dan’s real rows, portrait and brush ensō', async ({ page }) 
   await expect(about.locator('.enso path')).toHaveCount(1);
 });
 
-test('numerals use the serif voice', async ({ page }) => {
+test('step numbers use the code voice, as event numbers in an edit decision list', async ({ page }) => {
   await page.goto('/');
-  const family = await page.locator('#process .num').first().evaluate((el) => getComputedStyle(el).fontFamily);
-  expect(family).toContain('Shippori Mincho');
+  const family = await page.locator('#process .evt').first().evaluate((el) => getComputedStyle(el).fontFamily);
+  expect(family).toContain('Geist Mono');
 });
 
 test('theme toggle switches to light, persists, and defaults to dark', async ({ page }) => {
   await page.goto('/');
   const bg = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-  expect(await bg()).toBe('rgb(20, 20, 20)');
+  expect(await bg()).toBe('rgb(18, 16, 14)');
   await page.getByRole('button', { name: en.themeToLight }).first().click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await expect.poll(bg).toBe('rgb(244, 241, 234)');
   await page.reload();
   await expect.poll(bg).toBe('rgb(244, 241, 234)');
   await page.getByRole('button', { name: en.themeToDark }).first().click();
-  await expect.poll(bg).toBe('rgb(20, 20, 20)');
+  await expect.poll(bg).toBe('rgb(18, 16, 14)');
 });
 
 test('Japanese homepage: toggle, lang, translated copy, way back', async ({ page }) => {

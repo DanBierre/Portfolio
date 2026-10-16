@@ -57,10 +57,16 @@
       color: var(--text-muted);
       pointer-events: none;
     }
-    /* Off the end of the timeline: clear the footer's contact row. */
-    @supports (animation-timeline: scroll()) {
-      .timecode { animation: tc-out linear both; animation-timeline: scroll(root); }
-      @keyframes tc-out { 0%, 93% { opacity: 1; } 97%, 100% { opacity: 0; } }
+    /* Off the end of the timeline: clear the footer's contact row. With reduced motion the scroll-linked
+       timecode is decorative noise, so it is not shown at all. */
+    @media (prefers-reduced-motion: no-preference) {
+      @supports (animation-timeline: scroll()) {
+        .timecode { animation: tc-out linear both; }
+        @keyframes tc-out { 0%, 93% { opacity: 1; } 97%, 100% { opacity: 0; } }
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .timecode { display: none; }
     }
   }
 
@@ -75,7 +81,6 @@
         background: var(--rust);
         transform-origin: left;
         animation: playhead linear both;
-        animation-timeline: scroll(root);
         pointer-events: none;
       }
       @keyframes playhead { from { scale: 0 1; } }
@@ -100,5 +105,12 @@
       transition: opacity 0.6s var(--ease-out);
     }
     .lamp.is-lit { opacity: 1; }
+  }
+
+  /* Timelines live in their own @supports block: CSS minifiers fold animation-timeline into the
+     animation shorthand, which browsers reject, so it must not share a rule with the shorthand. */
+  @supports (animation-range: entry 0%) {
+    .timecode { animation-timeline: scroll(root); }
+    .playhead { animation-timeline: scroll(root); }
   }
 </style>

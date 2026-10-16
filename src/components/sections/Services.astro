@@ -1,5 +1,6 @@
 ---
 import SpineMark from '../SpineMark.astro';
+import EdgePrint from '../EdgePrint.astro';
 import { ui, langOf } from '../../i18n/ui';
 
 const t = ui[langOf(Astro.currentLocale)];
@@ -7,6 +8,7 @@ const t = ui[langOf(Astro.currentLocale)];
 
 <section id="services" class="services band lattice-field spined" aria-labelledby="services-title">
   <SpineMark section="services" />
+  <EdgePrint scene={4} label="Services" meta="2 tracks" />
   <div class="wrap">
     <h2 id="services-title">{t.services.title}</h2>
     <p class="services__lede">{t.services.intro}</p>

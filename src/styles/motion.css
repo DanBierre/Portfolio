@@ -2,6 +2,8 @@
    Everything is visible by default; animation only enhances. */
 @media (prefers-reduced-motion: no-preference) {
   /* Focus pull, used by section headings as they scroll in and the hero's note and actions. */
+  /* Headings rack focus without fading, so their contrast holds before they scroll in. */
+  @keyframes rack { from { filter: blur(14px); } }
   @keyframes develop {
     from {
       opacity: 0.15;
@@ -12,10 +14,12 @@
     }
   }
 
-  /* The authored moment: the headline is a title card in the film. The footage fades up from black,
-     grain flickers over footage and type at film rate, and the type weaves with the gate. The burn
-     at each cut lights the type from Hero's script. */
-  @keyframes film-in { from { opacity: 0; } }
+  /* The authored moment, 16mm: the footage fades up from black and the headline racks into focus like
+     a lens focus pull. Grain flickers over footage and type at film rate, the projected code drifts
+     like a beam through dust, and each cut's light leak lights the type from Hero's script. */
+  /* The lamp warms up (brightness, not opacity: browsers don't count a fading-in image as painted,
+     which held back LCP by up to two seconds on phones). */
+  @keyframes film-in { from { filter: brightness(0.08); } }
   #hero .hero__media { animation: film-in 1.4s ease-out both; }
   @keyframes grain {
     0% { translate: 0 0; }
@@ -25,13 +29,32 @@
     80% { translate: 5% 4%; }
   }
   #hero .hero__grain { animation: grain 0.42s steps(1) infinite; }
-  @keyframes weave {
-    0% { translate: 0 0; }
-    25% { translate: 0.5px -0.4px; }
-    50% { translate: -0.4px 0.6px; }
-    75% { translate: 0.3px 0.2px; }
+  @keyframes focus-pull {
+    from { filter: blur(8px); scale: 1.04; opacity: 0; }
+    60% { opacity: 1; }
   }
-  #hero .hero__statement { animation: weave 0.33s steps(1) infinite; }
+  /* 24fps stepped reveal: the focus pull advances in 12fps steps (17 over 1.4 s), never a smooth fade. */
+  #hero .hero__title { animation: focus-pull 1.4s steps(17, end) 0.2s both; transform-origin: left bottom; }
+  #hero .hero__note,
+  #hero .hero__actions { animation: develop 1s steps(12, end) 1.2s both; }
+
+
+
+  /* Chemical halation breathing: the gold words' bloom swells and settles. */
+  @property --bloom { syntax: '<number>'; inherits: true; initial-value: 0.35; }
+  @keyframes bloom { from { --bloom: 0.2; } to { --bloom: 0.6; } }
+  #hero .hero__title .accent { animation: bloom 3.2s ease-in-out infinite alternate; }
+  #hero .hero__title:hover .accent { animation-play-state: paused; }
+
+  /* Grain in the letters drifts at film rate, like the grain over the footage. */
+  @keyframes letter-grain {
+    25% { background-position: 0 0, 0 0, 37px -21px, 0 0; }
+    50% { background-position: 0 0, 0 0, -15px 44px, 0 0; }
+    75% { background-position: 0 0, 0 0, 52px 9px, 0 0; }
+  }
+  #hero .hero__title .line { animation: letter-grain 0.42s steps(1) infinite; }
+  @keyframes beam { to { translate: -4vw 1vh; } }
+  #hero .hero__beam { animation: beam 16s ease-in-out infinite alternate; }
 
   /* Page transitions: a hard cut with a flash frame, like the hero edit; the work thumbnail still
      morphs into the case study header. */
@@ -47,15 +70,14 @@
      Scroll-driven, so no JavaScript; browsers without it simply show the heading. */
   @supports (animation-timeline: view()) {
     main section:not(#hero) h2 {
-      animation: develop linear both;
-      animation-timeline: view();
+      /* Stepped, like the hero: the focus pull advances in frames, never a smooth digital fade. */
+      animation: rack steps(10, end) both;
       animation-range: entry 10% entry 85%;
     }
     /* The vertical spine labels write themselves downwards, brush-stroke order. */
     @keyframes spine-write { from { clip-path: inset(0 0 100% 0); } }
     .spine-mark {
       animation: spine-write linear both;
-      animation-timeline: view();
       animation-range: entry 0% cover 30%;
     }
 
@@ -64,7 +86,6 @@
     .credits > *,
     .credits__roll > div {
       animation: credit-roll linear both;
-      animation-timeline: view();
       animation-range: entry 0% entry 90%;
     }
 
@@ -72,7 +93,6 @@
     @keyframes clip-in { from { opacity: 0; translate: -1.5rem 0; clip-path: inset(0 100% 0 0); } }
     #services li {
       animation: clip-in linear both;
-      animation-timeline: view();
       animation-range: entry 5% entry 70%;
     }
 
@@ -88,7 +108,6 @@
         background: var(--rust);
         transform-origin: left;
         animation: track linear both;
-        animation-timeline: --steps;
         animation-range: cover 10% cover 45%;
       }
       @keyframes track { from { scale: 0 1; } }
@@ -96,7 +115,7 @@
         from { opacity: 0; filter: brightness(3) blur(4px); }
         40% { opacity: 1; }
       }
-      #process li .num { animation: cut-num linear both; animation-timeline: --steps; }
+      #process li .num { animation: cut-num linear both; }
       #process li:nth-child(1) .num { animation-range: cover 10% cover 14%; }
       #process li:nth-child(2) .num { animation-range: cover 18.75% cover 22.75%; }
       #process li:nth-child(3) .num { animation-range: cover 27.5% cover 31.5%; }
@@ -116,3 +135,55 @@
     animation: none !important;
   }
 }
+
+  /* Timelines live in their own @supports block: CSS minifiers fold animation-timeline into the
+     animation shorthand, which browsers reject, so it must not share a rule with the shorthand. */
+  @supports (animation-range: entry 0%) {
+    main section:not(#hero) h2 { animation-timeline: view(); }
+    .spine-mark { animation-timeline: view(); }
+    .credits > *,
+    .credits__roll > div { animation-timeline: view(); }
+    #services li { animation-timeline: view(); }
+    #process .process__steps::before { animation-timeline: --steps; }
+    #process li .num { animation-timeline: --steps; }
+  }
+
+/* Film burn between themes and languages (Nav.astro, Base.astro): the frame burns out to warm light
+   from the switch through a gaussian blur, the swap happens under the peak, then it burns back in. A
+   screen blend only ever adds light, like a real burn. Only opacity animates (the blur is fixed), so
+   the browser runs it off the main thread and page loading can't stall it. Classes are only ever set
+   when motion is welcome. */
+:root::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  mix-blend-mode: screen;
+  backdrop-filter: blur(16px);
+  background:
+    radial-gradient(circle at var(--burn-x, 85%) var(--burn-y, 0%), #fff6e3 0, #ffd58a 14%, rgb(255 150 64 / 0.85) 34%, transparent 66%),
+    radial-gradient(ellipse 60% 90% at 0% 100%, rgb(200 97 58 / 0.9), transparent 70%),
+    rgb(255 172 96 / 0.92);
+}
+:root:is(.burn-up, .burn-hold, .burn-down)::after { visibility: visible; will-change: opacity; }
+:root.burn-up::after { animation: burn-up 0.42s cubic-bezier(0.5, 0, 0.9, 0.6) forwards; }
+/* Holding at the peak (while the next page loads, or this one settles): the light keeps flickering. */
+:root.burn-hold::after { opacity: 1; animation: burn-flicker 0.5s steps(6, end) infinite; }
+:root.burn-down::after { animation: burn-down 0.75s cubic-bezier(0.2, 0.6, 0.4, 1) forwards; }
+@keyframes burn-up { from { opacity: 0; } to { opacity: 1; } }
+@keyframes burn-flicker { 0%, 100% { opacity: 1; } 35% { opacity: 0.93; } 60% { opacity: 0.98; } 80% { opacity: 0.9; } }
+@keyframes burn-down {
+  from { opacity: 1; }
+  12% { opacity: 0.86; } /* a flicker in the gate as the new print catches */
+  22% { opacity: 0.96; }
+  to { opacity: 0; }
+}
+
+/* Until the page has settled (Base.astro), the hero intro waits on its first frame. */
+:root.loading #hero,
+:root.loading #hero *,
+:root.loading #hero *::before,
+:root.loading #hero *::after { animation-play-state: paused !important; }

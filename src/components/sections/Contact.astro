@@ -3,6 +3,7 @@ import { site } from '../../site.config';
 import BookCall from '../BookCall.astro';
 import CopyEmail from '../CopyEmail.astro';
 import SpineMark from '../SpineMark.astro';
+import EdgePrint from '../EdgePrint.astro';
 import { ui, langOf } from '../../i18n/ui';
 
 const lang = langOf(Astro.currentLocale);
@@ -11,6 +12,7 @@ const t = ui[lang];
 
 <section id="contact" class="contact band lattice-field spined" aria-labelledby="contact-title">
   <SpineMark section="contact" />
+  <EdgePrint scene={7} label="Contact" meta="End of reel" />
   <div class="wrap">
     <h2 id="contact-title">
       {

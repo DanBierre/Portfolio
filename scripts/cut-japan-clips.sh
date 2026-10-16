@@ -10,23 +10,24 @@ cd "$(dirname "$0")/.."
 FF="${FFMPEG:-ffmpeg}"
 SRC=media-src/japan
 OUT=public/media/japan
-LEN=3 # seconds per cut: a shot is at most 2.4 s, the rest is headroom for the speed ramp
+LEN=4 # seconds per cut: holds run up to 3.2 s, the rest is headroom for the speed ramp
 
-# Shared look: dense film blacks with a hint of lift, a firm S-curve, highlights that roll off just
-# before clipping, warm highlights over neutral-cool shadows, colour kept rich (the site's warm
-# night), slight lens softness. Per-clip corrections first balance each source so they cut together.
-LOOK="curves=all='0/0.012 0.2/0.15 0.5/0.52 0.8/0.86 1/0.97',\
-colorbalance=rs=-0.02:bs=0.03:rm=0.02:bm=-0.02:rh=0.06:gh=0.02:bh=-0.05,\
-eq=contrast=1.08:saturation=1.0,vignette=angle=PI/5,gblur=sigma=0.5"
+# Shared look, nostalgic 16mm printed orange: soft contrast with lifted, warm-brown shadows (no blue
+# anywhere), orange-amber highlights, organic skin, 85% colour, and the hazy softness of an old lens.
+# Red halation, grain and light leaks are added live by the hero's shader.
+LOOK="curves=r='0/0.07 0.25/0.26 0.5/0.56 0.8/0.87 1/0.98':g='0/0.05 0.25/0.21 0.5/0.48 0.8/0.77 1/0.9':b='0/0.03 0.25/0.15 0.5/0.38 0.8/0.62 1/0.74',eq=contrast=0.92:saturation=0.85,vignette=angle=PI/5,gblur=sigma=1.0"
 
 # name | source id | in-point (s) | per-clip correction before the shared look
 CLIPS=(
-  "street|4451|0.4|colorbalance=bm=0.03:gh=-0.02,eq=saturation=0.95:gamma=0.95"            # yellow signage tamed, night kept
-  "neon|4447|1.0|eq=saturation=0.88:contrast=1.04"                                          # red neon held back from clipping
-  "subway|4449|1.8|colorbalance=gs=-0.08:gm=-0.08:rm=0.04:rh=0.03,eq=contrast=1.1:gamma=0.98:saturation=0.9" # green fluorescent out, flat image given depth
-  "lantern|4109|13.6|eq=gamma=1.08:saturation=1.05"                                         # lantern held, mids lifted so it glows
-  "walker|4451|11.8|colorbalance=bm=0.03:gh=-0.02,eq=saturation=0.95:gamma=0.95"           # same street, same balance
-  "crossing|4401|2.6|eq=brightness=-0.04:gamma=0.86:contrast=1.15:saturation=0.85,colorbalance=bs=0.06:gs=0.02:rh=0.05:bh=-0.04" # overcast day pushed to dusk
+  "garden|px31679638|1.0|eq=gamma=0.92:contrast=1.08:saturation=0.9,colorbalance=rs=0.1:gs=-0.03:bs=-0.1:rm=0.06:bm=-0.06:rh=0.06:bh=-0.08" # calm: stone lantern in a misted Kyoto garden (Pexels 31679638)
+  "market|4452|2.0|eq=brightness=-0.05:gamma=0.85:saturation=0.8,colorbalance=rs=0.04:bs=-0.05:rh=0.05:bh=-0.06" # busy: Asakusa market, crowd in long exposure
+  "kimono|px31385028|0.0|eq=gamma=0.95:saturation=0.92,colorbalance=rs=0.04:bs=-0.05:rh=0.04:bh=-0.05" # calm: kimono under a lantern, looking down the lane, before she turns (Pexels 31385028)
+  "shrine|4404|1.0|eq=brightness=-0.04:gamma=0.92:contrast=1.04:saturation=0.8,colorbalance=rs=0.06:bs=-0.08:rm=0.05:bm=-0.06:rh=0.06:bh=-0.1" # busy: Sensō-ji's gate, the crowd a long-exposure blur
+  "gate|4405|2.0|eq=brightness=-0.03:gamma=0.94:contrast=1.03,colorbalance=rs=0.05:bs=-0.07:rm=0.04:bm=-0.05:rh=0.05:bh=-0.08" # calm: inside Sensō-ji's gate
+  "pagoda|px18688462|4.0|eq=gamma=1.04:saturation=0.95"                                      # night: Sensō-ji's pagoda and the Skytree, vertical (camera tilts) (Pexels 18688462)
+  "lantern|4109|13.6|eq=gamma=1.08:saturation=1.05"                                         # calm: a paper lantern held, mids lifted so it glows
+  "building|px34977302|1.0|eq=gamma=1.35:brightness=0.03:saturation=0.45,colorbalance=rs=0.14:gs=-0.06:bs=-0.12:rm=0.12:gm=-0.04:bm=-0.12" # rain: a wet building at night, lit windows (Pexels 34977302)
+  "redlight|2846|6.0|colorbalance=rs=0.22:gs=-0.04:bs=-0.22:rm=0.2:gm=-0.04:bm=-0.2:rh=0.1:bh=-0.14,eq=brightness=-0.1:gamma=0.85:saturation=1.1" # rain: a red light through rain on glass
 )
 
 if [[ "${1:-}" == preview ]]; then

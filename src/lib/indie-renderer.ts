@@ -1,9 +1,9 @@
 // Indie edit renderer: one WebGL fragment shader that cuts between shots with speed ramps,
-// motion blur and trails, halation, film burns and grain, then lays it all behind shoji paper:
+// motion blur and trails, 500T halation, light leaks and 16mm grain, then lays it all behind shoji paper:
 // a charcoal-to-gold split tone, paper fibres and soft diffusion, so the footage reads as light
 // moving behind a screen rather than video pasted onto the page.
 // Returns null when WebGL is unavailable so the caller can keep the still frame.
-import { frameAt, shots, type Clip, type Frame } from './indie-edit';
+import { frameAt, shots, printIndex, type Clip, type Frame } from './indie-edit';
 
 const VERT = `attribute vec2 a; varying vec2 vUv; void main(){ vUv = a * .5 + .5; gl_Position = vec4(a, 0., 1.); }`;
 
@@ -13,7 +13,7 @@ varying vec2 vUv;
 uniform sampler2D uImage;
 uniform vec2 uRes, uImageSize, uDir;
 uniform vec3 uCam;
-uniform float uTime, uLocal, uShot, uSource, uBlur, uBurn, uFlash;
+uniform float uTime, uLocal, uShot, uSource, uBlur, uBurn, uFlash, uDissolve;
 
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float noise(vec2 p) {
@@ -54,23 +54,26 @@ vec3 scene(vec2 uv) { return uSource < .5 ? image(uv) : night(uv); }
 void main() {
   vec2 uv = vUv + vec2(sin(uTime * 13.) * .0016, cos(uTime * 9.) * .0013); // gate weave
 
-  // Motion blur along the camera path, with a colour split that grows with speed.
+  // Motion blur along the camera path.
   vec3 col = vec3(0.);
   for (int i = 0; i < 5; i++) col += scene(uv + uDir * (float(i) / 4. - .5) * uBlur * .07);
   col /= 5.;
-  float ca = .0025 + uBlur * .007;
-  col.r = mix(col.r, scene(uv + uDir * ca + vec2(ca, 0.)).r, .6);
-  col.b = mix(col.b, scene(uv - uDir * ca - vec2(ca, 0.)).b, .6);
 
-  // Soft halation around highlights.
+  // Film blur: an old lens and a 16mm print are never razor sharp. A small four-tap diffusion,
+  // mixed in at 35%, softens edges and lets highlights spread a little.
+  vec2 px = 1.6 / uRes;
+  vec3 soft = (scene(uv + vec2(px.x, px.y)) + scene(uv - vec2(px.x, px.y)) + scene(uv + vec2(-px.x, px.y)) + scene(uv + vec2(px.x, -px.y))) * .25;
+  col = mix(col, soft, .5); // hazy, textural defocus
+
+
+  // Halation, as 500T does it: a red-orange bloom bleeding off every light (neon, lantern, headlights).
   float lum = dot(col, vec3(.299, .587, .114));
-  col += vec3(1., .5, .2) * smoothstep(.5, 1., lum) * .25;
+  col += vec3(1., .32, .12) * smoothstep(.55, 1., lum) * .42;
 
-  // House look over each clip's own grade: a light split tone toward the site's charcoal and gold,
-  // then an S-curve so blacks stay dense and highlights glow. Colour and contrast come from the clip.
+  // Orange 16mm print: warm-brown shadows, orange-amber highlights, mids (skin) left alone. No blue.
   lum = dot(col, vec3(.299, .587, .114));
-  vec3 tone = mix(vec3(.08, .08, .085), vec3(1., .84, .58), smoothstep(.0, 1., lum));
-  col = mix(col, col * tone * 1.6, .22);
+  col += vec3(.03, .012, -.025) * (1. - smoothstep(.0, .45, lum));
+  col += vec3(.07, .028, -.05) * smoothstep(.5, 1., lum);
   col = clamp(col, 0., 1.);
   col = col * col * (3. - 2. * col) * .35 + col * .65;
 
@@ -78,18 +81,23 @@ void main() {
   vec2 corner = vec2(step(.5, hash(vec2(uShot, 9.))), step(.5, hash(vec2(uShot, 4.))));
   float n = fbm(uv * 3. + vec2(uLocal * 1.7, uShot * 7.1));
   float leak = smoothstep(.35, .9, n + (1. - length(uv - corner)) * .6 - .55 + uBurn * .7);
-  col += leak * uBurn * mix(vec3(.9, .45, .15), vec3(1., .88, .6), leak) * .8;
+  col += leak * uBurn * mix(vec3(1., .42, .1), vec3(1., .9, .66), leak) * 1.25;
 
   col += uFlash * vec3(.9, .78, .55);                                  // flash frame: warm, soft
 
   // Washi fibres: long horizontal strands and a fine tooth, as if the light comes through paper.
   float fibre = fbm(vec2(uv.x * 9., uv.y * 70.)) * .6 + noise(uv * uRes * .35) * .4;
   col *= .95 + fibre * .08;
-  col += (hash(uv * uRes + fract(uTime) * 91.) - .5) * .05;            // grain
+  col = col * .9 + vec3(.06, .045, .028);                               // soft contrast: shadows lifted to warm brown
+  // Coarse, heavy 16mm grain: clumped over 2px cells, stronger in the shadows like a pushed stock.
+  float g = hash(floor(uv * uRes / 2.) + fract(uTime) * 91.) * .65 + hash(uv * uRes + fract(uTime) * 37.) * .35;
+  col += (g - .5) * (.065 + .05 * (1. - smoothstep(0., .6, dot(col, vec3(.333)))));
   col *= smoothstep(1.25, .35, length(uv - .5));                       // vignette
 
   // Alpha < 1 leaves a trail of earlier frames (preserveDrawingBuffer + blending): the time-warp smear.
-  gl_FragColor = vec4(col, 1. - uBlur * .55);
+  // Alpha below 1 lets earlier frames persist: the motion trail, and around each cut an optical
+  // dissolve where the outgoing shot ghosts into the next through the burn.
+  gl_FragColor = vec4(col, 1. - uBlur * .55 - uDissolve * .78);
 }`;
 
 export type IndieEdit = { start(): void; stop(): void; running(): boolean };
@@ -103,7 +111,14 @@ export function createIndieEdit(
     allowSoftware = false,
     clipBase = '',
     onFrame,
-  }: { allowSoftware?: boolean; clipBase?: string; onFrame?: (clock: number, f: Frame) => void } = {},
+    onLight,
+  }: {
+    allowSoftware?: boolean;
+    clipBase?: string;
+    onFrame?: (clock: number, f: Frame) => void;
+    /** The scene's light, sampled twice a second: the average colour of a few points in the frame. */
+    onLight?: (r: number, g: number, b: number) => void;
+  } = {},
 ): IndieEdit | null {
   // Hardware graphics only: on software rendering (no GPU) the edit would hog the CPU, so keep the still.
   const gl = canvas.getContext('webgl', {
@@ -149,7 +164,7 @@ export function createIndieEdit(
   const u = (name: string) => gl.getUniformLocation(prog, name);
   const U = {
     res: u('uRes'), size: u('uImageSize'), dir: u('uDir'), cam: u('uCam'), time: u('uTime'), local: u('uLocal'),
-    shot: u('uShot'), source: u('uSource'), blur: u('uBlur'), burn: u('uBurn'), flash: u('uFlash'),
+    shot: u('uShot'), source: u('uSource'), blur: u('uBlur'), burn: u('uBurn'), flash: u('uFlash'), dissolve: u('uDissolve'),
   };
 
   const texture = () => {
@@ -182,9 +197,11 @@ export function createIndieEdit(
   // A cut whose footage cannot play yet holds the last frame (a freeze frame), or the night scene
   // before any footage has arrived, so the edit never stalls.
   let hasFrame = false;
+  let printed = -1;
   const bindSource = (f: Frame): number => {
     if (f.shot !== shown) {
       shown = f.shot;
+      printed = -1; // a new shot's first frame always prints, so the cut lands on time
       prime(f.shot);
       playing?.pause();
       playing = f.clip ? (videos[f.clip] ?? null) : null;
@@ -196,6 +213,11 @@ export function createIndieEdit(
     if (f.source === 'night') return 1;
     if (!playing || playing.readyState < 2) return hasFrame ? 0 : 1;
     playing.playbackRate = f.rate;
+    // Print rate: a new footage frame only goes up when the shot's 24 or 16 fps index changes; in
+    // between, the last frame holds while grain and light keep moving at the render rate.
+    const idx = printIndex(f.local, f.fps);
+    if (hasFrame && idx === printed) return 0;
+    printed = idx;
     gl.bindTexture(gl.TEXTURE_2D, videoTex);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, playing);
     hasFrame = true;
@@ -215,6 +237,8 @@ export function createIndieEdit(
   new ResizeObserver(resize).observe(canvas);
 
   let raf = 0;
+  let lightTick = 0;
+  const px = new Uint8Array(4);
   let clock = 0; // seconds of edit time; paused time does not count
   let last = 0;
   let first = true;
@@ -235,8 +259,17 @@ export function createIndieEdit(
     gl.uniform1f(U.blur, f.blur);
     gl.uniform1f(U.burn, f.burn);
     gl.uniform1f(U.flash, f.flash);
+    gl.uniform1f(U.dissolve, f.dissolve);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     onFrame?.(clock, f);
+    if (onLight && ++lightTick % 12 === 0) {
+      let r = 0, g = 0, b = 0;
+      for (const [u, v] of [[0.25, 0.35], [0.5, 0.5], [0.75, 0.6], [0.35, 0.7]]) {
+        gl.readPixels(Math.floor(canvas.width * u), Math.floor(canvas.height * v), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+        (r += px[0]), (g += px[1]), (b += px[2]);
+      }
+      onLight(r / 4, g / 4, b / 4);
+    }
     if (first) {
       first = false;
       onFirstFrame();

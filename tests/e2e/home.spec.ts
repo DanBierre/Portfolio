@@ -14,7 +14,7 @@ test('hero CTAs', async ({ page }) => {
 test('sections in spec order', async ({ page }) => {
   await page.goto('/');
   const ids = await page.locator('main > section').evaluateAll((s) => s.map((e) => e.id));
-  expect(ids).toEqual(['hero', 'proof', 'work', 'services', 'process', 'lab', 'about', 'contact']);
+  expect(ids).toEqual(['hero', 'proof', 'work', 'about', 'services', 'process', 'lab', 'contact']);
 });
 
 test('featured work: one card per project, each linking to its case study', async ({ page }) => {

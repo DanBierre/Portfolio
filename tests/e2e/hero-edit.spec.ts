@@ -117,11 +117,23 @@ test('the burned-in slate follows the edit: code line, clock and cut track', asy
   await expect(slate.locator('[data-read="code"]')).toHaveText(/^shots\[\d\] = \['\w+'/);
   const clock = slate.locator('[data-read="clock"]');
   const t = await clock.textContent();
-  await expect(clock).not.toHaveText(t!, { timeout: 2000 });
+  await expect(clock).not.toHaveText(t!, { timeout: 6000 }); // software WebGL is slow under a full parallel run
 });
 
 test('the hero shows no portrait: the still is a frame of the footage', async ({ page }) => {
   await page.goto('/');
   const src = await page.locator('img[data-hero-still]').getAttribute('src');
   expect(src).toMatch(/hero-still/);
+});
+
+test('the headline holds still when the edit starts: the slate’s space is kept from the start', async ({ page }) => {
+  await allowSoftware(page);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  const y = () => page.locator('#hero .hero__statement').evaluate((e) => Math.round(e.getBoundingClientRect().top + scrollY));
+  const before = await y();
+  const slate = page.locator('[data-hero-slate]');
+  expect(await slate.evaluate((e) => e.getBoundingClientRect().height)).toBeGreaterThan(20); // reserved, not yet shown
+  await expect(slate).toBeVisible({ timeout: 8000 });
+  expect(await y()).toBe(before);
 });

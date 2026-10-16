@@ -54,10 +54,10 @@ const en = {
   process: {
     title: 'How we work together',
     steps: [
-      { title: 'Brief', text: 'A 20-minute call about your pitch or project, followed by a written scope.' },
-      { title: 'Prototype in 1 week', text: 'A working prototype you can show your client, so the idea is proven before the full budget is spent.' },
-      { title: 'Build', text: 'The production build, working inside your process and under your agency’s name if you prefer.' },
-      { title: 'Handover', text: 'Documented code and a walkthrough, so your team can own what we built.' },
+      { title: 'Brief', text: 'A 20-minute call about your pitch or project, followed by a written scope.', reel: 'BRIEF', dur: '20 min call', out: 'Written scope' },
+      { title: 'Prototype in 1 week', text: 'A working prototype you can show your client, so the idea is proven before the full budget is spent.', reel: 'PROTO', dur: '1 week', out: 'Working prototype' },
+      { title: 'Build', text: 'The production build, working inside your process and under your agency’s name if you prefer.', reel: 'BUILD', dur: 'Your timeline', out: 'Production build' },
+      { title: 'Handover', text: 'Documented code and a walkthrough, so your team can own what we built.', reel: 'HANDOFF', dur: 'Walkthrough', out: 'Docs and code' },
     ],
   },
   lab: { title: 'From the Lab', all: 'See the Lab', interactive: 'interactive', study: 'study', live: 'live', progress: 'in progress' },
@@ -164,10 +164,10 @@ const ja: Dict = {
   process: {
     title: '進め方',
     steps: [
-      { title: 'ヒアリング', text: 'ピッチやプロジェクトについて20分の通話。その後、作業範囲を文書でお送りします。' },
-      { title: '1週間でプロトタイプ', text: 'クライアントに見せられる動くプロトタイプ。予算をすべて使う前にアイデアを検証できます。' },
-      { title: '本制作', text: '御社の進め方に合わせて本番を制作。御社名義での対応も可能です。' },
-      { title: '引き継ぎ', text: 'ドキュメント付きのコードと説明で、チームが自分たちで運用できる状態にします。' },
+      { title: 'ヒアリング', text: 'ピッチやプロジェクトについて20分の通話。その後、作業範囲を文書でお送りします。', reel: 'BRIEF', dur: '20分の通話', out: '作業範囲書' },
+      { title: '1週間でプロトタイプ', text: 'クライアントに見せられる動くプロトタイプ。予算をすべて使う前にアイデアを検証できます。', reel: 'PROTO', dur: '1週間', out: '動くプロトタイプ' },
+      { title: '本制作', text: '御社の進め方に合わせて本番を制作。御社名義での対応も可能です。', reel: 'BUILD', dur: 'ご希望の期間で', out: '本番環境' },
+      { title: '引き継ぎ', text: 'ドキュメント付きのコードと説明で、チームが自分たちで運用できる状態にします。', reel: 'HANDOFF', dur: '説明会', out: 'ドキュメントとコード' },
     ],
   },
   lab: { title: 'ラボから', all: 'ラボを見る', interactive: 'インタラクティブ', study: '習作', live: '公開中', progress: '制作中' },

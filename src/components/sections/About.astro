@@ -1,6 +1,7 @@
 ---
 import { Picture } from 'astro:assets';
 import SpineMark from '../SpineMark.astro';
+import EdgePrint from '../EdgePrint.astro';
 import portrait from '../../assets/portrait.jpg';
 import { brushRing } from '../../lib/enso';
 import { ui, langOf } from '../../i18n/ui';
@@ -11,6 +12,7 @@ const ring = brushRing({ r: 40, width: 9, seed: 2 });
 
 <section id="about" class="about spined" aria-labelledby="about-title">
   <SpineMark section="about" />
+  <EdgePrint scene={3} label="About" meta="Auckland → Japan" />
   <div class="wrap about__grid">
     <div class="about__text">
       <h2 id="about-title">{t.about.title}</h2>
@@ -77,16 +79,19 @@ const ring = brushRing({ r: 40, width: 9, seed: 2 });
     height: 100%;
     object-fit: cover;
     object-position: 50% 30%;
-    filter: saturate(0.7) sepia(0.2) contrast(1.05) brightness(0.92);
+    /* The reel's orange 16mm print: soft contrast, lifted warm shadows, a little haze. */
+    filter: sepia(0.32) saturate(0.85) contrast(0.92) brightness(1.03) blur(0.3px);
   }
   /* Washi over the photo, as over the hero footage. */
   .portrait__pic::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: url('/textures/washi.svg');
-    mix-blend-mode: soft-light;
-    opacity: 0.5;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+      radial-gradient(70% 60% at 50% 35%, rgb(255 180 100 / 0.25), transparent 70%);
+    mix-blend-mode: overlay;
+    opacity: 0.55;
   }
   .enso { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--rust); }
 
@@ -97,7 +102,6 @@ const ring = brushRing({ r: 40, width: 9, seed: 2 });
       .enso {
         mask: conic-gradient(from -20deg, #000 var(--sweep), transparent 0);
         animation: brush linear both;
-        animation-timeline: view();
         animation-range: entry 20% cover 45%;
       }
       @keyframes brush { from { --sweep: 0deg; } }
@@ -107,5 +111,11 @@ const ring = brushRing({ r: 40, width: 9, seed: 2 });
   @media (min-width: 48em) {
     .about__grid { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); column-gap: var(--space-xl); }
     .about__rows > div { grid-template-columns: 10rem minmax(0, 1fr); }
+  }
+
+  /* Timelines live in their own @supports block: CSS minifiers fold animation-timeline into the
+     animation shorthand, which browsers reject, so it must not share a rule with the shorthand. */
+  @supports (animation-range: entry 0%) {
+    .enso { animation-timeline: view(); }
   }
 </style>

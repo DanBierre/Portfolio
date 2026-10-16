@@ -1,24 +1,36 @@
 ---
 import BookCall from '../BookCall.astro';
 import SpineMark from '../SpineMark.astro';
+import EdgePrint from '../EdgePrint.astro';
 import { ui, langOf } from '../../i18n/ui';
 
 const t = ui[langOf(Astro.currentLocale)];
+// Record timecodes, starting at 01:00:00:00 as an edit decision list does.
+const tcs = ['01:00:00:00', '01:00:20:00', '01:07:20:00', '01:28:20:00', '01:29:00:00'];
 ---
 
 <section id="process" class="process spined" aria-labelledby="process-title">
   <SpineMark section="process" />
+  <EdgePrint scene={5} label="Process" meta="EDL · 4 events" />
   <div class="wrap">
     <h2 id="process-title">{t.process.title}<span class="count" aria-hidden="true">{t.process.steps.length}</span></h2>
+    <!-- An edit decision list: each step is an event with a reel, record in/out, duration and output. -->
+    <div class="edl__head" aria-hidden="true">
+      <span>#</span><span>Reel</span><span>Rec in</span><span>Rec out</span><span>Step</span><span>Duration · output</span>
+    </div>
     <ol class="process__steps" role="list">
       {
         t.process.steps.map((s, i) => (
           <li>
-            <span class="num" aria-hidden="true">
-              {String(i + 1).padStart(2, '0')}
-            </span>
-            <h3>{s.title}</h3>
-            <p>{s.text}</p>
+            <span class="evt" aria-hidden="true">{String(i + 1).padStart(3, '0')}</span>
+            <span class="reel" aria-hidden="true">{s.reel}</span>
+            <span class="tc" aria-hidden="true">{tcs[i]}</span>
+            <span class="tc" aria-hidden="true">{tcs[i + 1]}</span>
+            <div class="step">
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </div>
+            <p class="dur">{s.dur}<span>{s.out}</span></p>
           </li>
         ))
       }
@@ -32,24 +44,41 @@ const t = ui[langOf(Astro.currentLocale)];
 <style>
   .process { padding-block: var(--space-2xl) 0; }
   h2 { margin-bottom: var(--space-xl); max-width: 12ch; }
-  .process__steps { display: grid; gap: 0 var(--space-l); padding: 0; list-style: none; }
+
+  /* Edit decision list: mono for the code columns (event, reel, timecodes), the editor's voice for
+     the step itself. One hairline per event. */
+  .process__steps { display: grid; padding: 0; margin: 0; list-style: none; border-top: 1px solid var(--border); }
+  .edl__head { display: none; }
   li {
     display: grid;
-    gap: var(--space-s);
-    align-content: start;
-    padding-block: var(--space-m) var(--space-l);
-    border-top: 1px solid var(--border);
+    grid-template-columns: 3rem minmax(0, 1fr);
+    gap: 0.3rem var(--space-m);
+    padding-block: var(--space-m);
+    border-bottom: 1px solid var(--border);
   }
-  /* Shoji-style serif figures. */
-  .num { font-size: var(--step-3); line-height: 1; color: var(--gold); }
-  li p { color: var(--text-muted); }
+  .evt, .reel, .tc { font: 400 0.78rem / 1.6 var(--font-data); letter-spacing: 0.04em; }
+  .evt { color: var(--gold); grid-row: span 4; }
+  .reel { color: var(--rust); }
+  .tc { color: var(--code); font-variant-numeric: tabular-nums; }
+  .step { display: grid; gap: 0.3rem; }
+  .step h3 { font-size: var(--step-1); font-weight: 500; letter-spacing: -0.02em; }
+  .step p { color: var(--text-muted); max-width: 52ch; }
+  .dur { display: grid; gap: 0.15rem; margin: 0; font-weight: 500; }
+  .dur span { color: var(--text-muted); font-weight: 400; font-size: var(--step--1); }
   .process__cta { margin-top: var(--space-l); }
 
-  @media (min-width: 48em) {
-    .process__steps { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (min-width: 72em) {
-    .process__steps { grid-template-columns: repeat(4, 1fr); }
-    li { min-height: calc(var(--kumiko) * 4); }
+  @media (min-width: 64em) {
+    .edl__head,
+    li { grid-template-columns: 3rem 5.5rem 7.5rem 7.5rem minmax(0, 1fr) 12rem; align-items: start; }
+    .edl__head {
+      display: grid;
+      gap: var(--space-m);
+      padding-bottom: 0.6rem;
+      font: 400 0.66rem var(--font-data);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .evt { grid-row: auto; }
   }
 </style>

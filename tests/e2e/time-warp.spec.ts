@@ -24,6 +24,6 @@ test('time warp: play runs the shot and the playhead moves', async ({ page }) =>
 
 test('time warp: picking a clip swaps the footage', async ({ page }) => {
   await page.goto('/lab/time-warp');
-  await page.getByRole('radio', { name: 'neon' }).check();
-  await expect(page.locator('[data-video]')).toHaveAttribute('src', /neon\.mp4$/);
+  await page.getByRole('radio', { name: 'lantern' }).check();
+  await expect(page.locator('[data-video]')).toHaveAttribute('src', /lantern\.mp4$/);
 });

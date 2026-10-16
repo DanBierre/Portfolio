@@ -2,6 +2,7 @@
 import { Picture } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import SpineMark from '../SpineMark.astro';
+import EdgePrint from '../EdgePrint.astro';
 import { ui, langOf } from '../../i18n/ui';
 
 const t = ui[langOf(Astro.currentLocale)];
@@ -11,6 +12,7 @@ const items = all.slice(0, 3);
 
 <section id="lab" class="lab spined" aria-labelledby="lab-title">
   <SpineMark section="lab" />
+  <EdgePrint scene={6} label="Lab" meta="Reels 01–03" />
   <div class="wrap">
     <div class="lab__head">
       <h2 id="lab-title">{t.lab.title}<span class="count" aria-hidden="true">{all.length}</span></h2>
@@ -27,6 +29,7 @@ const items = all.slice(0, 3);
               sizes="(min-width: 48em) 18rem, 100vw"
               alt={item.data.imageAlt}
             />
+            <p class="reel-tape" aria-hidden="true"><span class="reel-can"></span>REEL {String(i + 1).padStart(2, '0')}</p>
             <div class="lab__caption">
               <h3>{item.data.title}</h3>
               <p class="label">
@@ -53,14 +56,38 @@ const items = all.slice(0, 3);
   }
   .lab__all { color: var(--text); text-decoration: underline; }
   .lab__grid { display: grid; gap: var(--space-xl) var(--space-m); }
-  .lab__item { display: grid; gap: var(--space-s); align-content: start; }
+  .lab__item { position: relative; display: grid; gap: var(--space-s); align-content: start; }
+  /* Each piece as a labelled reel: covers sit in sepia like stored film and warm up on hover; a film
+     can and a strip of cream tape carry the reel number. */
   .lab__item :global(img) {
     aspect-ratio: 1 / 2;
     object-fit: cover;
-    filter: grayscale(1);
+    filter: sepia(0.6) saturate(0.55) brightness(0.88);
     transition: filter 0.5s var(--ease-out);
   }
-  .lab__item:hover :global(img) { filter: none; }
+  .lab__item:hover :global(img) { filter: sepia(0.18) saturate(0.9) brightness(1); }
+  .reel-tape {
+    position: absolute;
+    top: var(--space-s);
+    left: calc(var(--space-s) * -0.5);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0.3rem 0.6rem;
+    background: var(--ink-light);
+    color: var(--ground);
+    font: 400 0.66rem var(--font-data);
+    letter-spacing: 0.14em;
+    rotate: -2deg;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.35);
+  }
+  .reel-can {
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--ink-light) 0 18%, var(--ground) 19% 28%, #5a5248 29% 62%, var(--ground) 63%);
+  }
   .lab__caption { display: flex; justify-content: space-between; gap: var(--space-s); align-items: baseline; }
   h3 { font-size: var(--step-0); font-weight: 500; letter-spacing: -0.01em; }
   .lab__summary { color: var(--text-muted); font-size: var(--step--1); }

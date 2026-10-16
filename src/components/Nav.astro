@@ -73,7 +73,7 @@ const links = [
       btn.setAttribute('aria-label', light ? btn.dataset.toDark! : btn.dataset.toLight!);
       btn.setAttribute('aria-pressed', String(light));
     };
-    btn.addEventListener('click', () => {
+    const apply = () => {
       const next = root.dataset.theme === 'light' ? 'dark' : 'light';
       if (next === 'light') root.dataset.theme = 'light';
       else delete root.dataset.theme;
@@ -81,10 +81,46 @@ const links = [
         localStorage.setItem('theme', next);
       } catch {}
       sync();
-    });
+    };
+    // Swap under the peak, let the restyle land while still covered, then burn back in.
+    btn.addEventListener('click', () =>
+      burn(btn, () => {
+        apply();
+        requestAnimationFrame(() => requestAnimationFrame(() => root.classList.replace('burn-up', 'burn-down')));
+      }),
+    );
     btn.hidden = false;
     sync();
   }
+
+  // Film burn (motion.css): burn out from the switch, swap under the peak. Instant with reduced motion.
+  const PEAK_MS = 420;
+  function burn(from: Element, atPeak: () => void) {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return atPeak();
+    const r = from.getBoundingClientRect();
+    root.style.setProperty('--burn-x', `${Math.round(r.left + r.width / 2)}px`);
+    root.style.setProperty('--burn-y', `${Math.round(r.top + r.height / 2)}px`);
+    root.classList.remove('burn-down', 'burn-hold');
+    root.classList.add('burn-up');
+    setTimeout(atPeak, PEAK_MS);
+  }
+
+  // Language: burn out here, and the next page burns in (Base.astro reads the flag before paint).
+  for (const a of document.querySelectorAll<HTMLAnchorElement>('nav a[hreflang]')) {
+    a.addEventListener('click', (e) => {
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; // new tab etc.
+      e.preventDefault();
+      burn(a, () => {
+        try {
+          if (root.classList.contains('burn-up')) sessionStorage.setItem('burn', '1');
+        } catch {}
+        root.classList.replace('burn-up', 'burn-hold'); // keep flickering while the next page loads
+        location.href = a.href;
+      });
+    });
+  }
+  // Back to this page from the history cache: don't come back mid-burn.
+  addEventListener('pageshow', (e) => e.persisted && root.classList.remove('burn-up', 'burn-hold', 'burn-down'));
 </script>
 
 <style>

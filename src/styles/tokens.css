@@ -1,18 +1,38 @@
+/* Metric-matched stand-ins while the web fonts load, so the swap moves nothing (sizes from the
+   fonts' own advance widths and vertical metrics). Latin only: Japanese falls through the stack. */
+@font-face {
+  font-family: 'Hanken Fallback';
+  src: local('Arial'), local('Helvetica'), local('Liberation Sans');
+  size-adjust: 99.64%;
+  ascent-override: 100.36%;
+  descent-override: 30.41%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Geist Mono Fallback';
+  src: local('Courier New'), local('Courier'), local('Liberation Mono');
+  size-adjust: 99.98%;
+  ascent-override: 100.52%;
+  descent-override: 29.5%;
+  line-gap-override: 0%;
+}
+
 /* Gallery Index tokens. One world for every visitor: near-black ground, backlit washi bands.
    Contrast (WCAG): ink/ground 15.4, muted/ground 6.6, muted/surface 6.0, error/ground 8.3;
    washi: ink 13.0, muted 6.4, error 6.2. */
 :root {
   color-scheme: dark;
 
-  --ground: #141414;
-  --ink-light: #ecebe7;
+  /* Film colours, matched to the reel: warm black ground, cream type. */
+  --ground: #12100e;
+  --ink-light: #ece4d4;
 
   --bg: var(--ground);
-  --surface: #1e1e1d;
+  --surface: #1c1916;
   --text: var(--ink-light);
-  --text-muted: #9d9b95;
-  --border: #2e2e2c;
-  --lattice: rgb(236 235 231 / 0.06);
+  --text-muted: #a39b8c;
+  --border: #2e2a25;
+  --lattice: rgb(236 228 212 / 0.06);
   --focus: var(--ink-light);
   --error: #ff8f80;
   /* Buttons invert the ground: light pill on dark, dark pill on washi. */
@@ -22,11 +42,13 @@
      Gold/ground 7.7, rust/ground 4.6. */
   --gold: #c9a24f;
   --rust: #c8613a;
-  --spine-line: rgb(236 235 231 / 0.45);
+  --spine-line: rgb(236 228 212 / 0.45);
+  /* The code voice: mono, in warm parchment (no blue, like the grade). Data and metadata only. */
+  --code: #b8a98a;
 
-  --font-display: 'Hanken Grotesk Variable', 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', ui-sans-serif, system-ui, sans-serif;
-  --font-body: 'Hanken Grotesk Variable', 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', ui-sans-serif, system-ui, sans-serif;
-  --font-data: 'Geist Mono Variable', ui-monospace, monospace;
+  --font-display: 'Hanken Grotesk Variable', 'Hanken Fallback', 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Hanken Grotesk Variable', 'Hanken Fallback', 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', ui-sans-serif, system-ui, sans-serif;
+  --font-data: 'Geist Mono Variable', 'Geist Mono Fallback', ui-monospace, monospace;
   /* Serif voice (as in Shoji and the live site): numerals, counts and the Japanese spine labels only. */
   --font-serif: 'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', ui-serif, serif;
 
@@ -73,4 +95,5 @@
   --gold: #8a6316;
   --rust: #8a3c21;
   --spine-line: rgb(27 27 26 / 0.45);
+  --code: #6b5d43; /* sepia on paper, 5.7 */
 }

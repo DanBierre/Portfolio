@@ -22,22 +22,30 @@ const t = ui[lang];
       sizes="100vw"
       alt=""
       loading="eager"
+      fetchpriority="high"
+      quality={40}
       class="hero__still"
       data-hero-still
     />
     <canvas class="hero__edit" data-hero-edit data-clips="/media/japan/" hidden></canvas>
     <span class="hero__paper"></span>
     <span class="hero__scrim"></span>
-    <span class="hero__kumiko lattice"></span>
+    <!-- The code, projected into the scene as light: the line driving the current shot, huge and out of
+         focus, drifting like a projector beam catching dust. -->
+    <pre class="hero__beam" data-hero-beam aria-hidden="true">{`shots[0] = ['${shots[0].clip}', ${shots[0].duration.toFixed(1)}, ${shots[0].ramp.toFixed(2).replace(/^0/, '')}]`}</pre>
+    <!-- Projector gate: the rounded corners and soft dark edge of a 16mm frame thrown on a wall. -->
+    <span class="hero__projector"></span>
   </div>
   <SpineMark section="hero" top="var(--space-l)" />
   <div class="wrap hero__grid">
     <div class="hero__statement">
+      <!-- A live code comment for the shot on screen: the edit, annotated as it plays. -->
+      <p class="hero__comment" data-read="comment" aria-hidden="true">{`// 01 ${shots[0].clip} · ${shots[0].duration.toFixed(1)}s · ${shots[0].fps}fps`}</p>
       <h1 id="hero-title" class="hero__title" aria-label={t.hero.title}>
         {
           t.hero.lines.map((line, i) => (
             <>
-              <span class:list={['line', { 'line--indent': i > 0 }]} aria-hidden="true">
+              <span class:list={['line', { 'line--indent': i > 0 }]} data-ln={String(i + 1).padStart(2, '0')} aria-hidden="true">
                 {line.map((seg) => (seg.accent ? <span class="accent">{seg.text}</span> : seg.text))}
               </span>
               {i < t.hero.lines.length - 1 && lang !== 'ja' && ' '}
@@ -55,7 +63,7 @@ const t = ui[lang];
     </div>
 
     <!-- Burn-in, as on an editor's dailies: the code driving this frame and the cut's timeline. -->
-    <div class="hero__slate" data-hero-slate aria-hidden="true" hidden>
+    <div class="hero__slate is-waiting" data-hero-slate aria-hidden="true">
       <ol class="hero__track">
         {shots.map((s, i) => <li data-shot={i} style={`flex-grow: ${s.duration}`}></li>)}
       </ol>
@@ -76,6 +84,8 @@ const t = ui[lang];
     <span class="when-playing" aria-hidden="true">pause</span><span class="when-paused" aria-hidden="true">play</span>
   </button>
   <!-- Film grain over everything in the frame, type included: the headline is a title card in the film. -->
+  <!-- Viewfinder gate: L-bracket corner marks and a centre cross, as in a 16mm camera's finder. -->
+  <span class="hero__gate" aria-hidden="true"></span>
   <span class="hero__grain" aria-hidden="true"></span>
 </section>
 
@@ -92,7 +102,9 @@ const t = ui[lang];
   const toggle = document.querySelector<HTMLButtonElement>('.hero__toggle');
   // Visitors asking to save data keep the still: the edit streams about 9 MB of footage.
   const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
-  if (canvas && still && toggle && !reduce && !saveData) {
+  // Built once the page is idle: compiling the shader before first paint delays the poster (LCP).
+  const boot = () => {
+    if (!canvas || !still || !toggle || reduce || saveData) return;
     canvas.hidden = false;
     // Tests run in software-rendered Chromium; they opt in explicitly. Real visitors need a GPU.
     const allowSoftware = (window as any).__indieEditAllowSoftware === true;
@@ -102,6 +114,8 @@ const t = ui[lang];
     const segs = slate ? [...slate.querySelectorAll<HTMLElement>('[data-shot]')] : [];
     const read = (k: string) => slate?.querySelector<HTMLElement>(`[data-read="${k}"]`);
     const out = { code: read('code'), clock: read('clock'), rate: read('rate') };
+    const beam = document.querySelector<HTMLElement>('[data-hero-beam]');
+    const comment = document.querySelector<HTMLElement>('[data-read="comment"]');
     const hero = canvas.closest<HTMLElement>('#hero')!;
     const line = (i: number) => {
       const s = shots[i];
@@ -113,6 +127,11 @@ const t = ui[lang];
         segs[lit]?.classList.remove('is-live');
         segs[f.shot]?.classList.add('is-live');
         if (out.code) out.code.textContent = line(f.shot);
+        if (beam) beam.textContent = line(f.shot);
+        const s = shots[f.shot];
+        if (comment) comment.textContent = `// ${String(f.shot + 1).padStart(2, '0')} ${s.clip} · ${s.duration.toFixed(1)}s · ${s.fps}fps`;
+        // Each cut's burn comes in from a different side of the type.
+        hero.style.setProperty('--bx', `${[18, 82, 40, 65, 8, 92, 30][f.shot % 7]}%`);
         lit = f.shot;
       }
       // The film burn and flash at each cut light the title card too.
@@ -121,10 +140,15 @@ const t = ui[lang];
       if (out.clock) out.clock.textContent = (clock % LOOP).toFixed(2).padStart(5, '0');
       if (out.rate) out.rate.textContent = f.rate.toFixed(2);
     };
-    const edit = createIndieEdit(canvas, () => ((still.hidden = true), slate && (slate.hidden = false)), {
+    const edit = createIndieEdit(canvas, () => ((still.hidden = true), slate?.classList.remove('is-waiting')), {
       allowSoftware,
       clipBase: canvas.dataset.clips,
       onFrame,
+      // Lit by the scene: the headline's glow takes the hue of the footage, at full brightness.
+      onLight: (r, g, b) => {
+        const k = 255 / Math.max(r, g, b, 1);
+        hero.style.setProperty('--scene', `${Math.round(r * k)} ${Math.round(g * k)} ${Math.round(b * k)}`);
+      },
     });
     if (!edit) {
       canvas.hidden = true;
@@ -139,38 +163,37 @@ const t = ui[lang];
         paused ? edit.stop() : edit.start();
         sync();
       });
-      // Start once the page is idle (never competing with first load), and only run while on screen.
-      const begin = () =>
-        new IntersectionObserver(([e]) => (e.isIntersecting && !paused ? edit.start() : edit.stop())).observe(canvas);
-      'requestIdleCallback' in window ? requestIdleCallback(begin, { timeout: 2000 }) : setTimeout(begin, 1200);
+      // Only run while on screen.
+      new IntersectionObserver(([e]) => (e.isIntersecting && !paused ? edit.start() : edit.stop())).observe(canvas);
       toggle.hidden = false;
       sync();
     }
-  }
+  };
+  'requestIdleCallback' in window ? requestIdleCallback(boot, { timeout: 2000 }) : setTimeout(boot, 1200);
 </script>
 
 <style>
   /* The hero is always a dark screen with footage behind it, in both themes. */
   .hero {
-    --text: #ecebe7;
+    --text: #ece4d4;
     --text-muted: #c2c0ba;
     --border: rgb(236 235 231 / 0.28);
     --gold: #c9a24f;
     --rust: #c8613a;
-    --focus: #ecebe7;
-    --btn-bg: #ecebe7;
-    --btn-text: #141414;
+    --focus: #ece4d4;
+    --btn-bg: #ece4d4;
+    --btn-text: #12100e;
     --spine-line: rgb(236 235 231 / 0.45);
     --lattice: rgb(236 235 231 / 0.07);
     --burn: 0;
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    background: #141414;
+    background: #0d0c0b; /* the dark of the room around the projected frame */
     color: var(--text);
   }
 
-  /* Footage, full bleed, behind paper and a kumiko lattice. */
+  /* Footage, full bleed, behind paper, inside a projected 16mm frame. */
   .hero__media { position: absolute; inset: 0; z-index: -1; }
   .hero__media :global(picture) { display: contents; }
   .hero__media :global(.hero__still),
@@ -190,7 +213,16 @@ const t = ui[lang];
       linear-gradient(to top, rgb(20 20 20 / 0.92) 0%, rgb(20 20 20 / 0.72) 35%, rgb(20 20 20 / 0.3) 60%, transparent 80%, rgb(20 20 20 / 0.25)),
       linear-gradient(to right, rgb(20 20 20 / 0.55), transparent 70%);
   }
-  .hero__kumiko { position: absolute; inset: 0; opacity: 0.8; }
+  .hero__projector {
+    position: absolute;
+    inset: 0;
+    border-radius: clamp(10px, 2vw, 28px);
+    box-shadow:
+      0 0 0 40px #0d0c0b,
+      inset 0 0 0 clamp(4px, 0.6vw, 10px) #0d0c0b,
+      inset 0 0 clamp(30px, 6vw, 90px) clamp(10px, 2vw, 30px) rgb(13 12 11 / 0.85);
+    pointer-events: none;
+  }
 
   .hero__grid {
     position: relative;
@@ -212,17 +244,78 @@ const t = ui[lang];
   .hero__title {
     font-size: var(--hero-size);
     line-height: 0.9;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.05em; /* tight, as an indie film title is set */
     font-weight: 430;
     text-wrap: initial;
-    /* Halation, as on the footage: a warm bloom around the type that flares with each cut's burn. */
-    text-shadow:
-      0 0 0.35em rgb(255 186 110 / calc(0.12 + var(--burn) * 0.32)),
-      0 0.04em 0.4em rgb(20 20 20 / 0.45);
-    filter: brightness(calc(1 + var(--burn) * 0.15));
   }
-  .hero__title .line { display: block; }
+  /* Film-stock grain and film burn in the type: each line is filled with a grain plate over ivory at 96%,
+     plus a burn layer, a warm light that blooms through the letters from a new side at every cut
+     (--bx, --burn from the edit) and a faint amber leak that never quite leaves. The letters carry the
+     footage's texture and light; shadows go on as drop-shadow filters, under the fill. */
+  .hero__title .line {
+    position: relative;
+    display: block;
+    width: fit-content;
+    background:
+      radial-gradient(circle at var(--bx, 20%) 55%, rgb(255 160 70 / calc(var(--burn) * 0.95)), rgb(255 205 140 / calc(var(--burn) * 0.4)) 28%, transparent 60%),
+      linear-gradient(100deg, rgb(255 170 90 / 0.28), transparent 45%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .08 0 0 0 0 .06 0 0 0 0 .04 1.1 0 0 0 -.5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E") 0 0 / 160px, rgb(236 235 231 / 0.96);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* A soft warm bloom round the type that swells with each cut's light leak. */
+    filter:
+      drop-shadow(0 0 0.3em rgb(var(--scene, 255 186 110) / calc(0.14 + var(--burn) * 0.3)))
+      drop-shadow(0 0.04em 0.35em rgb(20 20 20 / 0.5));
+  }
+  /* Chemical halation: the gold words bloom #FFB800 as light bleeds through the emulsion. */
+  .hero__title .accent {
+    --bloom: 0.35;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .08 0 0 0 0 .06 0 0 0 0 .04 1.1 0 0 0 -.5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E") 0 0 / 160px, rgb(201 162 79 / 0.95);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 calc(0.12em + var(--bloom) * 0.25em) rgb(255 184 0 / calc(0.25 + var(--bloom) * 0.35)));
+    transition: --bloom 0.8s var(--ease-out);
+  }
+  .hero__title:hover .accent { --bloom: 1; }
   .hero__title .line--indent { padding-left: 2.6em; }
+  /* Code margin: mono line numbers in the gutter, like an editor; a caret after the last line. */
+  /* Line numbers are generated content, so they never enter the headline's text. */
+  .hero__title .line::before {
+    content: attr(data-ln);
+    display: none; /* only where the spine margin gives the numbers room (below) */
+    position: absolute;
+    left: -2.6rem;
+    top: 0.25em;
+    font: 400 0.7rem / 1 var(--font-data);
+    letter-spacing: 0;
+    color: rgb(201 162 79 / 0.55);
+    -webkit-text-fill-color: rgb(201 162 79 / 0.55);
+    filter: none;
+  }
+  .hero__title .line:last-child::after {
+    content: '';
+    display: inline-block;
+    width: 0.07em;
+    height: 0.8em;
+    margin-left: 0.08em;
+    vertical-align: -0.04em;
+    background: #ffb800;
+    box-shadow: 0 0 0.3em rgb(255 184 0 / 0.6);
+  }
+  @keyframes caret { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__title .line:last-child::after { animation: caret 1.06s steps(1) infinite; }
+  }
+  @media (min-width: 64em) { .hero__title .line::before { display: block; } }
+  .hero__comment {
+    margin: 0 0 var(--space-s);
+    font: 400 clamp(0.68rem, 0.55rem + 0.3vw, 0.8rem) / 1 var(--font-data);
+    letter-spacing: 0.02em;
+    color: rgb(201 162 79 / 0.75);
+    text-shadow: 0 0 0.6em rgb(255 154 60 / 0.35);
+  }
   .hero__title:lang(ja) { letter-spacing: 0; line-height: 1.1; font-weight: 600; }
 
   /* The note sits in the gap the indent leaves, as in a Kolkhoze statement. */
@@ -250,9 +343,12 @@ const t = ui[lang];
     font: 400 clamp(0.6rem, 0.48rem + 0.25vw, 0.72rem) / 1.4 var(--font-data);
     letter-spacing: 0.02em;
     pointer-events: none;
+    transition: opacity 0.6s var(--ease-out);
   }
+  /* Its space is kept until the edit's first frame, so the headline never jumps; then it fades up. */
+  .hero__slate.is-waiting { visibility: hidden; opacity: 0; }
   .hero__slate p { display: flex; justify-content: space-between; gap: 1em; margin: 0.5em 0 0; white-space: nowrap; }
-  .hero__slate b { font-weight: 400; color: #ecebe7; font-variant-numeric: tabular-nums; }
+  .hero__slate b { font-weight: 400; color: #ece4d4; font-variant-numeric: tabular-nums; }
   .hero__code { overflow: hidden; text-overflow: ellipsis; }
   /* The cut as a track: one segment per shot, sized by its length; the playing one fills in gold. */
   .hero__track { display: flex; gap: 2px; margin: 0; padding: 0; list-style: none; }
@@ -263,6 +359,73 @@ const t = ui[lang];
   }
   .hero__track li:not(.is-live) { --p: 0; }
 
+  .hero__beam {
+    position: absolute;
+    top: 9%;
+    right: -6vw;
+    margin: 0;
+    font: 400 clamp(2.6rem, 0.8rem + 6.5vw, 8.5rem) / 1 var(--font-data);
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+    color: rgb(255 214 160 / 0.34);
+    mix-blend-mode: screen;
+    filter: blur(2.5px) drop-shadow(0 0 0.25em rgb(255 154 60 / 0.35));
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Halation buttons: hairline borders instead of flat blocks; on hover the light blooms amber, as
+     film halation bleeds round a bright source. Book a call keeps a faint warm fill to lead. */
+  .hero :global(.btn--primary),
+  .hero :global(.btn--secondary) {
+    border: 0.5px solid #57534e; /* stone-600: stone-700 disappears against the night footage */
+    background: rgb(20 20 20 / 0.35);
+    color: var(--text);
+    backdrop-filter: blur(6px);
+    transition: box-shadow 0.6s var(--ease-out), border-color 0.6s var(--ease-out), text-shadow 0.6s var(--ease-out), background-color 0.6s var(--ease-out);
+  }
+  .hero :global(.btn--primary) { background: rgb(201 162 79 / 0.14); border-color: rgb(201 162 79 / 0.55); }
+  .hero :global(.btn--primary:hover),
+  .hero :global(.btn--secondary:hover),
+  .hero :global(.btn--primary:focus-visible),
+  .hero :global(.btn--secondary:focus-visible) {
+    background: rgb(201 162 79 / 0.18);
+    color: #fff4e2;
+    border-color: rgb(255 170 90 / 0.85);
+    box-shadow: 0 0 0.6rem rgb(255 154 60 / 0.35), 0 0 2rem rgb(200 97 58 / 0.3), inset 0 0 0.8rem rgb(255 154 60 / 0.15);
+    text-shadow: 0 0 0.6em rgb(255 170 90 / 0.6);
+  }
+
+  /* Viewfinder gate: eight 1px strokes make four L-brackets; a small cross marks the centre. */
+  .hero__gate {
+    --c: rgb(120 113 108 / 0.3); /* stone-500 at 30% */
+    --l: 1.6rem;
+    position: absolute;
+    inset: var(--space-m) var(--gutter);
+    z-index: 1;
+    pointer-events: none;
+    background:
+      linear-gradient(var(--c) 0 0) top left / var(--l) 1px no-repeat,
+      linear-gradient(var(--c) 0 0) top left / 1px var(--l) no-repeat,
+      linear-gradient(var(--c) 0 0) top right / var(--l) 1px no-repeat,
+      linear-gradient(var(--c) 0 0) top right / 1px var(--l) no-repeat,
+      linear-gradient(var(--c) 0 0) bottom left / var(--l) 1px no-repeat,
+      linear-gradient(var(--c) 0 0) bottom left / 1px var(--l) no-repeat,
+      linear-gradient(var(--c) 0 0) bottom right / var(--l) 1px no-repeat,
+      linear-gradient(var(--c) 0 0) bottom right / 1px var(--l) no-repeat;
+  }
+  .hero__gate::after {
+    content: '';
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: 0.9rem;
+    height: 0.9rem;
+    translate: -50% -50%;
+    background:
+      linear-gradient(var(--c) 0 0) center / 100% 1px no-repeat,
+      linear-gradient(var(--c) 0 0) center / 1px 100% no-repeat;
+  }
+
   /* Grain: generated noise, overlaid on footage and type alike; it flickers at film rate (motion.css). */
   .hero__grain {
     position: absolute;
@@ -271,7 +434,7 @@ const t = ui[lang];
     pointer-events: none;
     background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     mix-blend-mode: overlay;
-    opacity: 0.16;
+    opacity: 0.15;
   }
 
   .hero__toggle {
@@ -281,7 +444,7 @@ const t = ui[lang];
     z-index: 1;
     padding: 0.3em 0.8em;
     background: rgb(20 20 20 / 0.6);
-    color: #ecebe7;
+    color: #ece4d4;
     border: 1px solid rgb(236 235 231 / 0.3);
     border-radius: 999px;
     cursor: pointer;
