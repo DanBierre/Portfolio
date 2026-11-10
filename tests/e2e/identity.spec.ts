@@ -7,7 +7,7 @@ const ja = ui.ja;
 test('hero leads with Dan’s headline, gold accents and offer line', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(en.hero.title);
-  await expect(page.locator('#hero h1 .accent')).toHaveText(['with', 'with']);
+  await expect(page.locator('#hero h1 .accent')).toHaveText(['websites', 'editor’s']);
   await expect(page.locator('#hero .hero__note .sep-item')).toHaveText(en.hero.offer.split(' · '));
 });
 

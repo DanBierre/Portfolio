@@ -1,6 +1,5 @@
 ---
 import { site } from '../../site.config';
-import BookCall from '../BookCall.astro';
 import CopyEmail from '../CopyEmail.astro';
 import SpineMark from '../SpineMark.astro';
 import EdgePrint from '../EdgePrint.astro';
@@ -32,11 +31,6 @@ const t = ui[lang];
     </ul>
 
     <div class="contact__paths">
-      <div class="contact__path">
-        <h3>{t.contact.talk}</h3>
-        <p>{t.contact.talkNote}</p>
-        <BookCall variant="primary" label={t.bookCall} />
-      </div>
       <div class="contact__path contact__path--brief">
         <h3>{t.contact.brief}</h3>
         <slot name="form"><p>{t.contact.briefFallback}</p></slot>
@@ -44,7 +38,6 @@ const t = ui[lang];
       <div class="contact__path">
         <h3>{t.contact.looking}</h3>
         <CopyEmail />
-        <a href={site.linkedin}>LinkedIn</a>
       </div>
     </div>
   </div>
@@ -83,6 +76,6 @@ const t = ui[lang];
     h2 .line--indent { padding-left: 0; }
   }
   @media (min-width: 64em) {
-    .contact__paths { grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 3fr); }
+    .contact__paths { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
   }
 </style>

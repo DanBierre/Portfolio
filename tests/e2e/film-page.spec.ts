@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 // The rest of the page in the reel's language: warm film colours, film-edge print between sections,
 // scene-numbered stepped headings, a contact sheet, an edit decision list, labelled reels.
-const SECTIONS = ['work', 'about', 'services', 'process', 'lab', 'contact'];
+const SECTIONS = ['services', 'process', 'work', 'about', 'lab', 'contact'];
 
 test('palette: warm black ground and cream type', async ({ page }) => {
   await page.goto('/');
@@ -44,11 +44,11 @@ test('work is a contact sheet: sprocket edges, frame numbers, a light leak on ho
 test('how we work is an edit decision list: event numbers, record timecodes, durations', async ({ page }) => {
   await page.goto('/');
   const rows = page.locator('#process ol > li');
-  await expect(rows).toHaveCount(4);
-  await expect(rows.locator('.evt')).toHaveText(['001', '002', '003', '004']);
+  await expect(rows).toHaveCount(3);
+  await expect(rows.locator('.evt')).toHaveText(['001', '002', '003']);
   expect(await rows.first().locator('.evt').evaluate((e) => getComputedStyle(e).fontFamily)).toMatch(/Geist Mono/);
   for (const tc of await rows.locator('.tc').allTextContents()) expect(tc).toMatch(/^\d\d:\d\d:\d\d:\d\d$/);
-  await expect(rows.locator('.dur')).toHaveCount(4);
+  await expect(rows.locator('.dur')).toHaveCount(3);
 });
 
 test('lab pieces are labelled reels', async ({ page }) => {

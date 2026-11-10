@@ -46,6 +46,8 @@ const lab = defineCollection({
       interactive: z.boolean(),
       // Only built experiments are 'live'; ideas still being made say so, never implying finished work.
       status: z.enum(['live', 'in-progress']),
+      // Hidden pieces keep their pages but drop out of every listing.
+      hidden: z.boolean().optional(),
     }),
 });
 

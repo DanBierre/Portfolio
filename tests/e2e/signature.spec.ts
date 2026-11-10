@@ -118,8 +118,8 @@ test('the footage is the hero background, full bleed, behind the headline', asyn
 test('pipeline reveal: each project lists how it was made', async ({ page }) => {
   await page.goto('/');
   const rows = page.locator('#work article');
-  await expect(rows).toHaveCount(3);
-  for (const i of [0, 1, 2]) {
+  await expect(rows).toHaveCount(2);
+  for (const i of [0, 1]) {
     const specs = rows.nth(i).locator('dl.pipeline');
     expect(await specs.locator('dt').count()).toBeGreaterThanOrEqual(2);
   }
@@ -168,7 +168,7 @@ test('filmic title: tracking tightened to -0.05em', async ({ page }) => {
 
 test('halation buttons: hairline borders, no flat fill, amber bloom on hover', async ({ page }, info) => {
   await page.goto('/');
-  for (const name of ['Book a call', 'See the work']) {
+  for (const name of ['Get in touch', 'See prices']) {
     const btn = page.locator('#hero').getByRole('link', { name });
     const s = await btn.evaluate((e) => ({ w: parseFloat(getComputedStyle(e).borderTopWidth), bg: getComputedStyle(e).backgroundColor }));
     expect(s.w).toBeLessThanOrEqual(1);

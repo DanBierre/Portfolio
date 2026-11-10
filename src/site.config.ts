@@ -3,8 +3,6 @@ export const site = {
   name: 'Dan Bierre',
   url: 'https://danbierre.dev',
   email: 'bierredan@gmail.com',
-  linkedin: 'https://www.linkedin.com/in/REPLACE_ME',
-  calUrl: 'https://cal.com/REPLACE_ME/20min',
   umamiWebsiteId: '',
 } as const;
 

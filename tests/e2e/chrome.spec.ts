@@ -5,17 +5,17 @@ test('desktop nav order and pinned CTA', async ({ page }, info) => {
   test.skip(info.project.name !== 'desktop');
   await page.goto('/');
   await expect(page.getByRole('navigation').getByRole('link')).toHaveText([
-    /Dan/, /^Work/, 'Services', /^Lab/, 'About', '日本語', 'Book a call',
+    /Dan/, /^Work/, 'Services', /^Lab/, 'About', '日本語', 'Get in touch',
   ]);
   await page.mouse.wheel(0, 3000);
-  await expect(page.getByRole('navigation').getByRole('link', { name: 'Book a call' })).toBeInViewport();
+  await expect(page.getByRole('navigation').getByRole('link', { name: 'Get in touch' })).toBeInViewport();
 });
 
-test('mobile bottom bar shows Book a call', async ({ page }, info) => {
+test('mobile bottom bar shows Get in touch', async ({ page }, info) => {
   test.skip(info.project.name !== 'mobile');
   await page.goto('/');
   await page.mouse.wheel(0, 3000);
-  await expect(page.getByTestId('mobile-cta').getByRole('link', { name: 'Book a call' })).toBeInViewport();
+  await expect(page.getByTestId('mobile-cta').getByRole('link', { name: 'Get in touch' })).toBeInViewport();
 });
 
 test('mobile menu opens and lists section links', async ({ page }, info) => {
@@ -25,16 +25,13 @@ test('mobile menu opens and lists section links', async ({ page }, info) => {
   await expect(page.getByRole('navigation').getByRole('link', { name: 'Services' })).toBeVisible();
 });
 
-test('Book a call falls back to a plain link when Cal.com is blocked', async ({ page }) => {
-  await page.route(/app\.cal\.com/, (r) => r.abort());
-  await page.route(site.calUrl, (r) => r.fulfill({ contentType: 'text/html', body: '<h1>Booking</h1>' }));
+test('Get in touch goes to the contact form', async ({ page }) => {
   await page.goto('/');
-  const link = page.getByRole('link', { name: 'Book a call' }).first();
-  await expect(link).toHaveAttribute('href', site.calUrl);
+  const link = page.locator('#hero').getByRole('link', { name: 'Get in touch' });
+  await expect(link).toHaveAttribute('href', '/#contact');
   await expect(link).toHaveAttribute('data-umami-event', 'book_call_click');
-  await link.hover();
   await link.click();
-  await expect(page).toHaveURL(site.calUrl);
+  await expect(page.locator('#contact form')).toBeInViewport();
 });
 
 test('copy email button copies the address', async ({ page, context }, info) => {
@@ -46,11 +43,11 @@ test('copy email button copies the address', async ({ page, context }, info) => 
   await expect(page.getByText('Copied')).toBeVisible();
 });
 
-test('footer has mailto and LinkedIn', async ({ page }) => {
+test('footer has mailto and no LinkedIn', async ({ page }) => {
   await page.goto('/');
   const footer = page.getByRole('contentinfo');
   await expect(footer.getByRole('link', { name: site.email })).toHaveAttribute('href', `mailto:${site.email}`);
-  await expect(footer.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', site.linkedin);
+  await expect(footer.getByRole('link', { name: 'LinkedIn' })).toHaveCount(0);
 });
 
 test('footer closes the page as end credits: fin mark, credits list, ensō, contact row', async ({ page }) => {

@@ -5,7 +5,7 @@ import { ui, langOf } from '../i18n/ui';
 const t = ui[langOf(Astro.currentLocale)];
 ---
 
-<form class="brief" method="post" action="/api/brief" data-brief-form data-email={site.email} data-cal={site.calUrl} data-t={JSON.stringify(t.form)} novalidate>
+<form class="brief" method="post" action="/api/brief" data-brief-form data-email={site.email} data-t={JSON.stringify(t.form)} novalidate>
   <div class="brief__row">
     <div class="field">
       <label for="brief-name">{t.form.name}</label>
@@ -20,6 +20,12 @@ const t = ui[langOf(Astro.currentLocale)];
   </div>
 
   <div class="field">
+    <label for="brief-website">{t.form.website} <span class="field__optional">{t.form.optional}</span></label>
+    <input id="brief-website" name="website" type="text" inputmode="url" autocomplete="url" maxlength="300" placeholder={t.form.websiteHint} aria-describedby="brief-website-error" />
+    <p class="field__error" id="brief-website-error" data-error-for="website"></p>
+  </div>
+
+  <div class="field">
     <label for="brief-project">{t.form.project}</label>
     <textarea id="brief-project" name="project" rows="4" required maxlength="5000" aria-describedby="brief-project-error"></textarea>
     <p class="field__error" id="brief-project-error" data-error-for="project"></p>
@@ -30,16 +36,6 @@ const t = ui[langOf(Astro.currentLocale)];
       <label for="brief-timeline">{t.form.timeline} <span class="field__optional">{t.form.optional}</span></label>
       <input id="brief-timeline" name="timeline" type="text" maxlength="200" placeholder={t.form.timelineHint} aria-describedby="brief-timeline-error" />
       <p class="field__error" id="brief-timeline-error" data-error-for="timeline"></p>
-    </div>
-    <div class="field">
-      <label for="brief-budget">{t.form.budget} <span class="field__optional">{t.form.optional}</span></label>
-      <span class="select">
-        <select id="brief-budget" name="budget" aria-describedby="brief-budget-error">
-        <option value="">{t.form.choose}</option>
-        {BUDGET_OPTIONS.map((b) => <option value={b}>{ui[langOf(Astro.currentLocale)].budget[b]}</option>)}
-        </select>
-      </span>
-      <p class="field__error" id="brief-budget-error" data-error-for="budget"></p>
     </div>
   </div>
 
@@ -58,7 +54,7 @@ const t = ui[langOf(Astro.currentLocale)];
   for (const form of document.querySelectorAll<HTMLFormElement>('[data-brief-form]')) {
     const status = form.querySelector<HTMLElement>('.brief__status')!;
     const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
-    const { email, cal } = form.dataset;
+    const { email } = form.dataset;
     const t = JSON.parse(form.dataset.t!) as Record<string, string>;
 
     const clearErrors = () => {
@@ -113,11 +109,7 @@ const t = ui[langOf(Astro.currentLocale)];
         if (res.ok && body.ok) {
           form.reset();
           status.dataset.state = 'success';
-          status.replaceChildren(
-            t.thanks,
-            Object.assign(document.createElement('a'), { href: cal, textContent: t.bookNow }),
-            t.stop,
-          );
+          status.replaceChildren(t.thanks);
           (window as any).umami?.track('brief_submitted');
         } else if (res.status === 400 && body.errors) {
           showErrors(body.errors);

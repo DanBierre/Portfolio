@@ -1,7 +1,7 @@
 import { BUDGET_OPTIONS, site } from '../src/site.config';
 import type { Env } from './index';
 
-export type Brief = { name: string; email: string; project: string; timeline: string; budget: string };
+export type Brief = { name: string; email: string; website: string; project: string; timeline: string; budget: string };
 type Errors = Partial<Record<keyof Brief, string>>;
 
 // Per-field limits cap the text; this only stops oversized payloads (URL-encoded non-Latin text is ~6-9 bytes per char).
@@ -17,6 +17,7 @@ export function validateBrief(
   const data: Brief = {
     name: get('name'),
     email: get('email'),
+    website: get('website'),
     project: get('project'),
     timeline: get('timeline'),
     budget: get('budget'),
@@ -27,6 +28,9 @@ export function validateBrief(
   else if (data.name.length > 100 || /[\r\n]/.test(data.name)) errors.name = 'Please use a shorter, single-line name.';
 
   if (data.email.length > 254 || !EMAIL_RE.test(data.email)) errors.email = 'Please add a valid email address.';
+
+  if (data.website.length > 300 || /[\r\n]/.test(data.website))
+    errors.website = 'Please keep the web address under 300 characters, on one line.';
 
   if (!data.project) errors.project = 'Tell me a little about the project.';
   else if (data.project.length > 5000) errors.project = 'Please keep this under 5,000 characters.';
@@ -75,6 +79,7 @@ export async function handleBrief(request: Request, env: Env): Promise<Response>
       text: [
         `Name: ${data.name}`,
         `Email: ${data.email}`,
+        `Website: ${data.website || '-'}`,
         `Timeline: ${data.timeline || '-'}`,
         `Budget: ${data.budget || '-'}`,
         '',

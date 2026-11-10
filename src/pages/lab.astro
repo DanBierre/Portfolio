@@ -5,7 +5,7 @@ import Base from '../layouts/Base.astro';
 import BookCall from '../components/BookCall.astro';
 import { site } from '../site.config';
 
-const items = (await getCollection('lab')).sort((a, b) => a.data.order - b.data.order);
+const items = (await getCollection('lab')).filter((e) => !e.data.hidden).sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Base

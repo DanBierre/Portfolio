@@ -7,14 +7,14 @@ const en = ui.en;
 test('hero CTAs', async ({ page }) => {
   await page.goto('/');
   const hero = page.locator('#hero');
-  await expect(hero.getByRole('link', { name: 'Book a call' })).toBeVisible();
-  await expect(hero.getByRole('link', { name: 'See the work' })).toHaveAttribute('href', '#work');
+  await expect(hero.getByRole('link', { name: 'Get in touch' })).toBeVisible();
+  await expect(hero.getByRole('link', { name: 'See prices' })).toHaveAttribute('href', '#services');
 });
 
 test('sections in spec order', async ({ page }) => {
   await page.goto('/');
   const ids = await page.locator('main > section').evaluateAll((s) => s.map((e) => e.id));
-  expect(ids).toEqual(['hero', 'proof', 'work', 'about', 'services', 'process', 'lab', 'contact']);
+  expect(ids).toEqual(['hero', 'services', 'process', 'work', 'about', 'lab', 'contact']);
 });
 
 test('featured work: one card per project, each linking to its case study', async ({ page }) => {
@@ -23,24 +23,24 @@ test('featured work: one card per project, each linking to its case study', asyn
   await expect(page.locator('#work a[href^="/work/"]')).toHaveCount(3);
 });
 
-test('services has Experiences and Pipelines with 3 items each', async ({ page }) => {
+test('services has Light Fix and Light Page with 3 items each', async ({ page }) => {
   await page.goto('/');
-  for (const name of ['Experiences', 'Pipelines'])
+  for (const name of ['Light Fix · $150', 'Light Page · $450'])
     await expect(page.locator('#services').getByRole('region', { name }).getByRole('listitem')).toHaveCount(3);
 });
 
-test('process has 4 steps in order', async ({ page }) => {
+test('process has 3 steps in order', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('#process ol > li h3')).toHaveText(['Brief', 'Prototype in 1 week', 'Build', 'Handover']);
+  await expect(page.locator('#process ol > li h3')).toHaveText(['Tell me', 'Fixed price', 'Review']);
 });
 
-test('contact trust signals and Book a call after process', async ({ page }) => {
+test('contact trust signals, the form, and Get in touch after process', async ({ page }) => {
   await page.goto('/');
   const c = page.locator('#contact');
   for (const t of [en.contact.availability, en.contact.reply, en.contact.whiteLabel]) await expect(c.getByText(t)).toBeVisible();
-  await expect(c.getByRole('link', { name: 'Book a call' })).toBeVisible();
+  await expect(c.locator('form')).toBeVisible();
   await expect(c.getByRole('link', { name: site.email })).toBeVisible();
-  await expect(page.locator('#process').getByRole('link', { name: 'Book a call' })).toBeVisible();
+  await expect(page.locator('#process').getByRole('link', { name: 'Get in touch' })).toBeVisible();
 });
 
 test('lab teaser shows 3 experiments and links to the Lab', async ({ page }) => {

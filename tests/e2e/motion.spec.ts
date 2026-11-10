@@ -56,7 +56,7 @@ test('refresh restores the scroll position instantly, links still glide', async 
   await page.goto('/');
   const behavior = () => page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior);
   expect(await behavior()).toBe('auto');
-  await page.locator('#hero').getByRole('link', { name: 'See the work' }).focus();
+  await page.locator('#hero').getByRole('link', { name: 'See prices' }).focus();
   expect(await behavior()).toBe('smooth');
 });
 

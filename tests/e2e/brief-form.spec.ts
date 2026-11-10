@@ -12,7 +12,7 @@ async function fill(page: Page, project = 'AI campaign') {
   const form = page.locator('#contact form');
   await form.getByLabel('Name').fill('Ana');
   await form.getByLabel('Email').fill('ana@studio.co');
-  await form.getByLabel("What's the project?").fill(project);
+  await form.getByLabel("What needs fixing, or what are you after?").fill(project);
   return form;
 }
 
@@ -23,7 +23,6 @@ test('form fields match the spec', async ({ page }) => {
   await expect(form.getByLabel('Name')).toHaveAttribute('required', '');
   await expect(form.getByLabel('Email')).toHaveAttribute('type', 'email');
   await expect(form.getByLabel('Timeline')).toBeVisible();
-  await expect(form.getByLabel('Budget range').locator('option')).toHaveCount(6);
   const trap = form.locator('.brief__trap');
   await expect(trap).toHaveAttribute('aria-hidden', 'true');
   await expect(trap).not.toBeInViewport();
@@ -50,7 +49,7 @@ test('send failure keeps typed text and shows email fallback', async ({ page }) 
   await form.getByRole('button', { name: 'Send brief' }).click();
   const status = page.locator('#contact [role="status"]');
   await expect(status.getByRole('link', { name: site.email })).toBeVisible();
-  await expect(form.getByLabel("What's the project?")).toHaveValue('Keep me');
+  await expect(form.getByLabel("What needs fixing, or what are you after?")).toHaveValue('Keep me');
 });
 
 test('server validation errors show next to the field', async ({ page }) => {

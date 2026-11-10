@@ -2,7 +2,7 @@ import { describe, test, expect, vi } from 'vitest';
 import { validateBrief, handleBrief } from '../../worker/brief';
 import { BUDGET_OPTIONS } from '../../src/site.config';
 
-const good = { name: 'Ana', email: 'ana@studio.co', project: 'AI campaign', timeline: 'March', budget: BUDGET_OPTIONS[1] };
+const good = { name: 'Ana', email: 'ana@studio.co', website: 'mycafe.co.nz', project: 'AI campaign', timeline: 'March', budget: BUDGET_OPTIONS[1] };
 const env = (send = vi.fn().mockResolvedValue({ messageId: 'x' })) =>
   ({ EMAIL: { send }, BRIEF_TO: 'dan@x.com', BRIEF_FROM: 'brief@x.com' }) as any;
 const req = (body: Record<string, string>, json = true) =>
@@ -17,6 +17,9 @@ describe('validateBrief', () => {
 
   test('trims whitespace', () =>
     expect(validateBrief({ ...good, name: '  Ana  ' })).toEqual({ ok: true, data: good }));
+
+  test('rejects a multi-line website', () =>
+    expect(validateBrief({ ...good, website: 'a.nz\nBcc: x' }).ok).toBe(false));
 
   test('rejects newline in name (header injection)', () =>
     expect(validateBrief({ ...good, name: 'Ana\r\nBcc: x@y.z' })).toMatchObject({

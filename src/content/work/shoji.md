@@ -1,8 +1,8 @@
 ---
 title: "Shoji"
-clientType: "Own product, coming soon"
+clientType: "Own product, out now for Windows"
 role: "Design, build, Japanese localisation"
-timeline: "In progress"
+timeline: "Ongoing"
 outcome: "A desktop planner for people who work from home: time blocks, reminders, streaks, a focus timer and a journal, all there to keep distractions out."
 results:
   - "Works in English and Japanese, in light and dark"
@@ -13,7 +13,7 @@ made:
   - { label: stack, value: "Electron · Tailwind CSS · JavaScript" }
   - { label: platform, value: "Desktop" }
   - { label: languages, value: "English · Japanese" }
-  - { label: status, value: "Coming soon" }
+  - { label: status, value: "Out now for Windows" }
 cover: ../../assets/work/shoji/cover.png
 coverAlt: "Shoji's Today screen in light and dark: 2h 55m focused so far, the morning's blocks ticked off and the rest of the day laid out"
 ---
@@ -39,3 +39,5 @@ Shoji grew screen by screen: Today, Schedule, Tracker, Journal and Insights, eac
 Insights turns the blocks you finish into weekly rings, numbers and streaks.
 
 ![Shoji Insights screen: 13h 45m focused this week, a ring for each day, five weeks of rings and the week's numbers](../../assets/work/shoji/insights-light.png)
+
+Shoji is free to download from [Soft Light Software](https://softlightsoftware.dev), the little studio I run on the side.

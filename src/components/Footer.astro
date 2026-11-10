@@ -44,7 +44,7 @@ const ring = brushRing({ r: 40, width: 7, seed: 5 });
   </div>
   <div class="wrap footer__row">
     <CopyEmail />
-    <a href={site.linkedin}>LinkedIn</a>
+    <a href="https://softlightsoftware.dev">Soft Light Software</a>
     <a class="footer__top" href="#main">{lang === 'ja' ? 'トップへ' : 'Back to top'} <span aria-hidden="true">↑</span></a>
     <p class="footer__legal">© {year}</p>
   </div>
@@ -94,7 +94,7 @@ const ring = brushRing({ r: 40, width: 7, seed: 5 });
   .footer__top:hover { color: var(--text); }
   .footer__legal { margin: 0; color: var(--text-muted); font-family: var(--font-data); }
 
-  /* Phones: contact on its own line, then LinkedIn, top and © on one line. */
+  /* Phones: contact on its own line, then top and © on one line. */
   @media (max-width: 47.99em) {
     .footer__row > :first-child { flex-basis: 100%; }
     .credits__roll dd { font-size: var(--step-0); }

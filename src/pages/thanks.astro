@@ -1,16 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
-import BookCall from '../components/BookCall.astro';
 import { site } from '../site.config';
 ---
 
 <Base title={`Brief sent | ${site.name}`} description="Your brief has been sent." noindex>
   <div class="wrap thanks">
     <h1>Brief sent.</h1>
-    <p>Thanks, I’ll reply within 1 working day. Or book a call now if it’s urgent.</p>
+    <p>Thanks, I’ll get back to you within 1 working day.</p>
     <div class="thanks__actions">
-      <BookCall variant="primary" />
-      <a class="btn btn--secondary" href="/">Back to the homepage</a>
+      <a class="btn btn--primary" href="/">Back to the homepage</a>
     </div>
   </div>
 </Base>

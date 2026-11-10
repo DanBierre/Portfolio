@@ -11,9 +11,10 @@ const tcs = ['01:00:00:00', '01:00:20:00', '01:07:20:00', '01:28:20:00', '01:29:
 
 <section id="process" class="process spined" aria-labelledby="process-title">
   <SpineMark section="process" />
-  <EdgePrint scene={5} label="Process" meta="EDL · 4 events" />
+  <EdgePrint scene={3} label="Process" meta="EDL · 3 events" />
   <div class="wrap">
     <h2 id="process-title">{t.process.title}<span class="count" aria-hidden="true">{t.process.steps.length}</span></h2>
+    <p class="process__caption">{t.process.caption}</p>
     <!-- An edit decision list: each step is an event with a reel, record in/out, duration and output. -->
     <div class="edl__head" aria-hidden="true">
       <span>#</span><span>Reel</span><span>Rec in</span><span>Rec out</span><span>Step</span><span>Duration · output</span>
@@ -44,6 +45,8 @@ const tcs = ['01:00:00:00', '01:00:20:00', '01:07:20:00', '01:28:20:00', '01:29:
 <style>
   .process { padding-block: var(--space-2xl) 0; }
   h2 { margin-bottom: var(--space-xl); max-width: 12ch; }
+  h2:has(+ .process__caption) { margin-bottom: var(--space-s); }
+  .process__caption { max-width: 46ch; margin-bottom: var(--space-xl); color: var(--text-muted); }
 
   /* Edit decision list: mono for the code columns (event, reel, timecodes), the editor's voice for
      the step itself. One hairline per event. */

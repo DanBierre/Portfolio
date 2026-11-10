@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('every page has unique title, description, canonical and og image', async ({ page, request }) => {
   const seen = new Set<string>();
-  for (const path of ['/', '/ja', '/work/shoji', '/work/case-study-one', '/work/case-study-two', '/lab']) {
+  for (const path of ['/', '/ja', '/work/shoji', '/work/japan-reel', '/lab']) {
     await page.goto(path);
     const title = await page.title();
     expect(seen.has(title), `duplicate title on ${path}`).toBe(false);
@@ -28,6 +28,6 @@ test('thanks and 404 are not indexed; sitemap and robots exist', async ({ page, 
   expect(await robots.text()).toContain('Sitemap: https://danbierre.dev/sitemap-index.xml');
   const sitemap = await request.get('/sitemap-0.xml');
   const xml = await sitemap.text();
-  expect(xml).toContain('https://danbierre.dev/work/case-study-one');
+  expect(xml).toContain('https://danbierre.dev/work/japan-reel');
   expect(xml).not.toContain('/thanks');
 });

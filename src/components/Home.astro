@@ -1,7 +1,6 @@
 ---
 // The homepage, shared by the English (/) and Japanese (/ja) routes. Copy comes from src/i18n/ui.ts.
 import Hero from './sections/Hero.astro';
-import ProofStrip from './sections/ProofStrip.astro';
 import FeaturedWork from './sections/FeaturedWork.astro';
 import Services from './sections/Services.astro';
 import Process from './sections/Process.astro';
@@ -12,11 +11,10 @@ import BriefForm from './BriefForm.astro';
 ---
 
 <Hero />
-<ProofStrip />
-<FeaturedWork />
-<About />
 <Services />
 <Process />
+<FeaturedWork />
+<About />
 <LabTeaser />
 <Contact>
   <BriefForm slot="form" />

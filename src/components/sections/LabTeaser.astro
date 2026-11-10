@@ -6,7 +6,7 @@ import EdgePrint from '../EdgePrint.astro';
 import { ui, langOf } from '../../i18n/ui';
 
 const t = ui[langOf(Astro.currentLocale)];
-const all = (await getCollection('lab')).sort((a, b) => a.data.order - b.data.order);
+const all = (await getCollection('lab')).filter((e) => !e.data.hidden).sort((a, b) => a.data.order - b.data.order);
 const items = all.slice(0, 3);
 ---
 
