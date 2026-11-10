@@ -28,7 +28,7 @@
     "@playwright/test": "^1.64.1",
     "lighthouse": "^13.5.0",
     "vitest": "^5.0.4",
-    "wrangler": "^4.151.0"
+    "wrangler": "^4.159.0"
   },
   "allowScripts": {
     "esbuild@0.28.2": true,
