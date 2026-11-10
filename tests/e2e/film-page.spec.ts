@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 // The rest of the page in the reel's language: warm film colours, film-edge print between sections,
 // scene-numbered stepped headings, a contact sheet, an edit decision list, labelled reels.
-const SECTIONS = ['services', 'process', 'work', 'about', 'lab', 'contact'];
+const SECTIONS = ['about', 'work', 'redesigns', 'services', 'process', 'clients', 'contact'];
 
 test('palette: warm black ground and cream type', async ({ page }) => {
   await page.goto('/');
@@ -49,11 +49,6 @@ test('how we work is an edit decision list: event numbers, record timecodes, dur
   expect(await rows.first().locator('.evt').evaluate((e) => getComputedStyle(e).fontFamily)).toMatch(/Geist Mono/);
   for (const tc of await rows.locator('.tc').allTextContents()) expect(tc).toMatch(/^\d\d:\d\d:\d\d:\d\d$/);
   await expect(rows.locator('.dur')).toHaveCount(3);
-});
-
-test('lab pieces are labelled reels', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.locator('#lab article .reel-tape')).toHaveText([/REEL 01/, /REEL 02/, /REEL 03/]);
 });
 
 test('about portrait carries the reel grade', async ({ page }) => {

@@ -118,8 +118,8 @@ test('the footage is the hero background, full bleed, behind the headline', asyn
 test('pipeline reveal: each project lists how it was made', async ({ page }) => {
   await page.goto('/');
   const rows = page.locator('#work article');
-  await expect(rows).toHaveCount(2);
-  for (const i of [0, 1]) {
+  await expect(rows).toHaveCount(3);
+  for (const i of [0, 1, 2]) {
     const specs = rows.nth(i).locator('dl.pipeline');
     expect(await specs.locator('dt').count()).toBeGreaterThanOrEqual(2);
   }

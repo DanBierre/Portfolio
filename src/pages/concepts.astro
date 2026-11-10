@@ -9,7 +9,6 @@ import { ui } from '../i18n/ui';
 
 const t = ui.en;
 const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
-const lab = (await getCollection('lab')).sort((a, b) => a.data.order - b.data.order).slice(0, 4);
 // The process as an edit decision list: record timecodes start at 01:00:00:00 as in a real EDL; the
 // duration column says what the copy promises (only the brief and the prototype have fixed lengths).
 const edl = [
@@ -126,23 +125,6 @@ const swatches = [
       <div class="about__text">
         <h2 class="scene"><span class="scene__no">SC.05</span>{t.about.title}</h2>
         <p class="body">The portrait gets the same split tone as the footage (cyan shadows, amber highlights), a rounded 16mm gate and grain, so it reads as a frame from the reel rather than a selfie.</p>
-      </div>
-    </section>
-
-    <!-- F · lab reels -->
-    <div class="edge-print wrap" aria-hidden="true">
-      <span>▸ SC.06</span><span>LAB</span><span>REELS 01–{String(lab.length).padStart(2, '0')}</span>
-    </div>
-    <section class="wrap block">
-      <p class="tag">F · Lab pieces as labelled reels</p>
-      <div class="reels">
-        {lab.map((l, i) => (
-          <a class="reel" href={l.data.link ?? '/lab'}>
-            <span class="reel__can" aria-hidden="true"></span>
-            <span class="reel__tape"><code>REEL {String(i + 1).padStart(2, '0')}</code><b>{l.data.title}</b></span>
-            <small>{l.data.summary}</small>
-          </a>
-        ))}
       </div>
     </section>
 
@@ -266,16 +248,6 @@ const swatches = [
   .still__grain { position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); mix-blend-mode: overlay; opacity: 0.18; }
   .still figcaption { color: var(--steel); font-size: 0.72rem; }
   @media (max-width: 47.99em) { .about { grid-template-columns: 1fr; } }
-
-  /* F: lab reels */
-  .reels { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: var(--space-m); }
-  .reel { display: grid; gap: 0.8rem; padding: var(--space-m); border: 1px solid var(--line); border-radius: 6px; color: inherit; text-decoration: none; transition: border-color 0.4s, box-shadow 0.4s; }
-  .reel:hover, .reel:focus-visible { border-color: rgb(255 170 90 / 0.6); box-shadow: 0 0 1.4rem rgb(200 97 58 / 0.25); }
-  .reel__can { width: 3.6rem; height: 3.6rem; border-radius: 50%; background: radial-gradient(circle, #0a0908 0 18%, #3a342c 19% 22%, #22201c 23% 60%, #3a342c 61% 64%, #1a1815 65%); box-shadow: inset 0 0 0 1px var(--line); }
-  .reel__tape { display: grid; gap: 0.2rem; padding: 0.5rem 0.7rem; background: var(--cream); color: var(--ground); border-radius: 2px; transform: rotate(-1.2deg); width: fit-content; }
-  .reel__tape code { font-size: 0.62rem; letter-spacing: 0.12em; }
-  .reel__tape b { font-weight: 500; }
-  .reel small { color: var(--muted); font-size: var(--step--1); }
 
   /* G */
   .rules ul { display: grid; gap: var(--space-s); padding-left: 1.2em; color: var(--muted); max-width: 70ch; }

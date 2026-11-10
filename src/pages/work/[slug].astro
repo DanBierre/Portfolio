@@ -20,7 +20,7 @@ interface Props {
 }
 
 const { entry, next } = Astro.props;
-const { title, clientType, role, timeline, outcome, results, cover, coverAlt, quote, beforeAfter, made } = entry.data;
+const { title, clientType, role, timeline, outcome, results, cover, coverAlt, quote, beforeAfter, made, inProgress } = entry.data;
 const { Content } = await render(entry);
 const og = await getImage({ src: cover, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
 ---
@@ -33,6 +33,7 @@ const og = await getImage({ src: cover, width: 1200, height: 630, fit: 'cover', 
         <div><dt>Client</dt><dd>{clientType}</dd></div>
         <div><dt>Role</dt><dd>{role}</dd></div>
         <div><dt>Timeline</dt><dd>{timeline}</dd></div>
+        {inProgress && <div><dt>Status</dt><dd>In progress · {inProgress}</dd></div>}
         {
           made?.map((m) => (
             <div><dt>{m.label}</dt><dd class="data sep-list">{m.value.split(' · ').map((v) => <span class="sep-item">{v}</span>)}</dd></div>

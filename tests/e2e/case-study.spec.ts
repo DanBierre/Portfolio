@@ -15,7 +15,7 @@ test('case study template sections and CTA', async ({ page }) => {
   await expect(cta.getByText("Have a similar project? Let's talk")).toBeVisible();
   await expect(cta.getByRole('link', { name: 'Get in touch' })).toBeVisible();
   await expect(cta.getByRole('link', { name: 'Send a brief' })).toHaveAttribute('href', '/#contact');
-  await expect(page.getByRole('link', { name: /next case study/i })).toHaveAttribute('href', '/work/shoji');
+  await expect(page.getByRole('link', { name: /next case study/i })).toHaveAttribute('href', '/work/mimitori');
 });
 
 test('interactive element sits between Process and Results', async ({ page }) => {

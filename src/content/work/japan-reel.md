@@ -7,7 +7,7 @@ outcome: "A 26-second 16mm-style film of Japan that plays live in the browser, b
 results:
   - "Nine shots in a 26-second loop, with burns, grain and halation rendered live instead of baked in"
   - "The homepage stays inside its speed budget: main content on screen in about 1.8 s, with no layout shift"
-order: 1
+order: 2
 year: "2026"
 made:
   - { label: footage, value: "Mixkit stock" }

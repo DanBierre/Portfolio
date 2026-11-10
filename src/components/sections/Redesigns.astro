@@ -1,0 +1,32 @@
+---
+// Website redesigns: my own site before and after, using the same drag slider as the case studies.
+// Client pairs can sit beside it once a business says yes in writing.
+import SpineMark from '../SpineMark.astro';
+import EdgePrint from '../EdgePrint.astro';
+import BeforeAfter from '../BeforeAfter.astro';
+import before from '../../assets/redesign/before-v2.jpg';
+import after from '../../assets/redesign/after-v3.jpg';
+import { ui, langOf } from '../../i18n/ui';
+
+const t = ui[langOf(Astro.currentLocale)].redesigns;
+---
+
+<section id="redesigns" class="redesigns spined" aria-labelledby="redesigns-title">
+  <SpineMark section="redesigns" />
+  <EdgePrint scene={4} label="Redesigns" meta="Before · after" />
+  <div class="wrap">
+    <div class="redesigns__head">
+      <h2 id="redesigns-title">{t.title}</h2>
+      <p class="redesigns__lede">{t.intro}</p>
+      <a class="btn btn--primary" href="#contact">{t.cta}</a>
+    </div>
+    <BeforeAfter before={before} after={after} beforeAlt={t.beforeAlt} afterAlt={t.afterAlt} caption={t.caption} />
+  </div>
+</section>
+
+<style>
+  .redesigns { padding-block: var(--space-2xl); }
+  .redesigns__head { display: grid; gap: var(--space-m); justify-items: start; margin-bottom: var(--space-xl); }
+  h2 { max-width: 16ch; }
+  .redesigns__lede { font-size: var(--step-1); line-height: 1.4; max-width: 44ch; }
+</style>

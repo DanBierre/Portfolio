@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('every page has unique title, description, canonical and og image', async ({ page, request }) => {
   const seen = new Set<string>();
-  for (const path of ['/', '/ja', '/work/shoji', '/work/japan-reel', '/lab']) {
+  for (const path of ['/', '/ja', '/work/shoji', '/work/japan-reel', '/work/mimitori']) {
     await page.goto(path);
     const title = await page.title();
     expect(seen.has(title), `duplicate title on ${path}`).toBe(false);

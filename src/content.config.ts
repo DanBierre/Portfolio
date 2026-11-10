@@ -17,6 +17,8 @@ const work = defineCollection({
       coverAlt: z.string(),
       preview: z.string().optional(),
       year: z.string(),
+      // Set while a project isn't finished yet, e.g. "Launching at mimitori.com". Shows an "In progress" tag.
+      inProgress: z.string().optional(),
       // "How it was made": label/value pairs shown in the pipeline reveal and on the case study
       // (model, steps, seed, render for generative work; stack, platform for products).
       made: z.array(z.object({ label: z.string(), value: z.string() })).optional(),
@@ -33,22 +35,4 @@ const work = defineCollection({
     }),
 });
 
-const lab = defineCollection({
-  loader: glob({ base: './src/content/lab', pattern: '*.md' }),
-  schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      summary: z.string(),
-      order: z.number(),
-      image: image(),
-      imageAlt: z.string(),
-      link: z.string().optional(),
-      interactive: z.boolean(),
-      // Only built experiments are 'live'; ideas still being made say so, never implying finished work.
-      status: z.enum(['live', 'in-progress']),
-      // Hidden pieces keep their pages but drop out of every listing.
-      hidden: z.boolean().optional(),
-    }),
-});
-
-export const collections = { work, lab };
+export const collections = { work };

@@ -26,9 +26,9 @@ test('spine labels every section in Japanese (desktop)', async ({ page }, info) 
   }
 });
 
-test('Shoji leads the work index and has a case study with real screens', async ({ page }) => {
+test('Mimitori leads the work index; Shoji has a case study with real screens', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('#work article').first().locator('h3')).toHaveText('Shoji');
+  await expect(page.locator('#work article').first().locator('h3')).toContainText('Mimitori');
   await expect(page.locator('#work article')).toHaveCount(3);
   await page.goto('/work/shoji');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Shoji');

@@ -1,0 +1,52 @@
+---
+// Client websites: honest placeholders until real Auckland jobs (with written OK) fill the spots.
+import SpineMark from '../SpineMark.astro';
+import EdgePrint from '../EdgePrint.astro';
+import { ui, langOf } from '../../i18n/ui';
+
+const t = ui[langOf(Astro.currentLocale)].clients;
+const spots = [1, 2, 3];
+---
+
+<section id="clients" class="clients spined" aria-labelledby="clients-title">
+  <SpineMark section="clients" />
+  <EdgePrint scene={7} label="Clients" meta={`${spots.length} open spots`} />
+  <div class="wrap">
+    <div class="clients__head">
+      <h2 id="clients-title">{t.title}</h2>
+      <p class="clients__lede">{t.intro}</p>
+    </div>
+    <ul class="clients__spots" role="list">
+      {
+        spots.map((n) => (
+          <li class="spot">
+            <span class="spot__no label num">{String(n).padStart(2, '0')}</span>
+            <span class="spot__name">{t.slot}</span>
+            <span class="spot__text">{t.slotText}</span>
+          </li>
+        ))
+      }
+    </ul>
+    <a class="btn btn--primary" href="#contact">{t.cta}</a>
+  </div>
+</section>
+
+<style>
+  .clients { padding-block: var(--space-2xl); }
+  .clients__head { display: grid; gap: var(--space-m); margin-bottom: var(--space-xl); }
+  .clients__lede { font-size: var(--step-1); line-height: 1.4; max-width: 44ch; }
+  .clients__spots { display: grid; gap: var(--space-m); margin: 0 0 var(--space-xl); padding: 0; }
+  @media (min-width: 48em) { .clients__spots { grid-template-columns: repeat(3, 1fr); } }
+  .spot {
+    display: grid;
+    align-content: end;
+    gap: var(--space-2xs, 0.25rem);
+    aspect-ratio: 16 / 10;
+    padding: var(--space-m);
+    border: 1px dashed var(--text-muted);
+    border-radius: 4px;
+  }
+  .spot__no { color: var(--text-muted); }
+  .spot__name { font-size: var(--step-2); letter-spacing: -0.03em; }
+  .spot__text { color: var(--text-muted); }
+</style>

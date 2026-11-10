@@ -9,13 +9,12 @@ const t = ui[lang];
 const home = homeOf(lang);
 const other = lang === 'ja' ? 'en' : 'ja';
 
-const [work, lab] = await Promise.all([getCollection('work'), getCollection('lab', (e) => !e.data.hidden)]);
+const work = await getCollection('work');
 const anchor = (id: string) => (lang === 'ja' ? `/ja#${id}` : `/#${id}`);
 const links = [
+  { href: anchor('about'), label: t.nav.about },
   { href: anchor('work'), label: t.nav.work, count: work.length },
   { href: anchor('services'), label: t.nav.services },
-  { href: '/lab', label: t.nav.lab, count: lab.length },
-  { href: anchor('about'), label: t.nav.about },
 ];
 ---
 

@@ -3,19 +3,22 @@
 import Hero from './sections/Hero.astro';
 import FeaturedWork from './sections/FeaturedWork.astro';
 import Services from './sections/Services.astro';
+import Redesigns from './sections/Redesigns.astro';
 import Process from './sections/Process.astro';
-import LabTeaser from './sections/LabTeaser.astro';
+import Clients from './sections/Clients.astro';
 import About from './sections/About.astro';
 import Contact from './sections/Contact.astro';
 import BriefForm from './BriefForm.astro';
 ---
 
+<!-- Me first (who, background, skills), then the business side (proof, prices, process, spots). -->
 <Hero />
+<About />
+<FeaturedWork />
+<Redesigns />
 <Services />
 <Process />
-<FeaturedWork />
-<About />
-<LabTeaser />
+<Clients />
 <Contact>
   <BriefForm slot="form" />
 </Contact>

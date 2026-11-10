@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { entry, index } = Astro.props;
-const { title, clientType, role, year, cover, coverAlt, preview, made } = entry.data;
+const { title, clientType, role, year, cover, coverAlt, preview, made, inProgress } = entry.data;
 const num = String(index + 1).padStart(2, '0');
 ---
 
@@ -24,7 +24,7 @@ const num = String(index + 1).padStart(2, '0');
       class="row__thumb"
       style={`view-transition-name: work-${entry.id}`}
     />
-    <h3 class="row__title">{title}</h3>
+    <h3 class="row__title">{title}{inProgress && <span class="row__tag label">In progress</span>}</h3>
     <span class="row__meta label">{clientType}<br />{role}</span>
     <span class="row__year label num">{year}</span>
   </a>
@@ -119,6 +119,17 @@ const num = String(index + 1).padStart(2, '0');
   .row__num { grid-area: num; }
   .row__year { grid-area: year; justify-self: end; }
   .row__title { grid-area: title; font-size: var(--step-4); line-height: 0.95; letter-spacing: -0.04em; }
+  .row__tag {
+    display: inline-block;
+    vertical-align: middle;
+    margin-inline-start: var(--space-s);
+    padding: 0.35em 0.7em;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    font-size: var(--step--1);
+    letter-spacing: 0.02em;
+    color: var(--text-muted);
+  }
   .row__meta { grid-area: meta; }
   .row__link :global(.row__thumb) { display: none; }
 

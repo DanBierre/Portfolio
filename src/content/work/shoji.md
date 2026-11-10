@@ -7,7 +7,7 @@ outcome: "A desktop planner for people who work from home: time blocks, reminder
 results:
   - "Works in English and Japanese, in light and dark"
   - "Today, Schedule, Tracker, Journal, Insights and Focus views"
-order: 0
+order: 1
 year: "2026"
 made:
   - { label: stack, value: "Electron · Tailwind CSS · JavaScript" }

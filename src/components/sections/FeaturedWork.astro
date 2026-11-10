@@ -11,7 +11,7 @@ const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.
 
 <section id="work" class="work spined" aria-labelledby="work-title">
   <SpineMark section="work" />
-  <EdgePrint scene={4} label="Work" meta="2 selects" />
+  <EdgePrint scene={3} label="Work" meta={`${work.length} selects`} />
   <div class="wrap">
     <div class="work__head">
       <h2 id="work-title">{t.work.title}<span class="count" aria-hidden="true">{work.length}</span></h2>

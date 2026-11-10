@@ -5,7 +5,7 @@ test('desktop nav order and pinned CTA', async ({ page }, info) => {
   test.skip(info.project.name !== 'desktop');
   await page.goto('/');
   await expect(page.getByRole('navigation').getByRole('link')).toHaveText([
-    /Dan/, /^Work/, 'Services', /^Lab/, 'About', '日本語', 'Get in touch',
+    /Dan/, 'About', /^Work/, 'Services', '日本語', 'Get in touch',
   ]);
   await page.mouse.wheel(0, 3000);
   await expect(page.getByRole('navigation').getByRole('link', { name: 'Get in touch' })).toBeInViewport();
