@@ -56,7 +56,7 @@ test('footer closes the page as end credits: fin mark, credits list, ensō, cont
   await expect(footer.locator('.credits__fin')).toHaveText('終');
   const terms = await footer.locator('.credits__roll dt').allTextContents();
   expect(terms).toEqual(['Design & code', 'Edit & grade', 'Footage', 'Made in']);
-  await expect(footer.locator('.credits__roll dd').nth(2)).toHaveText('Pexels');
+  await expect(footer.locator('.credits__roll dd').nth(2)).toHaveText('Mixkit');
   await expect(footer.locator('svg.credits__enso')).toBeVisible();
   await expect(footer.getByRole('link', { name: /back to top/i })).toHaveAttribute('href', '#main');
   await expect(footer.locator('.footer__mark')).toHaveCount(0); // the giant wordmark is gone

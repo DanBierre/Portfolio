@@ -39,8 +39,9 @@ const t = ui[lang];
   <SpineMark section="hero" top="var(--space-l)" />
   <div class="wrap hero__grid">
     <div class="hero__statement">
-      <!-- A live code comment for the shot on screen: the edit, annotated as it plays. -->
-      <p class="hero__comment" data-read="comment" aria-hidden="true">{`// 01 ${shots[0].clip} · ${shots[0].duration.toFixed(1)}s · ${shots[0].fps}fps`}</p>
+      <!-- A live slate line for the shot on screen: the edit, annotated as it plays. Plain film wording,
+           not code, so non-technical visitors don't read it as a glitch. -->
+      <p class="hero__comment" data-read="comment" aria-hidden="true">{`SHOT 01 · ${shots[0].clip} · ${shots[0].duration.toFixed(1)}s · ${shots[0].fps}fps`}</p>
       <h1 id="hero-title" class="hero__title" aria-label={t.hero.title}>
         {
           t.hero.lines.map((line, i) => (
@@ -69,7 +70,7 @@ const t = ui[lang];
       </ol>
       <p>
         <span class="hero__code" data-read="code"></span>
-        <span>frameAt(<b data-read="clock">00.00</b>) ×<b data-read="rate">1.00</b></span>
+        <span>TC <b data-read="clock">00.00</b> · ×<b data-read="rate">1.00</b></span>
       </p>
     </div>
   </div>
@@ -126,10 +127,11 @@ const t = ui[lang];
       if (f.shot !== lit) {
         segs[lit]?.classList.remove('is-live');
         segs[f.shot]?.classList.add('is-live');
-        if (out.code) out.code.textContent = line(f.shot);
-        if (beam) beam.textContent = line(f.shot);
         const s = shots[f.shot];
-        if (comment) comment.textContent = `// ${String(f.shot + 1).padStart(2, '0')} ${s.clip} · ${s.duration.toFixed(1)}s · ${s.fps}fps`;
+        const n = String(f.shot + 1).padStart(2, '0');
+        if (out.code) out.code.textContent = `SHOT ${n} · ${s.clip ?? s.source}`;
+        if (beam) beam.textContent = line(f.shot);
+        if (comment) comment.textContent = `SHOT ${n} · ${s.clip} · ${s.duration.toFixed(1)}s · ${s.fps}fps`;
         // Each cut's burn comes in from a different side of the type.
         hero.style.setProperty('--bx', `${[18, 82, 40, 65, 8, 92, 30][f.shot % 7]}%`);
         lit = f.shot;
@@ -367,9 +369,9 @@ const t = ui[lang];
     font: 400 clamp(2.6rem, 0.8rem + 6.5vw, 8.5rem) / 1 var(--font-data);
     letter-spacing: -0.04em;
     white-space: nowrap;
-    color: rgb(255 214 160 / 0.34);
+    color: rgb(255 214 160 / 0.22);
     mix-blend-mode: screen;
-    filter: blur(2.5px) drop-shadow(0 0 0.25em rgb(255 154 60 / 0.35));
+    filter: blur(3.5px) drop-shadow(0 0 0.25em rgb(255 154 60 / 0.35));
     pointer-events: none;
     user-select: none;
   }

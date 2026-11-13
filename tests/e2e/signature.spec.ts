@@ -60,8 +60,8 @@ test('code in the type: line numbers, a live comment per shot, a caret', async (
   expect(nums).toEqual(['"01"', '"02"', '"03"']); // generated content: shown in the spine margin on wide screens
   const comment = page.locator('#hero .hero__comment');
   await expect(comment).toHaveAttribute('aria-hidden', 'true');
-  await expect(comment).toHaveText(new RegExp(`^// 01 ${shots[0].clip}`));
-  await expect(comment).toHaveText(new RegExp(`^// 02 ${shots[1].clip}`), { timeout: 15000 }); // software WebGL is slow under a full parallel run
+  await expect(comment).toHaveText(new RegExp(`^SHOT 01 · ${shots[0].clip}`));
+  await expect(comment).toHaveText(new RegExp(`^SHOT 02 · ${shots[1].clip}`), { timeout: 15000 }); // software WebGL is slow under a full parallel run
   const caret = await page.locator('#hero h1 .line').last().evaluate((e) => getComputedStyle(e, '::after').content);
   expect(caret).not.toBe('none');
   await expect(page.locator('#hero h1')).toHaveAccessibleName(/I’m Dan/);

@@ -114,7 +114,7 @@ test('the burned-in slate follows the edit: code line, clock and cut track', asy
   await expect(slate).toBeVisible({ timeout: 5000 });
   await expect(slate.locator('[data-shot]')).toHaveCount(shots.length);
   await expect(slate.locator('.is-live')).toHaveCount(1);
-  await expect(slate.locator('[data-read="code"]')).toHaveText(/^shots\[\d\] = \['\w+'/);
+  await expect(slate.locator('[data-read="code"]')).toHaveText(/^SHOT \d\d · \w+/);
   const clock = slate.locator('[data-read="clock"]');
   const t = await clock.textContent();
   await expect(clock).not.toHaveText(t!, { timeout: 6000 }); // software WebGL is slow under a full parallel run

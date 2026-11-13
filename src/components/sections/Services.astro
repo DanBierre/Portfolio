@@ -27,6 +27,7 @@ const t = ui[langOf(Astro.currentLocale)];
         ))
       }
     </div>
+    <p class="services__more">{t.services.more} <a href="#contact">{t.services.moreLink}</a></p>
   </div>
 </section>
 
@@ -40,6 +41,8 @@ const t = ui[langOf(Astro.currentLocale)];
   .services__intro { color: var(--text-muted); margin-bottom: var(--space-s); }
   ul { padding: 0; list-style: none; border-top: 1px solid var(--text); }
   li { padding-block: var(--space-s); border-bottom: 1px solid var(--border); }
+  .services__more { margin-top: var(--space-xl); max-width: 52ch; color: var(--text-muted); }
+  .services__more a { color: var(--text); }
 
   @media (min-width: 48em) {
     .services__grid { grid-template-columns: 1fr 1fr; }

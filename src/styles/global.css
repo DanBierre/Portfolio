@@ -237,4 +237,4 @@ a:hover { text-decoration-thickness: 2px; }
 
 /* Off-screen sections skip rendering (and their font loads) until scrolled near, keeping the hero's
    first paint fast. They stay in the accessibility tree and in-page links still land. */
-main > section:not(#hero):not(#proof) { content-visibility: auto; contain-intrinsic-size: auto 900px; }
+main > section:not(#hero) { content-visibility: auto; contain-intrinsic-size: auto 900px; }

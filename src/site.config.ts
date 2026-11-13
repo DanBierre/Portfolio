@@ -2,9 +2,10 @@
 export const site = {
   name: 'Dan Bierre',
   url: 'https://danbierre.dev',
-  email: 'bierredan@gmail.com',
+  // Needs Cloudflare Email Routing on danbierre.dev (hello@ → Dan's inbox) before deploying.
+  email: 'hello@danbierre.dev',
   umamiWebsiteId: '',
 } as const;
 
 // Values sent to the server; labels per language are in ui.ts (budget).
-export const BUDGET_OPTIONS = ['Under £5k', '£5k–£15k', '£15k–£40k', '£40k+', 'Not sure yet'] as const;
+export const BUDGET_OPTIONS = ['A fix · $150', 'A one-page site · $450', 'A few pages', 'Not sure yet'] as const;
