@@ -15,13 +15,13 @@ const en = {
   seeWork: 'See the work',
   seePrices: 'See prices',
   hero: {
-    title: 'I’m Dan. I build websites with an editor’s eye.',
+    title: 'I’m Dan. I build websites and apps with an editor’s eye.',
     lines: [
       [{ text: 'I’m Dan. I build' }],
-      [{ text: 'websites', accent: true }, { text: ' with an' }],
-      [{ text: 'editor’s', accent: true }, { text: ' eye.' }],
+      [{ text: 'websites', accent: true }, { text: ' and ' }, { text: 'apps', accent: true }],
+      [{ text: 'with an ' }, { text: 'editor’s', accent: true }, { text: ' eye.' }],
     ] as Line[],
-    offer: 'Websites for Auckland businesses · Fixes from $150',
+    offer: 'Websites and apps for Auckland businesses · Fixes from $150',
     pause: 'Pause animation',
     play: 'Play animation',
   },
@@ -84,8 +84,12 @@ const en = {
     rows: [
       { term: 'Background', text: 'I started out in film. A BA in 3D Composition and years of video editing gave me a good eye for craft and detail.' },
       {
+        term: 'Into tech',
+        text: 'About a year and a half ago I switched to tech, doing freelance and contract work. Now I also work with an AI firm, helping New Zealand businesses put AI to good use: architects, insurers, builders and just about every sector in between. My 3D background comes in handy more often than you’d think.',
+      },
+      {
         term: 'These days',
-        text: 'I build and fix websites for Auckland businesses. I also make Shoji, a calm planner for Windows, under Soft Light Software. I’m easy to deal with, I keep things in plain words, and I’ll tell you if you don’t need what you were about to buy.',
+        text: 'I build and fix websites and apps for Auckland businesses. I also make Shoji, a calm planner for Windows, under Soft Light Software. I’m easy to deal with, I keep things in plain words, and I’ll tell you if you don’t need what you were about to buy.',
       },
       { term: 'Japanese', text: 'Self-taught, sparked by anime, kept alive by living there. Aiming for JLPT N2, then living and working in Japan.' },
       { term: 'Outside work', text: 'Anime and manga, games, hiking, skiing and photography.' },
@@ -147,13 +151,13 @@ const ja: Dict = {
   seeWork: '作品を見る',
   seePrices: '料金を見る',
   hero: {
-    title: 'ダンです。編集者の目で、ウェブサイトをつくります。',
+    title: 'ダンです。編集者の目で、ウェブサイトとアプリをつくります。',
     lines: [
       [{ text: 'ダンです。' }],
       [{ text: '編集者の目', accent: true }, { text: 'で、' }],
-      [{ text: 'ウェブサイト', accent: true }, { text: 'をつくります。' }],
+      [{ text: 'ウェブサイト', accent: true }, { text: 'と' }, { text: 'アプリ', accent: true }, { text: 'をつくります。' }],
     ],
-    offer: 'オークランドのお店のウェブサイト · 修正は$150から',
+    offer: 'オークランドのお店のウェブサイトとアプリ · 修正は$150から',
     pause: 'アニメーションを一時停止',
     play: 'アニメーションを再生',
   },
@@ -208,8 +212,12 @@ const ja: Dict = {
     rows: [
       { term: '経歴', text: '映画からスタートしました。3Dコンポジションの学士号と長年の映像編集で、細部とクラフトを見る目が身につきました。' },
       {
+        term: 'テックへ',
+        text: '1年半ほど前にテックの道へ転身し、フリーランスや契約の仕事をしてきました。今はAI企業とも組んで、ニュージーランドの企業へのAI導入を手伝っています。建築事務所、保険会社、建設会社など、業種はさまざまです。3Dの経験が、思った以上に役立っています。',
+      },
+      {
         term: '最近',
-        text: 'オークランドのお店のウェブサイトを作り、直しています。Soft Light Softwareとして、Windows向けの落ち着いたプランナー「Shoji」も作っています。やりとりはわかりやすい言葉で。必要のないものは、必要ないとお伝えします。',
+        text: 'オークランドのお店のウェブサイトやアプリを作り、直しています。Soft Light Softwareとして、Windows向けの落ち着いたプランナー「Shoji」も作っています。やりとりはわかりやすい言葉で。必要のないものは、必要ないとお伝えします。',
       },
       { term: '日本語', text: 'アニメがきっかけの独学で、日本での生活の中で身につけました。JLPT N2を目指し、その先は日本で暮らし、働くことが目標です。' },
       { term: '仕事以外', text: 'アニメと漫画、ゲーム、ハイキング、スキー、写真。' },

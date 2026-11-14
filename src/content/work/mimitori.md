@@ -2,7 +2,7 @@
 title: "Mimitori"
 clientType: "Own project. A free, open-source app for Japanese learners"
 role: "Idea, design and build"
-timeline: "Built in 2025, private until now"
+timeline: "Built in 2025, now public on GitHub"
 outcome: "A study app that lets you read real Japanese or watch your own videos with Japanese subtitles, tap any word for its meaning, and save it for review."
 inProgress: "Launching at mimitori.com"
 results:
@@ -34,6 +34,6 @@ Saved words come back in **Review** as flashcards, spaced out so they actually s
 
 ## Where it's at
 
-I built it in 2025 and kept it to myself. Now I'm getting it ready to go public at mimitori.com.
+I built it in 2025 and kept it to myself for a while. The code is now public on [GitHub](https://github.com/DanBierre/Mimitori), free and open source (MIT). Next up is the website at mimitori.com.
 
-It'll be free and open source (MIT), with no account and nothing uploaded: your files stay on your computer.
+There's no account and nothing gets uploaded: your files stay on your computer.
