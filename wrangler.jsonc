@@ -10,8 +10,7 @@
   },
   "send_email": [{ "name": "EMAIL" }],
   "vars": {
-    // TODO(Dan): set to the inbox that should receive briefs
-    "BRIEF_TO": "REPLACE_ME@example.com",
+    "BRIEF_TO": "bierredan@gmail.com",
     "BRIEF_FROM": "brief@danbierre.dev"
   },
   "routes": [{ "pattern": "danbierre.dev", "custom_domain": true }]
