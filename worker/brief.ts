@@ -73,7 +73,7 @@ export async function handleBrief(request: Request, env: Env): Promise<Response>
   try {
     const sent = await env.EMAIL.send({
       to: env.BRIEF_TO,
-      from: env.BRIEF_FROM,
+      from: { email: env.BRIEF_FROM, name: 'danbierre.dev brief form' },
       replyTo: data.email,
       subject: `New brief from ${data.name} (${data.email})`,
       text: [
