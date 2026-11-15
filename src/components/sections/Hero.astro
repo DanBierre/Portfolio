@@ -60,7 +60,6 @@ const t = ui[lang];
     <div class="hero__actions">
       <BookCall variant="primary" label={t.bookCall} />
       <a class="btn btn--secondary" href="#services">{t.seePrices}</a>
-      <p class="hero__live label"><span class="hero__now" aria-hidden="true"></span>{t.contact.availability}</p>
     </div>
 
     <!-- Burn-in, as on an editor's dailies: the code driving this frame and the cut's timeline. -->
@@ -333,8 +332,6 @@ const t = ui[lang];
 
   .hero__actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-s); }
   /* Rust means "now": the live diamond, as on Shoji's now line. */
-  .hero__live { display: inline-flex; align-items: center; gap: 0.6em; margin-left: var(--space-s); text-transform: none; }
-  .hero__now { width: 8px; height: 8px; rotate: 45deg; background: var(--rust); flex: none; }
 
   /* Burn-in slate: bottom right of the frame, like timecode on dailies. */
   .hero__slate {

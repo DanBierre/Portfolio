@@ -29,7 +29,7 @@ const en = {
   services: {
     title: 'Good light for Auckland businesses.',
     intro:
-      'I build and fix websites so your business looks as good online as it does in person. Flat prices, agreed before I start. I’ll come to you anywhere in Auckland.',
+      'I build and fix websites and apps so your business looks as good online as it does in person. Flat prices, agreed before I start. I’m just getting started, so the first few Auckland jobs get my full attention. I’ll come to you anywhere in Auckland.',
     columns: [
       {
         name: 'Light Fix · $150',
@@ -50,7 +50,7 @@ const en = {
         ],
       },
     ],
-    more: 'Need a few pages, or not sure what you need? Tell me what you’re after and I’ll quote it in writing before I start. No obligation.',
+    more: 'Need a few pages, an app, or not sure what you need? Tell me what you’re after and I’ll quote it in writing before I start. No obligation.',
     moreLink: 'Ask for a quote',
   },
   redesigns: {
@@ -70,19 +70,12 @@ const en = {
       { title: 'Review', text: 'I do the work and you have a look. If something’s off, I’ll fix it.', reel: 'CUT', dur: 'Your sign-off', out: 'Finished work' },
     ],
   },
-  clients: {
-    title: 'Client websites',
-    intro: 'Sites I build and fix for Auckland businesses will go here. I’m just getting started, so the first few spots are open.',
-    slot: 'Open spot',
-    slotText: 'Could be your café, salon, trade business or shop.',
-    cta: 'Grab a spot',
-  },
   about: {
     title: 'Auckland, NZ.',
     caption: 'Fushimi Inari, Kyoto',
     portraitAlt: 'Dan Bierre in a bucket hat at Fushimi Inari, Kyoto',
     rows: [
-      { term: 'Background', text: 'I started out in film. A BA in 3D Composition and years of video editing gave me a good eye for craft and detail.' },
+      { term: 'Background', text: 'I started out in film. A BA in 3D Composition and years of video editing gave me a good eye for craft and detail.', link: { href: '/work/japan-reel', label: 'Watch my Japan reel.' } },
       {
         term: 'Into tech',
         text: 'About a year and a half ago I switched to tech, doing freelance and contract work. Now I also work with an AI firm, helping New Zealand businesses put AI to good use: architects, insurers, builders and just about every sector in between. My 3D background comes in handy more often than you’d think.',
@@ -91,7 +84,7 @@ const en = {
         term: 'These days',
         text: 'I build and fix websites and apps for Auckland businesses. I also make Shoji, a calm planner for Windows, under Soft Light Software. I’m easy to deal with, I keep things in plain words, and I’ll tell you if you don’t need what you were about to buy.',
       },
-      { term: 'Japanese', text: 'Self-taught, sparked by anime, kept alive by living there. Aiming for JLPT N2, then living and working in Japan.' },
+      { term: 'Japanese', text: 'Self-taught, sparked by anime, kept alive by living there. Aiming for JLPT N2.' },
       { term: 'Outside work', text: 'Anime and manga, games, hiking, skiing and photography.' },
     ],
   },
@@ -165,7 +158,7 @@ const ja: Dict = {
   services: {
     title: 'オークランドのお店に、いい光を。',
     intro:
-      'お店が実物と同じくらいオンラインでもよく見えるように、ウェブサイトを作り、直します。料金は定額で、始める前に決めます。オークランドならどこへでも伺います。',
+      'お店が実物と同じくらいオンラインでもよく見えるように、ウェブサイトやアプリを作り、直します。料金は定額で、始める前に決めます。始めたばかりなので、最初のお客様には特にしっかり向き合います。オークランドならどこへでも伺います。',
     columns: [
       {
         name: 'ライト修正 · $150',
@@ -178,7 +171,7 @@ const ja: Dict = {
         items: ['お店の紹介、営業時間、地図', '文章は一緒に考え、表示は軽く', 'まずスマホできれいに見えるように'],
       },
     ],
-    more: '数ページ必要な場合や、何が必要かわからない場合も、まずは教えてください。始める前に書面でお見積もりします。依頼の義務はありません。',
+    more: '数ページやアプリが必要な場合や、何が必要かわからない場合も、まずは教えてください。始める前に書面でお見積もりします。依頼の義務はありません。',
     moreLink: 'お見積もりを依頼する',
   },
   redesigns: {
@@ -198,19 +191,12 @@ const ja: Dict = {
       { title: 'ご確認', text: '作業が終わったら確認してください。気になる点があれば直します。', reel: 'CUT', dur: 'ご確認', out: '完成' },
     ],
   },
-  clients: {
-    title: 'お客様のサイト',
-    intro: 'オークランドのお店のために作ったサイトをここで紹介します。始めたばかりなので、最初の枠はまだ空いています。',
-    slot: '空き枠',
-    slotText: 'カフェ、サロン、職人さん、お店など。',
-    cta: 'この枠に申し込む',
-  },
   about: {
     title: 'ニュージーランド・オークランド。',
     caption: '伏見稲荷大社、京都',
     portraitAlt: '京都・伏見稲荷大社でバケットハットをかぶったダン・ビエール',
     rows: [
-      { term: '経歴', text: '映画からスタートしました。3Dコンポジションの学士号と長年の映像編集で、細部とクラフトを見る目が身につきました。' },
+      { term: '経歴', text: '映画からスタートしました。3Dコンポジションの学士号と長年の映像編集で、細部とクラフトを見る目が身につきました。', link: { href: '/work/japan-reel', label: '日本のリールを見る' } },
       {
         term: 'テックへ',
         text: '1年半ほど前にテックの道へ転身し、フリーランスや契約の仕事をしてきました。今はAI企業とも組んで、ニュージーランドの企業へのAI導入を手伝っています。建築事務所、保険会社、建設会社など、業種はさまざまです。3Dの経験が、思った以上に役立っています。',
@@ -219,7 +205,7 @@ const ja: Dict = {
         term: '最近',
         text: 'オークランドのお店のウェブサイトやアプリを作り、直しています。Soft Light Softwareとして、Windows向けの落ち着いたプランナー「Shoji」も作っています。やりとりはわかりやすい言葉で。必要のないものは、必要ないとお伝えします。',
       },
-      { term: '日本語', text: 'アニメがきっかけの独学で、日本での生活の中で身につけました。JLPT N2を目指し、その先は日本で暮らし、働くことが目標です。' },
+      { term: '日本語', text: 'アニメがきっかけの独学で、日本での生活の中で身につけました。今はJLPT N2を目指しています。' },
       { term: '仕事以外', text: 'アニメと漫画、ゲーム、ハイキング、スキー、写真。' },
     ],
   },
@@ -276,7 +262,6 @@ export const spine = {
   services: 'サービス',
   redesigns: 'リニューアル',
   process: '工程',
-  clients: 'お客様',
   about: '自己紹介',
   contact: '連絡先',
 } as const;

@@ -4,6 +4,7 @@ import { site } from '../../src/site.config';
 test('touch previews play once instead of looping', async ({ page }, info) => {
   test.skip(info.project.name !== 'mobile');
   await page.goto('/');
+  test.skip(!(await page.locator('#work article video').count()), 'no homepage project has a preview video yet');
   expect(await page.locator('#work article video').first().evaluate((v: HTMLVideoElement) => v.loop)).toBe(false);
 });
 

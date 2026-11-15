@@ -19,6 +19,8 @@ const work = defineCollection({
       year: z.string(),
       // Set while a project isn't finished yet, e.g. "Launching at mimitori.com". Shows an "In progress" tag.
       inProgress: z.string().optional(),
+      // false keeps a project off the homepage list (its own page still builds).
+      homepage: z.boolean().default(true),
       // "How it was made": label/value pairs shown in the pipeline reveal and on the case study
       // (model, steps, seed, render for generative work; stack, platform for products).
       made: z.array(z.object({ label: z.string(), value: z.string() })).optional(),

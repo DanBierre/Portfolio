@@ -6,12 +6,12 @@ import EdgePrint from '../EdgePrint.astro';
 import { ui, langOf } from '../../i18n/ui';
 
 const t = ui[langOf(Astro.currentLocale)];
-const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+const work = (await getCollection('work')).filter((w) => w.data.homepage).sort((a, b) => a.data.order - b.data.order);
 ---
 
 <section id="work" class="work spined" aria-labelledby="work-title">
   <SpineMark section="work" />
-  <EdgePrint scene={3} label="Work" meta={`${work.length} selects`} />
+  <EdgePrint scene={5} label="Work" meta={`${work.length} selects`} />
   <div class="wrap">
     <div class="work__head">
       <h2 id="work-title">{t.work.title}<span class="count" aria-hidden="true">{work.length}</span></h2>

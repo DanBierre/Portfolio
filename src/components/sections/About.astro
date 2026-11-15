@@ -12,7 +12,7 @@ const ring = brushRing({ r: 40, width: 9, seed: 2 });
 
 <section id="about" class="about spined" aria-labelledby="about-title">
   <SpineMark section="about" />
-  <EdgePrint scene={2} label="About" meta="Auckland, NZ" />
+  <EdgePrint scene={6} label="About" meta="Auckland, NZ" />
   <div class="wrap about__grid">
     <div class="about__text">
       <h2 id="about-title">{t.about.title}</h2>
@@ -21,7 +21,7 @@ const ring = brushRing({ r: 40, width: 9, seed: 2 });
           t.about.rows.map((r) => (
             <div>
               <dt>{r.term}</dt>
-              <dd>{r.text}</dd>
+              <dd>{r.text}{'link' in r && r.link && <> <a href={r.link.href}>{r.link.label}</a></>}</dd>
             </div>
           ))
         }

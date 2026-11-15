@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 // The rest of the page in the reel's language: warm film colours, film-edge print between sections,
 // scene-numbered stepped headings, a contact sheet, an edit decision list, labelled reels.
-const SECTIONS = ['about', 'work', 'redesigns', 'services', 'process', 'clients', 'contact'];
+const SECTIONS = ['services', 'redesigns', 'process', 'work', 'about', 'contact'];
 
 test('palette: warm black ground and cream type', async ({ page }) => {
   await page.goto('/');

@@ -14,6 +14,7 @@ test('reduced motion: work previews stay paused on hover', async ({ page }, info
   test.skip(info.project.name !== 'desktop');
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
+  test.skip(!(await page.locator('#work article video').count()), 'no homepage project has a preview video yet');
   await page.locator('#work article').first().hover();
   await page.waitForTimeout(500);
   expect(await paused('#work article video')(page)).toBe(true);
@@ -33,6 +34,7 @@ test('work card preview plays on hover (desktop)', async ({ page }, info) => {
   test.skip(info.project.name !== 'desktop');
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
+  test.skip(!(await page.locator('#work article video').count()), 'no homepage project has a preview video yet');
   const card = page.locator('#work article:has(video)').first();
   await card.hover();
   await expect.poll(() => card.locator('video').evaluate((v: HTMLVideoElement) => !v.paused)).toBe(true);
@@ -44,6 +46,7 @@ test('work card preview plays when scrolled into view (touch)', async ({ page },
   test.skip(info.project.name !== 'mobile');
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
+  test.skip(!(await page.locator('#work article video').count()), 'no homepage project has a preview video yet');
   const card = page.locator('#work article:has(video)').first();
   await card.scrollIntoViewIfNeeded();
   await expect.poll(() => card.locator('video').evaluate((v: HTMLVideoElement) => !v.paused)).toBe(true);

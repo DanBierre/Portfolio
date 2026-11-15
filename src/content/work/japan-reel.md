@@ -8,6 +8,7 @@ results:
   - "Nine shots in a 26-second loop, with burns, grain and halation rendered live instead of baked in"
   - "The homepage stays inside its speed budget: main content on screen in about 1.8 s, with no layout shift"
 order: 2
+homepage: false
 year: "2026"
 made:
   - { label: footage, value: "Mixkit stock" }
