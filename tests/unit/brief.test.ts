@@ -47,7 +47,7 @@ describe('handleBrief', () => {
     const res = await handleBrief(req(good), e);
     expect(res.status).toBe(200);
     expect(e.EMAIL.send).toHaveBeenCalledWith(
-      expect.objectContaining({ to: 'dan@x.com', from: 'brief@x.com', replyTo: 'ana@studio.co', subject: 'New brief from Ana' }),
+      expect.objectContaining({ to: 'dan@x.com', from: 'brief@x.com', replyTo: 'ana@studio.co', subject: 'New brief from Ana (ana@studio.co)' }),
     );
     expect(e.EMAIL.send.mock.calls[0][0].text).toContain('AI campaign');
   });

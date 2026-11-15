@@ -71,11 +71,11 @@ export async function handleBrief(request: Request, env: Env): Promise<Response>
 
   const { data } = result;
   try {
-    await env.EMAIL.send({
+    const sent = await env.EMAIL.send({
       to: env.BRIEF_TO,
       from: env.BRIEF_FROM,
       replyTo: data.email,
-      subject: `New brief from ${data.name}`,
+      subject: `New brief from ${data.name} (${data.email})`,
       text: [
         `Name: ${data.name}`,
         `Email: ${data.email}`,
@@ -86,6 +86,7 @@ export async function handleBrief(request: Request, env: Env): Promise<Response>
         data.project,
       ].join('\n'),
     });
+    console.log('brief sent', JSON.stringify(sent));
   } catch (err) {
     console.error('brief send failed', err);
     return wantsJson
