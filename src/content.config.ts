@@ -15,6 +15,8 @@ const work = defineCollection({
       order: z.number(),
       cover: image(),
       coverAlt: z.string(),
+      // A tight 4:3 crop of the cover's best detail for the homepage index. Falls back to the cover.
+      thumb: image().optional(),
       preview: z.string().optional(),
       year: z.string(),
       // Set while a project isn't finished yet, e.g. "Launching at mimitori.com". Shows an "In progress" tag.

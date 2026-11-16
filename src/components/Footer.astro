@@ -53,9 +53,14 @@ const ring = brushRing({ r: 40, width: 7, seed: 5 });
 <style>
   .site-footer { padding-block: var(--space-2xl) var(--space-l); overflow: hidden; }
 
-  /* Credits: centred on a gutter, roles right-aligned to the left of it and names to the right,
-     as on a film's end roll. */
-  .credits { display: grid; justify-items: center; gap: var(--space-l); padding-bottom: var(--space-xl); }
+  /* Wide screens: the footer starts on the same edge as every scene's content. */
+  @media (min-width: 64em) {
+    .site-footer > .wrap { padding-left: calc(var(--spine-x) + 2.5rem); }
+  }
+
+  /* Credits: left-aligned like the rest of the page. Roles sit in the left half, names on the
+     page's shared half line, as in About and Contact. */
+  .credits { display: grid; justify-items: start; gap: var(--space-l); padding-bottom: var(--space-xl); }
   .credits__fin {
     display: flex;
     align-items: center;
@@ -66,18 +71,15 @@ const ring = brushRing({ r: 40, width: 7, seed: 5 });
     font-size: var(--step-3);
     color: var(--text);
   }
-  .credits__fin::before,
   .credits__fin::after { content: ''; width: 3rem; height: 1px; background: var(--border); }
-  .credits__roll { display: grid; gap: 0.7em; margin: 0; }
-  .credits__roll > div { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--space-m); }
-  .credits__roll dt {
-    text-align: right;
-    font-size: var(--step--1);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    align-self: center;
+  .credits__roll { display: grid; gap: 0.6em; width: 100%; margin: 0; }
+  .credits__roll > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: var(--space-xl);
+    align-items: baseline;
   }
+  .credits__roll dt { color: var(--text-muted); }
   .credits__roll dd { margin: 0; font-size: var(--step-1); }
   .credits__enso { width: 3.5rem; height: 3.5rem; color: var(--rust); }
 
@@ -97,6 +99,7 @@ const ring = brushRing({ r: 40, width: 7, seed: 5 });
   /* Phones: contact on its own line, then top and © on one line. */
   @media (max-width: 47.99em) {
     .footer__row > :first-child { flex-basis: 100%; }
+    .credits__roll > div { column-gap: var(--space-m); }
     .credits__roll dd { font-size: var(--step-0); }
   }
 </style>

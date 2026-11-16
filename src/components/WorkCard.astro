@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { entry, index } = Astro.props;
-const { title, clientType, role, year, cover, coverAlt, preview, made, inProgress } = entry.data;
+const { title, clientType, role, year, cover, coverAlt, thumb, preview, made, inProgress } = entry.data;
 const num = String(index + 1).padStart(2, '0');
 ---
 
@@ -16,10 +16,10 @@ const num = String(index + 1).padStart(2, '0');
   <a href={`/work/${entry.id}`} class="row__link">
     <span class="row__num label" aria-hidden="true"><span class="frame-no">{num}A</span> ▸</span>
     <Picture
-      src={cover}
+      src={thumb ?? cover}
       formats={['avif', 'webp']}
-      widths={[240, 480]}
-      sizes="10rem"
+      widths={[288, 576]}
+      sizes="12rem"
       alt=""
       class="row__thumb"
       style={`view-transition-name: work-${entry.id}`}
@@ -189,7 +189,7 @@ const num = String(index + 1).padStart(2, '0');
   @media (hover: hover) and (min-width: 80em) {
     .row__link {
       /* The fourth track stays empty: the reveal opens there, so it never covers a title or the meta. */
-      grid-template-columns: 3rem 10rem minmax(0, 1fr) min(22rem, 22vw) 13rem 3.5rem;
+      grid-template-columns: 3rem 12rem minmax(0, 1fr) min(22rem, 22vw) 13rem 3.5rem;
       grid-template-areas: 'num thumb title . meta year';
       align-items: center;
       column-gap: var(--space-l);
@@ -198,8 +198,8 @@ const num = String(index + 1).padStart(2, '0');
     .row__link :global(.row__thumb) {
       grid-area: thumb;
       display: block;
-      width: 10rem;
-      aspect-ratio: 1 / 1;
+      width: 12rem;
+      aspect-ratio: 4 / 3;
       object-fit: cover;
       object-position: 50% 0;
       filter: grayscale(1);

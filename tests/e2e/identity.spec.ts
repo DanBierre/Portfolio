@@ -29,7 +29,7 @@ test('spine labels every section in Japanese (desktop)', async ({ page }, info) 
 test('Mimitori leads the work index; Shoji has a case study with real screens', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#work article').first().locator('h3')).toContainText('Mimitori');
-  await expect(page.locator('#work article')).toHaveCount(2);
+  await expect(page.locator('#work article')).toHaveCount(3);
   await page.goto('/work/shoji');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Shoji');
   expect(await page.locator('.prose img').count()).toBeGreaterThanOrEqual(2);

@@ -16,6 +16,7 @@ made:
   - { label: review, value: "FSRS spaced repetition" }
   - { label: anki, value: "AnkiConnect · CSV export" }
 cover: ../../assets/work/mimitori/cover.jpg
+thumb: ../../assets/work/mimitori/thumb.png
 coverAlt: "Mimitori's Read tab: a Japanese paragraph with furigana, and the word card for 美味しい open with its meanings and a Save to review button"
 ---
 

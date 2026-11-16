@@ -15,6 +15,7 @@ made:
   - { label: languages, value: "English · Japanese" }
   - { label: status, value: "Out now for Windows" }
 cover: ../../assets/work/shoji/cover.png
+thumb: ../../assets/work/shoji/thumb.png
 coverAlt: "Shoji's Today screen in light and dark: 2h 55m focused so far, the morning's blocks ticked off and the rest of the day laid out"
 ---
 

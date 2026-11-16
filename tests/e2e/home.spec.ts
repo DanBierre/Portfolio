@@ -14,7 +14,7 @@ test('hero CTAs', async ({ page }) => {
 test('sections in spec order', async ({ page }) => {
   await page.goto('/');
   const ids = await page.locator('main > section').evaluateAll((s) => s.map((e) => e.id));
-  expect(ids).toEqual(['hero', 'services', 'redesigns', 'process', 'work', 'about', 'contact']);
+  expect(ids).toEqual(['hero', 'about', 'services', 'redesigns', 'process', 'work', 'contact']);
 });
 
 test('redesigns: my own site before and after, with a way to get in touch', async ({ page }) => {
@@ -27,19 +27,19 @@ test('redesigns: my own site before and after, with a way to get in touch', asyn
   await expect(s.getByRole('link', { name: en.redesigns.cta })).toHaveAttribute('href', '#contact');
 });
 
-test('Mimitori is listed as in progress, on the card and its case study', async ({ page }) => {
+test('Mimitori is live: no In progress tag, and its case study names mimitori.com', async ({ page }) => {
   await page.goto('/');
   const card = page.locator('#work article').filter({ hasText: 'Mimitori' });
-  await expect(card.getByText('In progress')).toBeVisible();
+  await expect(card.getByText('In progress')).toHaveCount(0);
   await page.goto('/work/mimitori');
-  await expect(page.locator('.case__header').getByText('In progress')).toBeVisible();
+  await expect(page.locator('.case__header').getByText('In progress')).toHaveCount(0);
   await expect(page.locator('.case__header')).toContainText('mimitori.com');
 });
 
 test('featured work: one card per homepage project, each linking to its case study', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('#work article')).toHaveCount(2);
-  await expect(page.locator('#work a[href^="/work/"]')).toHaveCount(2);
+  await expect(page.locator('#work article')).toHaveCount(3);
+  await expect(page.locator('#work a[href^="/work/"]')).toHaveCount(3);
 });
 
 test('services has Light Fix and Light Page with 3 items each', async ({ page }) => {

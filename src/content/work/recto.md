@@ -16,6 +16,7 @@ made:
   - { label: licence, value: "MIT, free" }
   - { label: status, value: "Version 0.1 out now" }
 cover: ../../assets/work/recto/cover.png
+thumb: ../../assets/work/recto/thumb.png
 coverAlt: "Recto's editor in its warm light theme, with a Markdown notes file open next to a CSS tab"
 ---
 
