@@ -2,9 +2,8 @@
 title: "Mimitori"
 clientType: "Own project. A free, open-source app for Japanese learners"
 role: "Idea, design and build"
-timeline: "Built in 2025, now public and open source"
+timeline: "Built in 2025, now live at mimitori.com"
 outcome: "A study app that lets you read real Japanese or watch your own videos with Japanese subtitles, tap any word for its meaning, and save it for review."
-inProgress: "Launching at mimitori.com"
 results:
   - "Paste Japanese and get furigana over the kanji, with every word tappable for its meaning"
   - "Watch your own videos with .srt, .vtt or .ass subtitles, one tappable line at a time"
@@ -34,6 +33,6 @@ Saved words come back in **Review** as flashcards, spaced out so they actually s
 
 ## Where it's at
 
-I built it in 2025 and used it privately for a while to study Japanese. Now it's public on [GitHub](https://github.com/DanBierre/Mimitori), free and open source (MIT). Next up is the website at mimitori.com.
+I built it in 2025 and used it privately for a while to study Japanese. Now it's live at [mimitori.com](https://mimitori.com), and you can [open the app](https://app.mimitori.com) straight in your browser, on a phone or a computer. It's free and open source (MIT), with the code on [GitHub](https://github.com/DanBierre/Mimitori).
 
-There's no account and nothing gets uploaded: your files stay on your computer.
+There's no account and nothing gets uploaded: your files stay on your device.
