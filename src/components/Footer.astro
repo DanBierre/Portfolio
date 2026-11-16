@@ -1,105 +1,62 @@
 ---
-import { site } from '../site.config';
 import CopyEmail from './CopyEmail.astro';
 import { langOf } from '../i18n/ui';
 import { brushRing } from '../lib/enso';
 
 const year = new Date().getFullYear();
 const lang = langOf(Astro.currentLocale);
-
-// The page ends like the edit at its top: a short credit roll, the 終 card and an ensō.
-const credits =
-  lang === 'ja'
-    ? [
-        ['デザイン・コード', 'Dan Bierre'],
-        ['編集・グレーディング', 'Dan Bierre'],
-        ['映像素材', 'Mixkit'],
-        ['制作', 'オークランド → 日本'],
-      ]
-    : [
-        ['Design & code', 'Dan Bierre'],
-        ['Edit & grade', 'Dan Bierre'],
-        ['Footage', 'Mixkit'],
-        ['Made in', 'Auckland → Japan'],
-      ];
 const ring = brushRing({ r: 40, width: 7, seed: 5 });
 ---
 
+<!-- The page ends on its mark: an ensō and 終, then the way to get in touch. -->
 <footer class="site-footer">
-  <div class="wrap credits">
-    <p class="credits__fin" lang="ja" aria-hidden="true">終</p>
-    <dl class="credits__roll">
-      {
-        credits.map(([term, name]) => (
-          <div>
-            <dt>{term}</dt>
-            <dd>{name}</dd>
-          </div>
-        ))
-      }
-    </dl>
-    <svg class="credits__enso" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
-      <path d={ring} fill="currentColor"></path>
-    </svg>
-  </div>
   <div class="wrap footer__row">
+    <p class="footer__fin" aria-hidden="true">
+      <svg class="footer__enso" viewBox="0 0 100 100" focusable="false">
+        <path d={ring} fill="currentColor"></path>
+      </svg>
+      <span lang="ja">終</span>
+    </p>
     <CopyEmail />
     <a href="https://softlightsoftware.dev">Soft Light Software</a>
     <a class="footer__top" href="#main">{lang === 'ja' ? 'トップへ' : 'Back to top'} <span aria-hidden="true">↑</span></a>
-    <p class="footer__legal">© {year}</p>
+    <p class="footer__legal">© {year} Dan Bierre, {lang === 'ja' ? 'オークランド' : 'Auckland'}</p>
   </div>
 </footer>
 
 <style>
-  .site-footer { padding-block: var(--space-2xl) var(--space-l); overflow: hidden; }
+  .site-footer { padding-block: var(--space-2xl) var(--space-l); }
 
   /* Wide screens: the footer starts on the same edge as every scene's content. */
   @media (min-width: 64em) {
     .site-footer > .wrap { padding-left: calc(var(--spine-x) + 2.5rem); }
   }
 
-  /* Credits: left-aligned like the rest of the page. Roles sit in the left half, names on the
-     page's shared half line, as in About and Contact. */
-  .credits { display: grid; justify-items: start; gap: var(--space-l); padding-bottom: var(--space-xl); }
-  .credits__fin {
-    display: flex;
-    align-items: center;
-    gap: var(--space-m);
-    margin: 0;
-    /* System Mincho: the web Mincho is a Latin subset without 終, so loading it here would only cost bytes. */
-    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif;
-    font-size: var(--step-3);
-    color: var(--text);
-  }
-  .credits__fin::after { content: ''; width: 3rem; height: 1px; background: var(--border); }
-  .credits__roll { display: grid; gap: 0.6em; width: 100%; margin: 0; }
-  .credits__roll > div {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    column-gap: var(--space-xl);
-    align-items: baseline;
-  }
-  .credits__roll dt { color: var(--text-muted); }
-  .credits__roll dd { margin: 0; font-size: var(--step-1); }
-  .credits__enso { width: 3.5rem; height: 3.5rem; color: var(--rust); }
-
   .footer__row {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-s) var(--space-l);
-    padding-top: var(--space-m);
-    border-top: 1px solid var(--border);
     font-size: var(--step--1);
   }
-  .footer__top { margin-left: auto; text-decoration: none; color: var(--text-muted); }
+  .footer__fin {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    margin: 0 auto 0 0;
+    /* System Mincho: the web Mincho is a Latin subset without 終, so loading it here would only cost bytes. */
+    font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', serif;
+    font-size: var(--step-3);
+    line-height: 1;
+    color: var(--text);
+  }
+  .footer__enso { width: 1.1em; height: 1.1em; color: var(--rust); }
+  .footer__top { text-decoration: none; color: var(--text-muted); }
   .footer__top:hover { color: var(--text); }
-  .footer__legal { margin: 0; color: var(--text-muted); font-family: var(--font-data); }
+  .footer__legal { margin: 0; color: var(--text-muted); }
 
-  /* Phones: contact on its own line, then top and © on one line. */
+  /* Phones: the mark on its own line, the links wrap underneath. */
   @media (max-width: 47.99em) {
-    .footer__row > :first-child { flex-basis: 100%; }
-    .credits__roll > div { column-gap: var(--space-m); }
-    .credits__roll dd { font-size: var(--step-0); }
+    .footer__fin { flex-basis: 100%; margin-bottom: var(--space-s); }
   }
 </style>

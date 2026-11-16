@@ -50,19 +50,20 @@ test('footer has mailto and no LinkedIn', async ({ page }) => {
   await expect(footer.getByRole('link', { name: 'LinkedIn' })).toHaveCount(0);
 });
 
-test('footer closes the page as end credits: fin mark, credits list, ensō, contact row', async ({ page }) => {
+test('footer closes the page on its mark: ensō and 終, then one contact row', async ({ page }) => {
   await page.goto('/');
   const footer = page.getByRole('contentinfo');
-  await expect(footer.locator('.credits__fin')).toHaveText('終');
-  const terms = await footer.locator('.credits__roll dt').allTextContents();
-  expect(terms).toEqual(['Design & code', 'Edit & grade', 'Footage', 'Made in']);
-  await expect(footer.locator('.credits__roll dd').nth(2)).toHaveText('Mixkit');
-  await expect(footer.locator('svg.credits__enso')).toBeVisible();
+  await expect(footer.locator('.footer__fin')).toHaveText('終');
+  await expect(footer.locator('svg.footer__enso')).toBeVisible();
+  await expect(footer.locator('.footer__legal')).toContainText('Auckland');
+  await expect(footer).not.toContainText('Japan');
+  await expect(footer.locator('dl')).toHaveCount(0); // no credit roll
   await expect(footer.getByRole('link', { name: /back to top/i })).toHaveAttribute('href', '#main');
-  await expect(footer.locator('.footer__mark')).toHaveCount(0); // the giant wordmark is gone
 });
 
-test('footer credits are translated on the Japanese page', async ({ page }) => {
+test('footer is translated on the Japanese page', async ({ page }) => {
   await page.goto('/ja');
-  await expect(page.getByRole('contentinfo').locator('.credits__roll dt').first()).toHaveText('デザイン・コード');
+  const footer = page.getByRole('contentinfo');
+  await expect(footer.locator('.footer__legal')).toContainText('オークランド');
+  await expect(footer).not.toContainText('日本');
 });
