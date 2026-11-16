@@ -145,14 +145,17 @@ const links = [
   .nav__menu { display: none; }
 
   .nav__switches { display: flex; gap: var(--space-s); align-items: center; }
+  /* Plain text switches, split by a slash: 日本語 / light. */
   .nav__switch {
-    padding: 0.2em 0.7em;
+    padding: 0.5em 0.1em;
+    font: inherit;
     font-size: var(--step--1);
+    text-decoration: none;
     background: none;
-    border: 1px solid var(--border);
-    border-radius: 999px;
+    border: 0;
     cursor: pointer;
   }
+  .nav__switch + .nav__switch::before { content: '/'; margin-right: var(--space-s); color: var(--text-muted); opacity: 0.6; }
   .nav__switch .when-light,
   :global([data-theme='light']) .nav__switch .when-dark { display: none; }
   :global([data-theme='light']) .nav__switch .when-light { display: inline; }

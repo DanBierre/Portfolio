@@ -47,7 +47,7 @@ const t = ui[lang];
   .contact { padding-block: var(--space-2xl); }
   h2 { font-size: var(--step-5); }
   h2 .line { display: block; }
-  h2 .line--indent { padding-left: 2.2em; }
+  h2 .line--indent { padding-left: 1.1em; }
   .contact__trust {
     display: flex;
     flex-wrap: wrap;
@@ -76,6 +76,6 @@ const t = ui[lang];
     h2 .line--indent { padding-left: 0; }
   }
   @media (min-width: 64em) {
-    .contact__paths { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+    .contact__paths { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--space-xl); }
   }
 </style>

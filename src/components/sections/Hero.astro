@@ -375,8 +375,7 @@ const t = ui[lang];
 
   /* Halation buttons: hairline borders instead of flat blocks; on hover the light blooms amber, as
      film halation bleeds round a bright source. Get in touch keeps a faint warm fill to lead. */
-  .hero :global(.btn--primary),
-  .hero :global(.btn--secondary) {
+  .hero :global(.btn--primary) {
     border: 0.5px solid #57534e; /* stone-600: stone-700 disappears against the night footage */
     background: rgb(20 20 20 / 0.35);
     color: var(--text);
@@ -384,10 +383,10 @@ const t = ui[lang];
     transition: box-shadow 0.6s var(--ease-out), border-color 0.6s var(--ease-out), text-shadow 0.6s var(--ease-out), background-color 0.6s var(--ease-out);
   }
   .hero :global(.btn--primary) { background: rgb(201 162 79 / 0.14); border-color: rgb(201 162 79 / 0.55); }
+  /* See prices is a plain link: a soft shadow keeps it readable over the footage. */
+  .hero :global(.btn--secondary) { text-shadow: 0 1px 0.8em rgb(10 9 8 / 0.8); }
   .hero :global(.btn--primary:hover),
-  .hero :global(.btn--secondary:hover),
-  .hero :global(.btn--primary:focus-visible),
-  .hero :global(.btn--secondary:focus-visible) {
+  .hero :global(.btn--primary:focus-visible) {
     background: rgb(201 162 79 / 0.18);
     color: #fff4e2;
     border-color: rgb(255 170 90 / 0.85);
@@ -445,7 +444,7 @@ const t = ui[lang];
     background: rgb(20 20 20 / 0.6);
     color: #ece4d4;
     border: 1px solid rgb(236 235 231 / 0.3);
-    border-radius: 999px;
+    border-radius: 2px;
     cursor: pointer;
   }
   .hero__toggle:hover { border-color: var(--ink-light); }

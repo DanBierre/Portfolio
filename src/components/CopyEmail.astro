@@ -30,15 +30,16 @@ const t = ui[langOf(Astro.currentLocale)].copy;
 <style>
   .copy-email { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-s); }
   .copy-email__btn {
-    padding: 0.2em 0.7em;
+    padding: 0.4em 0.1em;
     background: none;
-    border: 1px solid var(--border);
-    border-radius: 999px;
+    border: 0;
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
     font-size: var(--step--1);
     color: var(--text-muted);
     cursor: pointer;
     transition: border-color 0.2s, color 0.2s;
   }
-  .copy-email__btn:hover { border-color: var(--text); color: var(--text); }
+  .copy-email__btn:hover { color: var(--text); }
   .copy-email__status { font-size: var(--step--1); color: var(--text-muted); }
 </style>

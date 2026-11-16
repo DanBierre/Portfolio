@@ -13,7 +13,7 @@ const tcs = ['01:00:00:00', '01:00:20:00', '01:07:20:00', '01:28:20:00', '01:29:
   <SpineMark section="process" />
   <EdgePrint scene={5} label="Process" meta="EDL · 3 events" />
   <div class="wrap">
-    <h2 id="process-title">{t.process.title}<span class="count" aria-hidden="true">{t.process.steps.length}</span></h2>
+    <h2 id="process-title">{t.process.title}</h2>
     <p class="process__caption">{t.process.caption}</p>
     <!-- An edit decision list: each step is an event with a reel, record in/out, duration and output. -->
     <div class="edl__head" aria-hidden="true">
@@ -43,7 +43,7 @@ const tcs = ['01:00:00:00', '01:00:20:00', '01:07:20:00', '01:28:20:00', '01:29:
 </section>
 
 <style>
-  .process { padding-block: var(--space-2xl) 0; }
+  .process { padding-block: var(--space-xl); }
   h2 { margin-bottom: var(--space-xl); max-width: 12ch; }
   h2:has(+ .process__caption) { margin-bottom: var(--space-s); }
   .process__caption { max-width: 46ch; margin-bottom: var(--space-xl); color: var(--text-muted); }
@@ -83,5 +83,10 @@ const tcs = ['01:00:00:00', '01:00:20:00', '01:07:20:00', '01:28:20:00', '01:29:
       color: var(--text-muted);
     }
     .evt { grid-row: auto; }
+  }
+  /* Wide screens: the step starts on the page's shared column line, as in Services and About. */
+  @media (min-width: 80em) {
+    .edl__head,
+    li { grid-template-columns: 3rem 5.5rem 7.5rem minmax(7.5rem, 1fr) minmax(0, calc(50% - var(--space-xl) / 2 - 12rem - var(--space-m))) 12rem; }
   }
 </style>

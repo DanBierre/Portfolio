@@ -14,7 +14,7 @@ const work = (await getCollection('work')).filter((w) => w.data.homepage).sort((
   <EdgePrint scene={6} label="Work" meta={`${work.length} selects`} />
   <div class="wrap">
     <div class="work__head">
-      <h2 id="work-title">{t.work.title}<span class="count" aria-hidden="true">{work.length}</span></h2>
+      <h2 id="work-title">{t.work.title}</h2>
       <p class="label">{t.work.hint}</p>
     </div>
     <div class="work__index">

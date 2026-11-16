@@ -84,8 +84,8 @@ typography:
     fontWeight: 400
 rounded:
   media: "4px"
-  field: "6px"
-  pill: "999px"
+  field: "2px"
+  action: "2px"
 spacing:
   xs: "0.5rem"
   s: "0.75rem"
@@ -99,7 +99,7 @@ components:
   button-primary:
     backgroundColor: "{colors.ink-light}"
     textColor: "{colors.ground}"
-    rounded: "{rounded.pill}"
+    rounded: "{rounded.action}"
     padding: "0.6em 1.35em"
     height: "2.75rem"
   button-primary-hover:
@@ -108,7 +108,7 @@ components:
   button-secondary:
     backgroundColor: "transparent"
     textColor: "{colors.ink-light}"
-    rounded: "{rounded.pill}"
+    rounded: "{rounded.action}"
     padding: "0.6em 1.35em"
     height: "2.75rem"
   button-secondary-hover:
@@ -118,7 +118,7 @@ components:
     backgroundColor: "{colors.ink-light}"
     textColor: "{colors.ground}"
     typography: "{typography.label}"
-    rounded: "{rounded.pill}"
+    rounded: "{rounded.action}"
     padding: "0.35em 1em"
     height: "2.25rem"
   input:
@@ -141,7 +141,7 @@ components:
     textColor: "{colors.text-muted}"
   enso-portrait:
     textColor: "{colors.rust}"
-    rounded: "{rounded.pill}"
+    rounded: "{rounded.action}"
     width: "min(100%, 20rem)"
 ---
 
@@ -164,7 +164,7 @@ The page exists in English and Japanese (`/ja`), and Japanese is set by its own 
 - Home order: Hero, About, Work, Redesigns, Services, Process, Clients, Contact.
 - Two accents (gold key words, rust live/now) plus a parchment `--code` ink for mono metadata.
 - Hanken Grotesk at extreme scale contrast, Geist Mono as code voice, Mincho for spine labels only.
-- Kumiko lattice, section spine, pills for actions, hairlines for structure.
+- Kumiko lattice, section spine, square-cut actions, hairlines for structure.
 - A film layer (grade, grain, burns, timecode, credits), all decorative and skipped for reduced motion.
 
 ## Colors
@@ -173,7 +173,7 @@ Cream on warm black, warm paper bands, two narrow accents and a parchment code i
 
 ### Primary
 - **Projection Black** (ground): page ground, and the dark ink on paper bands' buttons.
-- **Cream Ink** (ink-light): primary text, primary pill fill, selection, focus ring.
+- **Cream Ink** (ink-light): primary text, primary button fill, selection, focus ring.
 
 ### Secondary
 - **Kintsugi Gold** (gold): key words, EDL event numbers, work row numbers, the hero shot track, slate scene numbers. 7.7:1 on the ground. **Deep Gold** (washi-gold) on paper bands, **Ochre Ink** (light-gold) in the light theme.
@@ -228,7 +228,7 @@ Cream on warm black, warm paper bands, two narrow accents and a parchment code i
 
 **The Code Voice Rule.** Mono carries what a machine or a film lab would print: timecodes, counts, EDL fields, spec values, the shot code. It never sets running copy or headings.
 
-**The Bracket Count Rule.** Counts are superscript brackets (`.count`, 0.32em, `[n]`) after a heading or nav link, and count real things.
+**The Bracket Count Rule.** Counts are superscript brackets (`.count`, 0.32em, `[n]`) after a nav link, and count real things. Section headings carry none: the edge print already numbers the scene.
 
 **The Clean Separator Rule.** Inline lists use the `.sep-list` middle dot, clipped at line starts. Never type " · " into wrapping copy.
 
@@ -251,18 +251,18 @@ Flat UI, lit scenes. Cards, buttons, fields and sections carry no shadows. Depth
 
 ## Shapes
 
-Rectangles and hairlines (1px). Actions are pills (999px); fields 6px; editorial media and open-spot cards 4px. Work screens are square, two 1:2 panels. The hero frame is a rounded projector gate with L-bracket viewfinder marks. The one circle is the portrait inside a hand-drawn ensō; a small ensō also closes the footer. Markers: a 7px dot on the spine, a 45° square for "now".
+Rectangles and hairlines (1px). Actions and fields are square-cut (2px), never pills; the secondary action is an underlined text link; editorial media and open-spot cards 4px. Work screens are square, two 1:2 panels. The hero frame is a rounded projector gate with L-bracket viewfinder marks. The one circle is the portrait inside a hand-drawn ensō; a small ensō also closes the footer. Markers: a 7px dot on the spine, a 45° square for "now".
 
 ## Components
 
 ### Buttons
-Pills that invert their ground, min-height 2.75rem, lowercase, weight 500. Primary empties to an outline on hover; secondary fills. Focus is a 2px ring, offset 3px. The nav pill ("book a call") is 2.25rem. In the hero, buttons are translucent hairline halation buttons that bloom amber on hover.
+Square-cut blocks (2px) that invert their ground, min-height 2.75rem, lowercase, weight 500. Primary empties to an outline on hover. Secondary is an underlined text link whose line thickens on hover. Small controls (language and theme switches, copy email, the In progress tag) are plain text, not chips. Focus is a 2px ring, offset 3px. The nav button ("get in touch") is 2.25rem. In the hero, buttons are translucent hairline halation buttons that bloom amber on hover.
 
 ### Inputs / Fields (BriefForm)
-Surface fill, 1px border, 6px corner, min-height 2.75rem, label-size labels, "(optional)" muted. Hover strokes to muted; focus to the text colour with a ring. Errors use `--error` with text below.
+Surface fill, 1px border, 2px corner, min-height 2.75rem, label-size labels, "(optional)" muted. Hover strokes to muted; focus to the text colour with a ring. Errors use `--error` with text below.
 
 ### Navigation
-Brand left, muted links (About, Work with a count, Services, ...), language and theme switches, the nav pill. A native disclosure menu and a fixed MobileCta bar serve narrow screens. Switching theme or language plays a film burn (`motion.css`, `Nav`, `Base`): warm light burns out from the switch, the swap happens under the peak, then it burns back in; opacity only. Page navigation is a 90ms cut-out and a flash-frame cut-in; the work thumbnail morphs into the case study.
+Brand left, muted links (About, Work with a count, Services, ...), language and theme switches, the nav button. A native disclosure menu and a fixed MobileCta bar serve narrow screens. Switching theme or language plays a film burn (`motion.css`, `Nav`, `Base`): warm light burns out from the switch, the swap happens under the peak, then it burns back in; opacity only. Page navigation is a 90ms cut-out and a flash-frame cut-in; the work thumbnail morphs into the case study.
 
 ### Spine Mark (signature)
 One per section, a vertical Japanese label in the Mincho with a dot on the line, written downwards on scroll. From `spine` in `ui.ts` (Japanese in both languages): ダン (hero, rust "now" diamond), 自己紹介 (about), 制作 (work), リニューアル (redesigns), サービス (services), 工程 (process), お客様 (clients), 連絡先 (contact). Decorative, `aria-hidden`, desktop only.

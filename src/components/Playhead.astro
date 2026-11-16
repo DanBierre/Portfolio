@@ -47,9 +47,14 @@
   @media (min-width: 64em) {
     .timecode {
       display: block;
+      /* Runs up the outer margin, left of the spine labels, so it never sits on the content. */
       position: fixed;
-      left: var(--spine-x, var(--gutter));
+      left: calc(var(--gutter) / 2 - 0.5em);
       bottom: var(--space-s);
+      writing-mode: vertical-rl;
+      rotate: 180deg;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
       z-index: 20;
       margin: 0;
       font-family: var(--font-data);

@@ -62,9 +62,6 @@ a:hover { text-decoration-thickness: 2px; }
   color: var(--text-muted);
 }
 /* Kolkhoze-style counts: superscript, bracketed. */
-.count { font-size: 0.32em; font-weight: 450; letter-spacing: 0; vertical-align: super; margin-left: 0.15em; }
-.count::before { content: '['; }
-.count::after { content: ']'; }
 
 .visually-hidden {
   position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -112,7 +109,7 @@ a:hover { text-decoration-thickness: 2px; }
   background-size: var(--kumiko) calc(var(--kumiko) * 2);
 }
 
-/* Buttons: pills that invert their ground. */
+/* Buttons: square-cut, like a slate, inverting their ground. The secondary action is a text link. */
 .btn {
   display: inline-flex;
   background: transparent; /* <button>s otherwise keep the browser's grey ButtonFace */
@@ -122,7 +119,7 @@ a:hover { text-decoration-thickness: 2px; }
   min-height: 2.75rem;
   padding: 0.6em 1.35em;
   border: 1px solid transparent;
-  border-radius: 999px;
+  border-radius: 2px;
   font-weight: 500;
   line-height: 1.2;
   text-decoration: none;
@@ -132,10 +129,16 @@ a:hover { text-decoration-thickness: 2px; }
   transition: background-color 0.25s var(--ease-out), color 0.25s var(--ease-out), border-color 0.25s var(--ease-out);
 }
 .btn--primary, .btn--nav { background: var(--btn-bg); color: var(--btn-text); }
-.btn--secondary { border-color: var(--text); color: var(--text); }
+.btn--secondary {
+  padding-inline: 0.15em;
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.35em;
+}
 .btn--nav { min-height: 2.25rem; padding: 0.35em 1em; font-size: var(--step--1); }
 .btn--primary:hover, .btn--nav:hover { background: transparent; color: var(--text); border-color: var(--text); }
-.btn--secondary:hover { background: var(--text); color: var(--bg); }
+.btn--secondary:hover { text-decoration-thickness: 2px; }
 
 /* Native cross-document page transitions; unsupported browsers just navigate. */
 @view-transition { navigation: auto; }
@@ -176,7 +179,7 @@ a:hover { text-decoration-thickness: 2px; }
 }
 
 /* Key-code voice: numerals and counts in mono, like the numbers printed along the film edge. */
-.num, .count { font-family: var(--font-data); font-weight: 400; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.num { font-family: var(--font-data); font-weight: 400; letter-spacing: 0; font-variant-numeric: tabular-nums; }
 .accent { color: var(--gold); }
 
 /* Spine: the live site's vertical line with diamond markers and Japanese section labels.
