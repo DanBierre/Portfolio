@@ -126,7 +126,7 @@ const en = {
     'Not sure yet': 'Not sure yet',
   } as Record<string, string>,
   meta: {
-    title: 'Dan Bierre | Websites for Auckland businesses',
+    title: 'Dan Bierre | Websites and apps with an editor’s eye',
     description:
       'I’m Dan, an Auckland web developer with a background in 3D and visual effects. I build and fix websites for local businesses, at flat prices.',
   },
@@ -247,7 +247,7 @@ const ja: Dict = {
     'Not sure yet': '未定',
   },
   meta: {
-    title: 'ダン・ビエール | オークランドのお店のウェブサイト',
+    title: 'ダン・ビエール | 編集者の目でつくるウェブサイトとアプリ',
     description:
       'オークランドのウェブ開発者、ダンです。3Dと映像の経験を活かして、地元のお店のウェブサイトを定額で作り、直します。',
   },
